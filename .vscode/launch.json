@@ -1,0 +1,141 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "IoT_MLP - FedAvg",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/main.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/src",
+      "justMyCode": true,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src"
+      },
+      "args": [
+        "-dataset",
+        "IoT",
+        "-algo",
+        "FedAvg",
+        "-gr",
+        "5",
+        "-eg",
+        "1",
+        "-t",
+        "1",
+        "-model_family",
+        "IoT_MLP",
+        "--input_dim",
+        "77",
+        "-lbs",
+        "64",
+        "-nb",
+        "15",
+        "-nc",
+        "10"
+      ]
+    },
+    {
+      "name": "IoT_MLP - FedProto",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/main.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/src",
+      "justMyCode": true,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src"
+      },
+      "args": [
+        "-dataset",
+        "IoT",
+        "-algo",
+        "FedProto",
+        "-gr",
+        "5",
+        "-eg",
+        "1",
+        "-t",
+        "1",
+        "-model_family",
+        "IoT_MLP",
+        "--input_dim",
+        "77",
+        "-lbs",
+        "64",
+        "-nb",
+        "15",
+        "-nc",
+        "10"
+      ]
+    },
+    {
+      "name": "IoT_CNN1D - FedAvg",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/main.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/src",
+      "justMyCode": true,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src"
+      },
+      "args": [
+        "-dataset",
+        "IoT",
+        "-algo",
+        "FedAvg",
+        "-gr",
+        "5",
+        "-eg",
+        "1",
+        "-t",
+        "1",
+        "-model_family",
+        "IoT_CNN1D",
+        "--input_dim",
+        "77",
+        "-lbs",
+        "64",
+        "-nb",
+        "15",
+        "-nc",
+        "10"
+      ]
+    },
+    {
+      "name": "IoT_CNN1D - FedProto",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/main.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/src",
+      "justMyCode": true,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src"
+      },
+      "args": [
+        "-dataset",
+        "IoT",
+        "-algo",
+        "FedProto",
+        "-gr",
+        "5",
+        "-eg",
+        "1",
+        "-t",
+        "1",
+        "-model_family",
+        "IoT_CNN1D",
+        "--input_dim",
+        "77",
+        "-lbs",
+        "64",
+        "-nb",
+        "15",
+        "-nc",
+        "10"
+      ]
+    }
+  ]
+}
