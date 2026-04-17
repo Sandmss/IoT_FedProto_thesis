@@ -51,6 +51,8 @@ class Server(object):
 
         self.rs_test_acc = []
         self.rs_test_auc = []
+        self.rs_test_auc_micro = []
+        self.rs_test_fnr = []
         self.rs_train_loss = []
 
         self.times = times
@@ -154,6 +156,9 @@ class Server(object):
             with h5py.File(file_path, 'w') as hf:
                 hf.create_dataset('rs_test_acc', data=self.rs_test_acc)
                 hf.create_dataset('rs_test_auc', data=self.rs_test_auc)
+                hf.create_dataset('rs_test_auc_macro', data=self.rs_test_auc)
+                hf.create_dataset('rs_test_auc_micro', data=self.rs_test_auc_micro)
+                hf.create_dataset('rs_test_fnr', data=self.rs_test_fnr)
                 hf.create_dataset('rs_train_loss', data=self.rs_train_loss)
         
         if 'temp' in self.save_folder_name:
@@ -166,17 +171,26 @@ class Server(object):
     def test_metrics(self):        
         num_samples = []
         tot_correct = []
-        tot_auc = []
+        tot_auc_macro = []
+        tot_auc_micro = []
+        tot_fnr = []
         for c in self.clients:
-            ct, ns, auc = c.test_metrics()
+            ct, ns, auc_macro, auc_micro, fnr = c.test_metrics()
             tot_correct.append(ct*1.0)
-            print(f'Client {c.id}: Acc: {ct*1.0/ns:.4f}, AUC: {auc:.4f}({int(ct)}/{ns} 正确)')
-            tot_auc.append(auc*ns)
+            print(
+                f'Client {c.id}: Acc: {ct*1.0/ns:.4f}, '
+                f'AUC macro: {auc_macro:.4f}, AUC micro: {auc_micro:.4f}'
+                f', FNR: {fnr:.4f} '
+                f'({int(ct)}/{ns} 正确)'
+            )
+            tot_auc_macro.append(auc_macro * ns)
+            tot_auc_micro.append(auc_micro * ns)
+            tot_fnr.append(fnr)
             num_samples.append(ns)
 
         ids = [c.id for c in self.clients]
 
-        return ids, num_samples, tot_correct, tot_auc
+        return ids, num_samples, tot_correct, tot_auc_macro, tot_auc_micro, tot_fnr
 
     def train_metrics(self):        
         num_samples = []
@@ -196,13 +210,20 @@ class Server(object):
         # stats_train = self.train_metrics()
 
         test_acc = sum(stats[2])*1.0 / sum(stats[1])
-        test_auc = sum(stats[3])*1.0 / sum(stats[1])
+        test_auc_macro = sum(stats[3]) * 1.0 / sum(stats[1])
+        test_auc_micro = sum(stats[4]) * 1.0 / sum(stats[1])
+        test_fnr = float(np.mean(stats[5])) if len(stats[5]) > 0 else 0.0
         # train_loss = sum(stats_train[2])*1.0 / sum(stats_train[1])
         accs = [a / n for a, n in zip(stats[2], stats[1])]
-        aucs = [a / n for a, n in zip(stats[3], stats[1])]
+        aucs_macro = [a / n for a, n in zip(stats[3], stats[1])]
+        aucs_micro = [a / n for a, n in zip(stats[4], stats[1])]
+        fnrs = stats[5]
         
         if acc == None:
             self.rs_test_acc.append(test_acc)
+            self.rs_test_auc.append(test_auc_macro)
+            self.rs_test_auc_micro.append(test_auc_micro)
+            self.rs_test_fnr.append(test_fnr)
         else:
             acc.append(test_acc)
         
@@ -213,10 +234,14 @@ class Server(object):
 
         # print("Averaged Train Loss: {:.4f}".format(train_loss))
         print("Averaged Test Accurancy: {:.4f}".format(test_acc))
-        print("Averaged Test AUC: {:.4f}".format(test_auc))
+        print("Averaged Test AUC Macro: {:.4f}".format(test_auc_macro))
+        print("Averaged Test AUC Micro: {:.4f}".format(test_auc_micro))
+        print("Averaged Test FNR: {:.4f}".format(test_fnr))
         # self.print_(test_acc, train_acc, train_loss)
         print("Std Test Accurancy: {:.4f}".format(np.std(accs)))
-        print("Std Test AUC: {:.4f}".format(np.std(aucs)))
+        print("Std Test AUC Macro: {:.4f}".format(np.std(aucs_macro)))
+        print("Std Test AUC Micro: {:.4f}".format(np.std(aucs_micro)))
+        print("Std Test FNR: {:.4f}".format(np.std(fnrs)))
 
     def print_(self, test_acc, test_auc, train_loss):
         print("Average Test Accurancy: {:.4f}".format(test_acc))

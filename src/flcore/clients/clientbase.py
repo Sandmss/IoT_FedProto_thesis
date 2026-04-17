@@ -1,18 +1,42 @@
 # --- START OF FILE clientbase.py ---
 
 import copy
+import json
 import torch
 import torch.nn as nn
 import numpy as np
 import os
+import time
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
-# 从 scikit-learn 导入用于计算多分类 AUC 的工具
-from sklearn.preprocessing import label_binarize
 from sklearn import metrics
 # 从项目工具中导入数据读取和模型定义
 from utils.data_utils import read_client_data
 from flcore.trainmodel.models import BaseHeadSplit
+
+# region agent log
+DEBUG_LOG_PATH = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "..", "debug-bfc949.log")
+)
+
+
+def debug_log(location, message, data=None, run_id="fedproto-debug", hypothesis_id="H?"):
+    payload = {
+        "sessionId": "bfc949",
+        "id": f"log_{time.time_ns()}",
+        "timestamp": int(time.time() * 1000),
+        "location": location,
+        "message": message,
+        "data": data or {},
+        "runId": run_id,
+        "hypothesisId": hypothesis_id,
+    }
+    try:
+        with open(DEBUG_LOG_PATH, "a", encoding="utf-8") as f:
+            f.write(json.dumps(payload, ensure_ascii=False) + "\n")
+    except Exception:
+        pass
+# endregion
 
 
 class Client(object):
@@ -34,11 +58,16 @@ class Client(object):
         self.save_folder_name = args.save_folder_name_full  # 结果保存的文件夹路径
 
         self.num_classes = args.num_classes  # 数据集的类别数
+        self.normal_class = getattr(args, "normal_class", 0)
         self.train_samples = train_samples  # 训练样本数量
         self.test_samples = test_samples  # 测试样本数量
         self.batch_size = args.batch_size  # 批处理大小
+        self.num_workers = args.num_workers
+        self.pin_memory = bool(args.pin_memory) and self.device == "cuda"
         self.learning_rate = args.local_learning_rate  # 本地学习率
         self.local_epochs = args.local_epochs  # 本地训练轮数
+        self.model = None
+        self.best_model = None
 
         # 如果不是从已有的临时文件夹恢复，则为该客户端创建一个新的模型实例
         if args.save_folder_name == 'temp' or 'temp' not in args.save_folder_name:
@@ -46,6 +75,12 @@ class Client(object):
             model = BaseHeadSplit(args, self.id).to(self.device)
             # 将新创建的模型保存到文件
             save_item(model, self.role, 'model', self.save_folder_name)
+            self.model = model
+        else:
+            self.model = load_item(self.role, 'model', self.save_folder_name)
+            if self.model is None:
+                self.model = BaseHeadSplit(args, self.id).to(self.device)
+                save_item(self.model, self.role, 'model', self.save_folder_name)
 
         # 从关键字参数中获取慢客户端标志，用于模拟异构性
         self.train_slow = kwargs['train_slow']  # 标记是否为训练慢的客户端
@@ -81,14 +116,28 @@ class Client(object):
         # 从文件中读取属于该客户端ID的训练数据
         train_data = read_client_data(self.dataset, self.id, is_train=True)
         # 返回一个PyTorch的DataLoader对象
-        return DataLoader(train_data, batch_size, drop_last=True, shuffle=True)
+        return DataLoader(
+            train_data,
+            batch_size=batch_size,
+            drop_last=True,
+            shuffle=True,
+            num_workers=self.num_workers,
+            pin_memory=self.pin_memory,
+        )
         
     def load_test_data(self, batch_size=None):
         """加载当前客户端的测试数据集。"""
         if batch_size == None:
             batch_size = self.batch_size
         test_data = read_client_data(self.dataset, self.id, is_train=False)
-        return DataLoader(test_data, batch_size, drop_last=False, shuffle=False)
+        return DataLoader(
+            test_data,
+            batch_size=batch_size,
+            drop_last=False,
+            shuffle=False,
+            num_workers=self.num_workers,
+            pin_memory=self.pin_memory,
+        )
 
     def clone_model(self, model, target):
         """一个工具函数，用于将一个模型的参数复制到另一个模型。"""
@@ -108,7 +157,30 @@ class Client(object):
         这是标准的评估方法，使用模型的分类头进行预测。
         """
         testloaderfull = self.load_test_data()
-        model = load_item(self.role, 'model', self.save_folder_name)
+        model = self.model if self.model is not None else load_item(self.role, 'model', self.save_folder_name)
+        if self.algorithm == "Local" and self.id == 0 and getattr(self, "current_round", 0) in {1, 10, 50, 99, 100}:
+            disk_model = load_item(self.role, 'model', self.save_folder_name)
+            # region agent log
+            debug_log(
+                "src/flcore/clients/clientbase.py:138",
+                "local eval model source snapshot",
+                {
+                    "round": int(getattr(self, "current_round", 0)),
+                    "client_id": int(self.id),
+                    "using_self_model": self.model is not None,
+                    "self_model_id": id(self.model) if self.model is not None else None,
+                    "disk_model_id": id(disk_model) if disk_model is not None else None,
+                    "self_model_norm": float(
+                        sum(p.detach().float().norm().item() for p in self.model.parameters())
+                    ) if self.model is not None else None,
+                    "disk_model_norm": float(
+                        sum(p.detach().float().norm().item() for p in disk_model.parameters())
+                    ) if disk_model is not None else None,
+                },
+                run_id="local-runtime",
+                hypothesis_id="L1",
+            )
+            # endregion
         # 将模型设置为评估模式 (关闭dropout等)
         model.eval()
 
@@ -116,6 +188,7 @@ class Client(object):
         test_num = 0
         y_prob = []  # 存储模型输出的概率
         y_true = []  # 存储真实的标签
+        y_pred = []  # 存储预测标签
 
         # 禁用梯度计算以加速评估
         with torch.no_grad():
@@ -128,35 +201,68 @@ class Client(object):
                 y = y.to(self.device)
                 # 前向传播
                 output = model(x)
+                pred = torch.argmax(output, dim=1)
 
                 # 计算正确预测的数量
-                test_acc += (torch.sum(torch.argmax(output, dim=1) == y)).item()
+                test_acc += (torch.sum(pred == y)).item()
                 test_num += y.shape[0]
 
                 # 收集概率和标签用于计算AUC
-                y_prob.append(output.detach().cpu().numpy())
-                # 将标签进行one-hot编码 (binarize) 以计算多分类AUC
-                nc = self.num_classes
-                if self.num_classes == 2:
-                    nc += 1  # scikit-learn binarize的特殊处理
-                lb = label_binarize(y.detach().cpu().numpy(), classes=np.arange(nc))
-                if self.num_classes == 2:
-                    lb = lb[:, :2]
-                y_true.append(lb)
+                y_prob.append(F.softmax(output, dim=1).detach().cpu().numpy())
+                y_true.append(y.detach().cpu().numpy())
+                y_pred.append(pred.detach().cpu().numpy())
 
         # 将所有批次的概率和标签连接起来
         y_prob = np.concatenate(y_prob, axis=0)
         y_true = np.concatenate(y_true, axis=0)
+        y_pred = np.concatenate(y_pred, axis=0)
 
-        # 使用 micro-average 计算AUC分数
-        auc = metrics.roc_auc_score(y_true, y_prob, average='micro')
+        auc_macro, auc_micro = self.compute_multiclass_auc(y_true, y_prob)
+        fnr = self.compute_false_negative_rate(y_true, y_pred)
 
-        return test_acc, test_num, auc
+        return test_acc, test_num, auc_macro, auc_micro, fnr
+
+    def compute_multiclass_auc(self, y_true, y_prob):
+        """
+        计算真实的多分类 AUC，并同时返回 macro / micro。
+        当某些类别在当前客户端测试集中完全缺失时，自动跳过这些无效列。
+        """
+        if len(y_true) == 0:
+            return 0.0, 0.0
+
+        y_true = np.asarray(y_true, dtype=np.int64)
+        y_prob = np.asarray(y_prob, dtype=np.float64)
+
+        if y_prob.ndim != 2 or y_prob.shape[0] != y_true.shape[0]:
+            return 0.0, 0.0
+
+        y_true_bin = np.eye(self.num_classes, dtype=np.int32)[y_true]
+        valid_columns = np.logical_and(
+            y_true_bin.sum(axis=0) > 0,
+            y_true_bin.sum(axis=0) < y_true_bin.shape[0],
+        )
+
+        if not np.any(valid_columns):
+            return 0.0, 0.0
+
+        y_true_bin = y_true_bin[:, valid_columns]
+        y_prob = y_prob[:, valid_columns]
+
+        try:
+            if y_true_bin.shape[1] == 1:
+                auc_value = metrics.roc_auc_score(y_true_bin[:, 0], y_prob[:, 0])
+                return float(auc_value), float(auc_value)
+
+            auc_macro = metrics.roc_auc_score(y_true_bin, y_prob, average='macro')
+            auc_micro = metrics.roc_auc_score(y_true_bin, y_prob, average='micro')
+            return float(auc_macro), float(auc_micro)
+        except ValueError:
+            return 0.0, 0.0
 
     def train_metrics(self):
         """在本地训练集上评估模型的总损失。"""
         trainloader = self.load_train_data()
-        model = load_item(self.role, 'model', self.save_folder_name)
+        model = self.model if self.model is not None else load_item(self.role, 'model', self.save_folder_name)
         model.eval()
 
         train_num = 0
@@ -176,6 +282,26 @@ class Client(object):
                 losses += loss.item() * y.shape[0]
 
         return losses, train_num
+
+    def compute_false_negative_rate(self, y_true, y_pred):
+        """
+        计算 IoT 检测任务中的漏报率(FNR)。
+        默认将标签 0 视为正常类，非 0 视为攻击类；
+        漏报定义为“攻击样本被预测为正常类”。
+        """
+        if len(y_true) == 0:
+            return 0.0
+
+        y_true = np.asarray(y_true, dtype=np.int64)
+        y_pred = np.asarray(y_pred, dtype=np.int64)
+
+        positive_mask = y_true != self.normal_class
+        positive_count = int(np.sum(positive_mask))
+        if positive_count == 0:
+            return 0.0
+
+        false_negatives = int(np.sum(np.logical_and(positive_mask, y_pred == self.normal_class)))
+        return float(false_negatives / positive_count)
 
 
 # ---- 全局工具函数 ----
@@ -202,7 +328,10 @@ def load_item(role, item_name, item_path=None):
     从文件中加载一个PyTorch对象。
     """
     try:
-        return torch.load(os.path.join(item_path, role + "_" + item_name + ".pt"))
+        return torch.load(
+            os.path.join(item_path, role + "_" + item_name + ".pt"),
+            weights_only=False,
+        )
     except FileNotFoundError:
         print(f"文件未找到: {role}_{item_name}.pt")
         return None

@@ -17,10 +17,10 @@ import numpy as np
 import logging
 from flcore.servers.serverproto import FedProto
 from flcore.servers.serveravg import FedAvg
+from flcore.servers.serverlocal import Local
+from flcore.clients.clientbase import debug_log
 # 从 utils.result_utils 模块导入 average_data 函数，用于对多次实验结果求平均
 from utils.result_utils import average_data
-# 从 utils.mem_utils 模块导入 MemReporter 类，用于报告内存使用情况
-from utils.mem_utils import MemReporter
 
 # 获取日志记录器对象
 logger = logging.getLogger()
@@ -38,8 +38,6 @@ def run(args):
     主运行函数，负责执行整个联邦学习的流程。
     """
     time_list = []  # 初始化一个列表，用于存储每次实验的运行时间
-    reporter = MemReporter()  # 创建一个内存报告器实例
-
     # 循环指定的实验次数 (args.times)，`args.prev` 用于从中间次数开始
     for i in range(args.prev, args.times):
         print(f"\n============= Run {i} =============")
@@ -78,9 +76,14 @@ def run(args):
             server = FedProto(args, i)
         elif args.algorithm == "FedAvg":
             server = FedAvg(args, i)
+        elif args.algorithm == "Local":
+            server = Local(args, i)
         else:
             # 如果算法未实现，则抛出错误
-            raise NotImplementedError
+            raise NotImplementedError(
+                f"Unsupported algorithm '{args.algorithm}'. "
+                "Available options: FedAvg, FedProto, Local"
+            )
 
         # 调用服务器的 `train` 方法，开始整个联邦学习训练过程
         server.train()
@@ -95,9 +98,6 @@ def run(args):
     average_data(dataset=args.dataset, algorithm=args.algorithm, goal=args.goal, times=args.times)
 
     print("All done!")  # 打印完成信息
-
-    # 报告最终的内存使用情况
-    reporter.report()
 
 
 if __name__ == "__main__":
@@ -118,10 +118,16 @@ if __name__ == "__main__":
                         choices=["cpu", "cuda"])
     parser.add_argument('-did', "--device_id", type=str, default="0")
     parser.add_argument('-nb', "--num_classes", type=int, default=15)
-    parser.add_argument('-lbs', "--batch_size", type=int, default=64)
+    parser.add_argument('--normal_class', type=int, default=0,
+                        help="Label id treated as the normal class when computing FNR")
+    parser.add_argument('-lbs', "--batch_size", type=int, default=10)
+    parser.add_argument('-nw', "--num_workers", type=int, default=4,
+                        help="DataLoader worker processes per client")
+    parser.add_argument('-pm', "--pin_memory", type=bool, default=True,
+                        help="Whether to use pinned memory for DataLoader")
     parser.add_argument('-lr', "--local_learning_rate", type=float, default=0.005,
                         help="Local learning rate")
-    parser.add_argument('-gr', "--global_rounds", type=int, default=2000)
+    parser.add_argument('-gr', "--global_rounds", type=int, default=100)
     parser.add_argument('-ls', "--local_epochs", type=int, default=1,
                         help="Local training epochs per communication round")
     parser.add_argument('-algo', "--algorithm", type=str, default="FedAvg")
@@ -140,7 +146,7 @@ if __name__ == "__main__":
     parser.add_argument('-sfn', "--save_folder_name", type=str, default='temp',
                         help="Directory name for intermediate outputs")
     parser.add_argument('-ab', "--auto_break", type=bool, default=False,
-                        help="Enable early stopping logic")
+                        help="Reserved flag, currently disabled")
     parser.add_argument('-fd', "--feature_dim", type=int, default=64,
                         help="Prototype / representation dimension")
     # practical: 联邦学习环境参数
@@ -175,7 +181,6 @@ if __name__ == "__main__":
     # =====================================================================
     # 解析命令行传入的参数
     args = parser.parse_args()
-
     # 设置 `CUDA_VISIBLE_DEVICES` 环境变量，以指定使用的 GPU
     os.environ["CUDA_VISIBLE_DEVICES"] = args.device_id
 
@@ -193,8 +198,11 @@ if __name__ == "__main__":
     print("Model family: {}".format(args.model_family))
     print("Input dimension: {}".format(args.input_dim))
     print("Number of classes: {}".format(args.num_classes))
+    print("Normal class label: {}".format(args.normal_class))
     print("Number of clients: {}".format(args.num_clients))
     print("Local batch size: {}".format(args.batch_size))
+    print("DataLoader workers: {}".format(args.num_workers))
+    print("Pin memory: {}".format(args.pin_memory))
     print("Local epochs: {}".format(args.local_epochs))
     print("Local learning rate: {}".format(args.local_learning_rate))
     print("Client join ratio: {}".format(args.join_ratio))
@@ -209,9 +217,30 @@ if __name__ == "__main__":
     print("Lambda: {}".format(args.lamda))
     print("Packet weight: {}".format(args.packet_weight))
     print("Auto break: {}".format(args.auto_break))
-    if not args.auto_break:
-        print("Global rounds: {}".format(args.global_rounds))
+    print("Global rounds: {}".format(args.global_rounds))
     print("=" * 50)
+
+    # region agent log
+    debug_log(
+        "src/main.py:220",
+        "runtime args snapshot",
+        {
+            "algorithm": args.algorithm,
+            "dataset": args.dataset,
+            "model_family": args.model_family,
+            "device": args.device,
+            "device_id": args.device_id,
+            "batch_size": args.batch_size,
+            "local_epochs": args.local_epochs,
+            "feature_dim": args.feature_dim,
+            "lamda": args.lamda,
+            "global_rounds": args.global_rounds,
+            "num_workers": args.num_workers,
+        },
+        run_id=f"{args.algorithm}_runtime",
+        hypothesis_id="H1",
+    )
+    # endregion
 
     # 下面是被注释掉的数据生成部分，如果需要，可以取消注释以自动生成数据集划分
     # if args.dataset == "mnist" or args.dataset == "fmnist":

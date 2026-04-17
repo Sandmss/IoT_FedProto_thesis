@@ -1,28 +1,35 @@
-#这段代码主要用于处理实验结果数据，具体功能是读取多次实验的测试准确率数据，并计算最佳准确率的均值和标准差。
+# 读取多次实验结果，并汇总测试准确率 / AUC 的最佳值统计。
 import h5py
 import numpy as np
 import os
 
 
 def average_data(algorithm="", dataset="", goal="", times=10):
-    test_acc = get_all_results_for_one_algo(algorithm, dataset, goal, times)
+    results = get_all_results_for_one_algo(algorithm, dataset, goal, times)
 
-    max_accurancy = []
-    for i in range(times):
-        max_accurancy.append(test_acc[i].max())
+    best_acc = [run_result["rs_test_acc"].max() for run_result in results]
+    print("std for best accurancy:", np.std(best_acc))
+    print("mean for best accurancy:", np.mean(best_acc))
 
-    print("std for best accurancy:", np.std(max_accurancy))
-    print("mean for best accurancy:", np.mean(max_accurancy))
+    if any(run_result["rs_test_auc_macro"].size > 0 for run_result in results):
+        best_auc_macro = [run_result["rs_test_auc_macro"].max() for run_result in results]
+        print("std for best auc macro:", np.std(best_auc_macro))
+        print("mean for best auc macro:", np.mean(best_auc_macro))
+
+    if any(run_result["rs_test_auc_micro"].size > 0 for run_result in results):
+        best_auc_micro = [run_result["rs_test_auc_micro"].max() for run_result in results]
+        print("std for best auc micro:", np.std(best_auc_micro))
+        print("mean for best auc micro:", np.mean(best_auc_micro))
 
 
 def get_all_results_for_one_algo(algorithm="", dataset="", goal="", times=10):
-    test_acc = []
+    all_results = []
     algorithms_list = [algorithm] * times
     for i in range(times):
         file_name = dataset + "_" + algorithms_list[i] + "_" + goal + "_" + str(i)
-        test_acc.append(np.array(read_data_then_delete(file_name, delete=False)))
+        all_results.append(read_data_then_delete(file_name, delete=False))
 
-    return test_acc
+    return all_results
 
 
 def read_data_then_delete(file_name, delete=False):
@@ -30,9 +37,24 @@ def read_data_then_delete(file_name, delete=False):
 
     with h5py.File(file_path, 'r') as hf:
         rs_test_acc = np.array(hf.get('rs_test_acc'))
+        rs_test_auc_macro = _read_optional_dataset(hf, 'rs_test_auc_macro')
+        if rs_test_auc_macro.size == 0:
+            rs_test_auc_macro = _read_optional_dataset(hf, 'rs_test_auc')
+        rs_test_auc_micro = _read_optional_dataset(hf, 'rs_test_auc_micro')
 
     if delete:
         os.remove(file_path)
     print("Length: ", len(rs_test_acc))
 
-    return rs_test_acc
+    return {
+        "rs_test_acc": rs_test_acc,
+        "rs_test_auc_macro": rs_test_auc_macro,
+        "rs_test_auc_micro": rs_test_auc_micro,
+    }
+
+
+def _read_optional_dataset(hf, dataset_name):
+    dataset = hf.get(dataset_name)
+    if dataset is None:
+        return np.array([])
+    return np.array(dataset)

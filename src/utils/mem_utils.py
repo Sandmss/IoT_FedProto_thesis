@@ -7,10 +7,23 @@ from typing import Optional, Tuple, List
 import torch
   
 from math import isnan
-from calmsize import size as calmsize
+try:
+    from calmsize import size as calmsize
+except ModuleNotFoundError:
+    def calmsize(num_bytes: int) -> str:
+        units = ["B", "KB", "MB", "GB", "TB", "PB"]
+        value = float(num_bytes)
+        unit_idx = 0
+        while abs(value) >= 1024.0 and unit_idx < len(units) - 1:
+            value /= 1024.0
+            unit_idx += 1
+        return f"{value:.2f}{units[unit_idx]}"
 
 def readable_size(num_bytes: int) -> str:
-    return '' if isnan(num_bytes) else '{:.2f}'.format(calmsize(num_bytes))
+    if isnan(num_bytes):
+        return ''
+    size = calmsize(num_bytes)
+    return size if isinstance(size, str) else '{:.2f}'.format(size)
 
 LEN = 79
 

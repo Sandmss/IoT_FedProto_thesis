@@ -49,23 +49,32 @@ def clean_dataframe(df):
     for column in feature_columns:
         df[column] = pd.to_numeric(df[column], errors="coerce")
 
+    before_dropna = len(df)
     df = df.dropna(axis=0).reset_index(drop=True)
-    print(f"Rows after cleaning: {len(df)}")
+    after_dropna = len(df)
+    before_dedup = len(df)
+    df = df.drop_duplicates().reset_index(drop=True)
+    after_dedup = len(df)
+    print(
+        "Rows after cleaning: {} "
+        "(dropped NaN/inf rows: {}, dropped duplicate rows: {})".format(
+            len(df),
+            before_dropna - after_dropna,
+            before_dedup - after_dedup,
+        )
+    )
     return df
 
 
-def encode_and_scale(df):
+def encode_labels_and_extract_features(df):
     label_column = "Label" if "Label" in df.columns else df.columns[-1]
     y = df[label_column]
-    X = df.drop(columns=[label_column])
+    X = df.drop(columns=[label_column]).to_numpy(dtype=np.float32, copy=True)
 
     label_encoder = LabelEncoder()
     y_encoded = label_encoder.fit_transform(y)
 
-    scaler = MinMaxScaler(feature_range=(0, 1))
-    X_scaled = scaler.fit_transform(X)
-
-    return X_scaled.astype(np.float32), y_encoded.astype(np.int64), label_encoder
+    return X, y_encoded.astype(np.int64), label_encoder
 
 
 def dirichlet_distribute_by_class(y, num_clients=10, alpha=0.1, seed=42):
@@ -181,17 +190,36 @@ def split_client_data_train_test(client_class_indices, train_ratio=0.75, seed=42
     return split_indices, stats_summary
 
 
-def save_client_data(X, y, split_indices, output_dir):
+def fit_global_train_scaler(X, split_indices):
+    train_indices = [
+        split["train"] for split in split_indices.values() if split["train"].size > 0
+    ]
+    if not train_indices:
+        raise ValueError("No training samples were assigned across clients.")
+
+    train_indices = np.concatenate(train_indices).astype(np.int64, copy=False)
+    scaler = MinMaxScaler(feature_range=(0, 1))
+    scaler.fit(X[train_indices])
+    print(f"Scaler fitted on {len(train_indices)} training samples only.")
+    return scaler
+
+
+def save_client_data(X, y, split_indices, output_dir, scaler):
     output_dir.mkdir(parents=True, exist_ok=True)
 
     for client_id, split in split_indices.items():
         train_indices = split["train"]
         test_indices = split["test"]
 
-        np.save(output_dir / f"client_{client_id}_X.npy", X[train_indices])
+        train_X = scaler.transform(X[train_indices]).astype(np.float32, copy=False)
+        test_X = scaler.transform(X[test_indices]).astype(np.float32, copy=False)
+        train_y = y[train_indices]
+        test_y = y[test_indices]
+
+        np.save(output_dir / f"client_{client_id}_X.npy", train_X)
         np.save(output_dir / f"client_{client_id}_y.npy", y[train_indices])
-        np.save(output_dir / f"client_{client_id}_X_test.npy", X[test_indices])
-        np.save(output_dir / f"client_{client_id}_y_test.npy", y[test_indices])
+        np.save(output_dir / f"client_{client_id}_X_test.npy", test_X)
+        np.save(output_dir / f"client_{client_id}_y_test.npy", test_y)
 
         print(
             f"Client {client_id}: "
@@ -199,7 +227,15 @@ def save_client_data(X, y, split_indices, output_dir):
         )
 
 
-def save_metadata(output_dir, label_encoder, args, stats_summary, total_samples, feature_dim):
+def save_metadata(
+    output_dir,
+    label_encoder,
+    args,
+    stats_summary,
+    total_samples,
+    feature_dim,
+    scaler_train_samples,
+):
     metadata = {
         "num_clients": int(args.num_clients),
         "train_ratio": float(args.train_ratio),
@@ -207,6 +243,8 @@ def save_metadata(output_dir, label_encoder, args, stats_summary, total_samples,
         "seed": int(args.seed),
         "total_samples": int(total_samples),
         "feature_dim": int(feature_dim),
+        "scaler_scope": "global_train_only",
+        "scaler_train_samples": int(scaler_train_samples),
         "labels": {
             str(label_id): class_name
             for label_id, class_name in enumerate(label_encoder.classes_.tolist())
@@ -288,7 +326,7 @@ def main():
 
     merged_df = load_and_merge_csv(args.data_dir)
     cleaned_df = clean_dataframe(merged_df)
-    X, y, label_encoder = encode_and_scale(cleaned_df)
+    X, y, label_encoder = encode_labels_and_extract_features(cleaned_df)
 
     client_class_indices = dirichlet_distribute_by_class(
         y,
@@ -301,7 +339,10 @@ def main():
         train_ratio=args.train_ratio,
         seed=args.seed,
     )
-    save_client_data(X, y, split_indices, args.output_dir)
+    scaler = fit_global_train_scaler(X, split_indices)
+    total_train = sum(info["total_train"] for info in stats_summary.values())
+    total_test = sum(info["total_test"] for info in stats_summary.values())
+    save_client_data(X, y, split_indices, args.output_dir, scaler)
     save_metadata(
         args.output_dir,
         label_encoder,
@@ -309,11 +350,10 @@ def main():
         stats_summary,
         total_samples=len(y),
         feature_dim=X.shape[1],
+        scaler_train_samples=total_train,
     )
     print_stats_summary(stats_summary)
 
-    total_train = sum(info["total_train"] for info in stats_summary.values())
-    total_test = sum(info["total_test"] for info in stats_summary.values())
     print(f"最终参与训练的特征维度: {X.shape[1]}")
     print(f"总样本数: {len(y)} | 训练样本数: {total_train} | 测试样本数: {total_test}")
 

@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 import time
-from flcore.clients.clientbase import Client, load_item, save_item
+from flcore.clients.clientbase import Client, save_item
 
 
 class clientAvg(Client):
@@ -25,15 +25,7 @@ class clientAvg(Client):
         3. 保存更新后的本地模型。
         """
         trainloader = self.load_train_data()
-
-        # 1. 加载本地模型结构
-        model = load_item(self.role, 'model', self.save_folder_name)
-
-        # 2. 【关键】加载 Server 端的全局模型，并覆盖本地参数 (Global Synchronization)
-        # 注意：第一次训练时，Server 需要先保存一个 global_model
-        global_model = load_item('Server', 'global_model', self.save_folder_name)
-        if global_model is not None:
-            model.load_state_dict(global_model.state_dict())
+        model = self.model
 
         optimizer = torch.optim.SGD(model.parameters(), lr=self.learning_rate)
         model.train()
@@ -66,8 +58,7 @@ class clientAvg(Client):
                 torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=10.0)
                 optimizer.step()
 
-        # 3. 保存训练后的模型供 Server 聚合
-        save_item(model, self.role, 'model', self.save_folder_name)
+        self.model = model
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time
@@ -76,16 +67,14 @@ class clientAvg(Client):
         """
         保存最佳模型副本。
         """
-        model = load_item(self.role, 'model', self.save_folder_name)
-        save_item(model, self.role, 'best_model', self.save_folder_name)
+        self.best_model = copy.deepcopy(self.model)
+        save_item(self.best_model, self.role, 'best_model', self.save_folder_name)
 
     def extract_features(self):
         """
         加载最佳模型，提取本地测试集的特征向量和标签，用于 t-SNE 可视化。
         """
-        model = load_item(self.role, 'best_model', self.save_folder_name)
-        if model is None:
-            model = load_item(self.role, 'model', self.save_folder_name)
+        model = self.best_model if self.best_model is not None else self.model
 
         testloader = self.load_test_data()
         model.eval()
