@@ -5,9 +5,9 @@ import torch
 import torch.nn as nn
 import numpy as np
 import time
-import os
-from flcore.clients.clientbase import Client, save_item, debug_log
+from flcore.clients.clientbase import Client, load_item, save_item
 from collections import defaultdict
+
 
 class clientproto(Client):
     """
@@ -19,19 +19,14 @@ class clientproto(Client):
         torch.manual_seed(0)
         self.loss_mse = nn.MSELoss()
         self.lamda = args.lamda
-        self.global_protos = None
-        self.local_protos = None
-        self.local_proto_weights = None
-        self.best_protos = None
-        self.current_round = 0
 
     def train(self):
         """
         执行本地训练，包含原型正则化。
         """
         trainloader = self.load_train_data()
-        model = self.model
-        global_protos = self.global_protos
+        model = load_item(self.role, 'model', self.save_folder_name)
+        global_protos = load_item('Server', 'global_protos', self.save_folder_name)
         optimizer = torch.optim.SGD(model.parameters(), lr=self.learning_rate)
         model.train()
 
@@ -54,8 +49,6 @@ class clientproto(Client):
                 rep = model.base(x)
                 output = model.head(rep)
                 loss = self.loss(output, y)
-                ce_loss_value = float(loss.item())
-                proto_loss_value = 0.0
 
                 if global_protos is not None:
                     proto_new = copy.deepcopy(rep.detach())
@@ -63,39 +56,7 @@ class clientproto(Client):
                         y_c = yy.item()
                         if type(global_protos[y_c]) != type([]):
                             proto_new[i, :] = global_protos[y_c].data
-                    proto_loss_tensor = self.loss_mse(proto_new, rep)
-                    proto_loss_value = float(proto_loss_tensor.item())
-                    loss += proto_loss_tensor * self.lamda
-
-                if (
-                    self.id == 0
-                    and step == 0
-                    and i == 0
-                    and self.current_round in {1, 10, 50, 98, 100}
-                ):
-                    available_proto_classes = 0 if global_protos is None else len(global_protos)
-                    batch_labels, batch_counts = torch.unique(y.detach().cpu(), return_counts=True)
-                    # region agent log
-                    debug_log(
-                        "src/flcore/clients/clientproto.py:72",
-                        "client train loss snapshot",
-                        {
-                            "round": int(self.current_round),
-                            "client_id": int(self.id),
-                            "ce_loss": ce_loss_value,
-                            "proto_loss": proto_loss_value,
-                            "lamda": float(self.lamda),
-                            "feature_norm_mean": float(rep.detach().norm(dim=1).mean().item()),
-                            "available_proto_classes": int(available_proto_classes),
-                            "batch_label_hist": {
-                                int(label): int(count)
-                                for label, count in zip(batch_labels.tolist(), batch_counts.tolist())
-                            },
-                        },
-                        run_id="fedproto-runtime",
-                        hypothesis_id="H2",
-                    )
-                    # endregion
+                    loss += self.loss_mse(proto_new, rep) * self.lamda
 
                 optimizer.zero_grad()
                 loss.backward()
@@ -103,23 +64,22 @@ class clientproto(Client):
                 torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=10.0)
                 optimizer.step()
 
-        self.model = model
-        self.collect_protos(model=model)
+        self.collect_protos()
+        save_item(model, self.role, 'model', self.save_folder_name)
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time
 
-    def collect_protos(self, model=None):
+    def collect_protos(self):
         """
         在本地训练数据上计算每个类别的平均特征表示（即局部原型），并保存。
         """
         trainloader = self.load_train_data()
-        if model is None:
-            model = self.model
+        model = load_item(self.role, 'model', self.save_folder_name)
         model.eval()
 
         protos = defaultdict(list)
-        class_counts = defaultdict(int)
+        class_counts = defaultdict(int)  # 【新增】用于记录每个类别的样本数量
         with torch.no_grad():
             for i, (x, y) in enumerate(trainloader):
                 if type(x) == type([]):
@@ -136,26 +96,23 @@ class clientproto(Client):
                     protos[y_c].append(rep[i, :].detach().data)
                     class_counts[y_c] += 1
 
-        self.local_protos = agg_func(protos)
-        self.local_proto_weights = dict(class_counts)
+        save_item(agg_func(protos), self.role, 'protos', self.save_folder_name)
+        save_item(dict(class_counts), self.role, 'proto_weights', self.save_folder_name)
 
     def test_metrics(self):
         """
         标准测试方法：在【本地测试集】上使用【全局原型】进行分类。
         """
         testloader = self.load_test_data()
-        model = self.model
-        global_protos = self.global_protos
+        model = load_item(self.role, 'model', self.save_folder_name)
+        global_protos = load_item('Server', 'global_protos', self.save_folder_name)
         model.eval()
 
         test_acc, test_num = 0, 0
-        y_prob = []
-        y_true = []
-        y_pred = []
 
         if global_protos is not None:
             with torch.no_grad():
-                for batch_idx, (x, y) in enumerate(testloader):
+                for x, y in testloader:
                     if type(x) == type([]):
                         x[0] = x[0].to(self.device)
                     else:
@@ -163,74 +120,17 @@ class clientproto(Client):
                     y = y.to(self.device)
                     rep = model.base(x)
 
-                    output = torch.full(
-                        (y.shape[0], self.num_classes),
-                        float("inf"),
-                        device=self.device,
-                    )
-                    valid_proto_items = [
-                        (int(class_id), proto)
-                        for class_id, proto in global_protos.items()
-                        if isinstance(proto, torch.Tensor)
-                    ]
-                    if valid_proto_items:
-                        class_ids = [class_id for class_id, _ in valid_proto_items]
-                        proto_matrix = torch.stack(
-                            [proto.to(self.device) for _, proto in valid_proto_items],
-                            dim=0,
-                        )
-                        # rep: [B, D], proto_matrix: [C, D]
-                        # 计算每个样本到每个原型的均方距离，避免逐样本逐类别 Python 循环。
-                        distances = torch.mean(
-                            (rep.unsqueeze(1) - proto_matrix.unsqueeze(0)) ** 2,
-                            dim=2,
-                        )
-                        output[:, class_ids] = distances
+                    output = float('inf') * torch.ones(y.shape[0], self.num_classes).to(self.device)
+                    for i, r in enumerate(rep):
+                        for j, pro in global_protos.items():
+                            if type(pro) != type([]):
+                                output[i, j] = self.loss_mse(r, pro)
 
-                    proto_pred = torch.argmin(output, dim=1)
-                    proto_correct = torch.sum(proto_pred == y).item()
-                    test_acc += proto_correct
+                    test_acc += (torch.sum(torch.argmin(output, dim=1) == y)).item()
                     test_num += y.shape[0]
-                    y_prob.append(torch.softmax(-output, dim=1).detach().cpu().numpy())
-                    y_true.append(y.detach().cpu().numpy())
-                    y_pred.append(proto_pred.detach().cpu().numpy())
-
-            y_prob = np.concatenate(y_prob, axis=0)
-            y_true = np.concatenate(y_true, axis=0)
-            y_pred = np.concatenate(y_pred, axis=0)
-            auc_macro, auc_micro = self.compute_multiclass_auc(y_true, y_prob)
-            fnr = self.compute_false_negative_rate(y_true, y_pred)
-            if self.id in {0, 2} and self.current_round in {1, 10, 50, 98, 100}:
-                pred_labels, pred_counts = np.unique(y_pred, return_counts=True)
-                true_labels, true_counts = np.unique(y_true, return_counts=True)
-                # region agent log
-                debug_log(
-                    "src/flcore/clients/clientproto.py:180",
-                    "client eval prediction snapshot",
-                    {
-                        "round": int(self.current_round),
-                        "client_id": int(self.id),
-                        "test_acc": float(test_acc / max(test_num, 1)),
-                        "auc_macro": float(auc_macro),
-                        "auc_micro": float(auc_micro),
-                        "fnr": float(fnr),
-                        "available_proto_classes": 0 if global_protos is None else len(global_protos),
-                        "pred_label_hist": {
-                            int(label): int(count)
-                            for label, count in zip(pred_labels.tolist(), pred_counts.tolist())
-                        },
-                        "true_label_hist": {
-                            int(label): int(count)
-                            for label, count in zip(true_labels.tolist(), true_counts.tolist())
-                        },
-                    },
-                    run_id="fedproto-runtime",
-                    hypothesis_id="H4",
-                )
-                # endregion
-            return test_acc, test_num, auc_macro, auc_micro, fnr
+            return test_acc, test_num, 0
         else:
-            return 0, 1e-5, 0.0, 0.0, 0.0
+            return 0, 1e-5, 0
 
     # def evaluate_on_global_test_set(self, global_protos=None):
     #     """
@@ -346,8 +246,8 @@ class clientproto(Client):
         重写训练评估方法，以包含原型正则化损失。
         """
         trainloader = self.load_train_data()
-        model = self.model
-        global_protos = self.global_protos
+        model = load_item(self.role, 'model', self.save_folder_name)
+        global_protos = load_item('Server', 'global_protos', self.save_folder_name)
         model.eval()
 
         train_num, losses = 0, 0
@@ -433,27 +333,29 @@ class clientproto(Client):
         【修改】同时保存当前的原型为最佳原型副本。
         """
         # 1. 保存最佳模型
-        self.best_model = copy.deepcopy(self.model)
-        save_item(self.best_model, self.role, 'best_model', self.save_folder_name)
+        model = load_item(self.role, 'model', self.save_folder_name)
+        save_item(model, self.role, 'best_model', self.save_folder_name)
 
         # 2. 保存最佳原型 (新增)
-        if self.local_protos:
-            self.best_protos = copy.deepcopy(self.local_protos)
-            save_item(self.best_protos, self.role, 'best_protos', self.save_folder_name)
-    def extract_features(self, max_samples=None):
+        protos = load_item(self.role, 'protos', self.save_folder_name)
+        if protos:
+            save_item(protos, self.role, 'best_protos', self.save_folder_name)
+    def extract_features(self):
         """
         加载最佳模型，提取本地测试集的特征向量和标签，用于 t-SNE 可视化。
         返回: (features, labels) 的 numpy 数组
         """
-        model = self.best_model if self.best_model is not None else self.model
+        # 加载最佳模型
+        model = load_item(self.role, 'best_model', self.save_folder_name)
+        if model is None:
+            # 如果没有最佳模型，回退到普通模型
+            model = load_item(self.role, 'model', self.save_folder_name)
 
         testloader = self.load_test_data()
         model.eval()
 
         features_list = []
         labels_list = []
-        collected = 0
-        rng = np.random.default_rng(0)
 
         with torch.no_grad():
             for x, y in testloader:
@@ -466,22 +368,8 @@ class clientproto(Client):
                 # 提取特征 (Rep)
                 rep = model.base(x)
 
-                rep_np = rep.detach().cpu().numpy()
-                y_np = y.detach().cpu().numpy()
-                if max_samples is not None:
-                    remaining = max_samples - collected
-                    if remaining <= 0:
-                        break
-                    if len(rep_np) > remaining:
-                        sample_idx = rng.choice(len(rep_np), size=remaining, replace=False)
-                        rep_np = rep_np[sample_idx]
-                        y_np = y_np[sample_idx]
-
-                features_list.append(rep_np)
-                labels_list.append(y_np)
-                collected += len(rep_np)
-                if max_samples is not None and collected >= max_samples:
-                    break
+                features_list.append(rep.detach().cpu().numpy())
+                labels_list.append(y.detach().cpu().numpy())
 
         if len(features_list) > 0:
             features = np.concatenate(features_list, axis=0)

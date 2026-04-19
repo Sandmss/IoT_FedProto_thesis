@@ -142,7 +142,9 @@ if __name__ == "__main__":
     parser.add_argument('-t', "--times", type=int, default=1,
                         help="Number of repeated runs")
     parser.add_argument('-eg', "--eval_gap", type=int, default=1,
-                        help="Evaluation interval in rounds")
+                        help="Evaluation interval in rounds (e.g. 10 cuts eval cost ~10x)")
+    parser.add_argument('--skip_figures', action='store_true',
+                        help="Skip t-SNE / prototype figure generation at end (saves CPU time)")
     parser.add_argument('-sfn', "--save_folder_name", type=str, default='temp',
                         help="Directory name for intermediate outputs")
     parser.add_argument('-ab', "--auto_break", type=bool, default=False,
@@ -218,6 +220,8 @@ if __name__ == "__main__":
     print("Packet weight: {}".format(args.packet_weight))
     print("Auto break: {}".format(args.auto_break))
     print("Global rounds: {}".format(args.global_rounds))
+    print("Eval gap (rounds): {}".format(args.eval_gap))
+    print("Skip figures: {}".format(args.skip_figures))
     print("=" * 50)
 
     # region agent log

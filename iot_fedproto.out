@@ -1,0 +1,1785 @@
+==================================================
+Algorithm: FedProto
+Dataset: IoT
+Model family: IoT_MLP
+Input dimension: 77
+Number of classes: 15
+Normal class label: 0
+Number of clients: 10
+Local batch size: 10
+DataLoader workers: 4
+Pin memory: True
+Local epochs: 1
+Local learning rate: 0.01
+Client join ratio: 1.0
+Random join ratio: False
+Client drop rate: 0.0
+Time-based client selection: False
+Runs: 1
+Device: cuda
+Feature dimension: 512
+Lambda: 0.1
+Packet weight: 1.0
+Auto break: False
+Global rounds: 100
+==================================================
+
+============= Run 0 =============
+Creating server and clients...
+Model family: IoT_MLP
+Resolved models:
+  MLP_IoT(dim_in=77, dim_hidden=128, dim_out=512, num_classes=15)
+
+参与比例 / 客户端总数: 1.0 / 10
+消融实验服务器和客户端创建完成。
+
+------------- 全局轮次: 0 (初始状态) -------------
+Client 0: Acc: 0.0000, AUC macro: 0.0000, AUC micro: 0.0000, FNR: 0.0000 (0/1e-05 正确)
+Client 1: Acc: 0.0000, AUC macro: 0.0000, AUC micro: 0.0000, FNR: 0.0000 (0/1e-05 正确)
+Client 2: Acc: 0.0000, AUC macro: 0.0000, AUC micro: 0.0000, FNR: 0.0000 (0/1e-05 正确)
+Client 3: Acc: 0.0000, AUC macro: 0.0000, AUC micro: 0.0000, FNR: 0.0000 (0/1e-05 正确)
+Client 4: Acc: 0.0000, AUC macro: 0.0000, AUC micro: 0.0000, FNR: 0.0000 (0/1e-05 正确)
+Client 5: Acc: 0.0000, AUC macro: 0.0000, AUC micro: 0.0000, FNR: 0.0000 (0/1e-05 正确)
+Client 6: Acc: 0.0000, AUC macro: 0.0000, AUC micro: 0.0000, FNR: 0.0000 (0/1e-05 正确)
+Client 7: Acc: 0.0000, AUC macro: 0.0000, AUC micro: 0.0000, FNR: 0.0000 (0/1e-05 正确)
+Client 8: Acc: 0.0000, AUC macro: 0.0000, AUC micro: 0.0000, FNR: 0.0000 (0/1e-05 正确)
+Client 9: Acc: 0.0000, AUC macro: 0.0000, AUC micro: 0.0000, FNR: 0.0000 (0/1e-05 正确)
+Averaged Test Accurancy: 0.0000
+Averaged Test AUC Macro: 0.0000
+Averaged Test AUC Micro: 0.0000
+Averaged Test FNR: 0.0000
+Std Test Accurancy: 0.0000
+Std Test AUC Macro: 0.0000
+Std Test AUC Micro: 0.0000
+Std Test FNR: 0.0000
+--------------------------------------------------
+
+------------- 全局轮次: 1 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.605554  0.5941294 2.9584384 2.3123298 1.7173458 2.1112404 1.4188206
+ 1.3848294 1.7173458 1.6327318 1.3848294 1.4188206 1.4015298 0.5941294
+ 1.4015298]
+全局最小类间距离 (Min Gap): 0.5941
+全局最大类间距离 (Max Gap): 2.9584
+------------------------------------------
+--- 轮次 1 评估 ---
+Client 0: Acc: 0.2987, AUC macro: 0.9722, AUC micro: 0.9879, FNR: 0.0000 (92/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.7554, AUC micro: 0.9076, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.6548, AUC macro: 0.8279, AUC micro: 0.8535, FNR: 0.0230 (17080/26085 正确)
+Client 3: Acc: 0.7752, AUC macro: 0.8831, AUC micro: 0.9104, FNR: 0.0054 (62545/80685 正确)
+Client 4: Acc: 0.6717, AUC macro: 0.8983, AUC micro: 0.8784, FNR: 0.0597 (80925/120476 正确)
+Client 5: Acc: 0.3884, AUC macro: 0.7376, AUC micro: 0.8390, FNR: 0.0000 (536/1380 正确)
+Client 6: Acc: 0.9642, AUC macro: 0.7000, AUC micro: 0.9610, FNR: 0.8638 (173850/180304 正确)
+Client 7: Acc: 0.2285, AUC macro: 0.8676, AUC micro: 0.8374, FNR: 0.0000 (1286/5627 正确)
+Client 8: Acc: 0.6546, AUC macro: 0.8833, AUC micro: 0.9160, FNR: 0.0000 (12251/18714 正确)
+Client 9: Acc: 0.6464, AUC macro: 0.9426, AUC micro: 0.9260, FNR: 0.0009 (78825/121950 正确)
+Averaged Test Accurancy: 0.7692
+Averaged Test AUC Macro: 0.8366
+Averaged Test AUC Micro: 0.9199
+Averaged Test FNR: 0.0953
+Std Test Accurancy: 0.2170
+Std Test AUC Macro: 0.0853
+Std Test AUC Micro: 0.0477
+Std Test FNR: 0.2568
+检测到新最佳准确率，正在保存最佳模型检查点 (Round 1)...
+本轮耗时: 591.07 秒
+
+------------- 全局轮次: 2 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.5417079 0.5662131 2.985658  2.4865658 2.2398686 2.0055096 1.5585469
+ 1.1922054 2.2398686 1.4681491 1.1922054 1.4800313 1.5478691 0.5662131
+ 1.4800313]
+全局最小类间距离 (Min Gap): 0.5662
+全局最大类间距离 (Max Gap): 2.9857
+------------------------------------------
+--- 轮次 2 评估 ---
+Client 0: Acc: 0.8636, AUC macro: 0.9739, AUC micro: 0.9876, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.8472, AUC micro: 0.9213, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.6807, AUC macro: 0.9211, AUC micro: 0.9002, FNR: 0.0313 (17755/26085 正确)
+Client 3: Acc: 0.7340, AUC macro: 0.8761, AUC micro: 0.9190, FNR: 0.0014 (59219/80685 正确)
+Client 4: Acc: 0.7176, AUC macro: 0.9112, AUC micro: 0.9322, FNR: 0.0282 (86454/120476 正确)
+Client 5: Acc: 0.7543, AUC macro: 0.7472, AUC micro: 0.8629, FNR: 0.0000 (1041/1380 正确)
+Client 6: Acc: 0.8354, AUC macro: 0.6547, AUC micro: 0.9575, FNR: 0.1942 (150619/180304 正确)
+Client 7: Acc: 0.7029, AUC macro: 0.8648, AUC micro: 0.8819, FNR: 0.0132 (3955/5627 正确)
+Client 8: Acc: 0.7453, AUC macro: 0.9022, AUC micro: 0.9429, FNR: 0.0016 (13948/18714 正确)
+Client 9: Acc: 0.7431, AUC macro: 0.9421, AUC micro: 0.9585, FNR: 0.0022 (90624/121950 正确)
+Averaged Test Accurancy: 0.7629
+Averaged Test AUC Macro: 0.8290
+Averaged Test AUC Micro: 0.9424
+Averaged Test FNR: 0.0272
+Std Test Accurancy: 0.0535
+Std Test AUC Macro: 0.0911
+Std Test AUC Micro: 0.0358
+Std Test FNR: 0.0568
+本轮耗时: 680.61 秒
+
+------------- 全局轮次: 3 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.6357619 0.5816248 3.1738448 2.7217956 2.6981182 2.0002587 1.592452
+ 1.2063489 2.51869   1.4357827 1.2063489 1.5722033 1.6842834 0.5816248
+ 1.5722033]
+全局最小类间距离 (Min Gap): 0.5816
+全局最大类间距离 (Max Gap): 3.1738
+------------------------------------------
+--- 轮次 3 评估 ---
+Client 0: Acc: 0.8636, AUC macro: 0.9812, AUC micro: 0.9880, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7799, AUC macro: 0.8616, AUC micro: 0.9446, FNR: 0.0000 (2169/2781 正确)
+Client 2: Acc: 0.8001, AUC macro: 0.9323, AUC micro: 0.9551, FNR: 0.0537 (20871/26085 正确)
+Client 3: Acc: 0.7284, AUC macro: 0.8397, AUC micro: 0.9257, FNR: 0.0011 (58773/80685 正确)
+Client 4: Acc: 0.7628, AUC macro: 0.9495, AUC micro: 0.9518, FNR: 0.0152 (91898/120476 正确)
+Client 5: Acc: 0.7558, AUC macro: 0.7774, AUC micro: 0.8824, FNR: 0.0000 (1043/1380 正确)
+Client 6: Acc: 0.8481, AUC macro: 0.7808, AUC micro: 0.9660, FNR: 0.2029 (152910/180304 正确)
+Client 7: Acc: 0.7109, AUC macro: 0.8762, AUC micro: 0.9134, FNR: 0.0132 (4000/5627 正确)
+Client 8: Acc: 0.7536, AUC macro: 0.9052, AUC micro: 0.9367, FNR: 0.0000 (14102/18714 正确)
+Client 9: Acc: 0.7053, AUC macro: 0.9449, AUC micro: 0.9628, FNR: 0.0002 (86011/121950 正确)
+Averaged Test Accurancy: 0.7738
+Averaged Test AUC Macro: 0.8743
+Averaged Test AUC Micro: 0.9541
+Averaged Test FNR: 0.0286
+Std Test Accurancy: 0.0508
+Std Test AUC Macro: 0.0669
+Std Test AUC Micro: 0.0284
+Std Test FNR: 0.0602
+检测到新最佳准确率，正在保存最佳模型检查点 (Round 3)...
+本轮耗时: 684.80 秒
+
+------------- 全局轮次: 4 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.7514364 0.6105988 3.0501447 3.0501447 3.0023103 2.0792356 1.6459285
+ 1.2713491 2.513179  1.5063561 1.2713491 1.6115973 1.8159845 0.6105988
+ 1.662974 ]
+全局最小类间距离 (Min Gap): 0.6106
+全局最大类间距离 (Max Gap): 3.0501
+------------------------------------------
+--- 轮次 4 评估 ---
+Client 0: Acc: 0.8636, AUC macro: 0.9838, AUC micro: 0.9885, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7807, AUC macro: 0.8741, AUC micro: 0.9696, FNR: 0.0000 (2171/2781 正确)
+Client 2: Acc: 0.8032, AUC macro: 0.9430, AUC micro: 0.9681, FNR: 0.0505 (20951/26085 正确)
+Client 3: Acc: 0.7464, AUC macro: 0.8536, AUC micro: 0.9342, FNR: 0.0021 (60221/80685 正确)
+Client 4: Acc: 0.7975, AUC macro: 0.9550, AUC micro: 0.9657, FNR: 0.0186 (96081/120476 正确)
+Client 5: Acc: 0.7572, AUC macro: 0.8254, AUC micro: 0.8927, FNR: 0.0000 (1045/1380 正确)
+Client 6: Acc: 0.8393, AUC macro: 0.8048, AUC micro: 0.9786, FNR: 0.1913 (151329/180304 正确)
+Client 7: Acc: 0.7226, AUC macro: 0.8888, AUC micro: 0.9210, FNR: 0.0142 (4066/5627 正确)
+Client 8: Acc: 0.8434, AUC macro: 0.9171, AUC micro: 0.9440, FNR: 0.0000 (15784/18714 正确)
+Client 9: Acc: 0.8326, AUC macro: 0.9190, AUC micro: 0.9697, FNR: 0.0187 (101534/121950 正确)
+Averaged Test Accurancy: 0.8122
+Averaged Test AUC Macro: 0.8808
+Averaged Test AUC Micro: 0.9650
+Averaged Test FNR: 0.0296
+Std Test Accurancy: 0.0443
+Std Test AUC Macro: 0.0548
+Std Test AUC Micro: 0.0282
+Std Test FNR: 0.0560
+检测到新最佳准确率，正在保存最佳模型检查点 (Round 4)...
+本轮耗时: 683.48 秒
+
+------------- 全局轮次: 5 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.767803   0.63838995 3.1690705  3.1690705  3.3156083  1.9530475
+ 1.7186915  1.1847811  2.6204143  1.3683178  1.1847811  1.4522572
+ 1.8675647  0.63838995 1.7186915 ]
+全局最小类间距离 (Min Gap): 0.6384
+全局最大类间距离 (Max Gap): 3.3156
+------------------------------------------
+--- 轮次 5 评估 ---
+Client 0: Acc: 0.8636, AUC macro: 0.9888, AUC micro: 0.9893, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7889, AUC macro: 0.8511, AUC micro: 0.9673, FNR: 0.0000 (2194/2781 正确)
+Client 2: Acc: 0.8310, AUC macro: 0.9459, AUC micro: 0.9791, FNR: 0.0448 (21677/26085 正确)
+Client 3: Acc: 0.7576, AUC macro: 0.8941, AUC micro: 0.9245, FNR: 0.0532 (61128/80685 正确)
+Client 4: Acc: 0.8180, AUC macro: 0.9503, AUC micro: 0.9763, FNR: 0.0203 (98545/120476 正确)
+Client 5: Acc: 0.7580, AUC macro: 0.8110, AUC micro: 0.9024, FNR: 0.0000 (1046/1380 正确)
+Client 6: Acc: 0.8461, AUC macro: 0.8102, AUC micro: 0.9851, FNR: 0.2000 (152551/180304 正确)
+Client 7: Acc: 0.7219, AUC macro: 0.8946, AUC micro: 0.9230, FNR: 0.0142 (4062/5627 正确)
+Client 8: Acc: 0.8532, AUC macro: 0.9275, AUC micro: 0.9479, FNR: 0.0001 (15966/18714 正确)
+Client 9: Acc: 0.8238, AUC macro: 0.9376, AUC micro: 0.9762, FNR: 0.0144 (100463/121950 正确)
+Averaged Test Accurancy: 0.8202
+Averaged Test AUC Macro: 0.8918
+Averaged Test AUC Micro: 0.9701
+Averaged Test FNR: 0.0347
+Std Test Accurancy: 0.0450
+Std Test AUC Macro: 0.0575
+Std Test AUC Micro: 0.0291
+Std Test FNR: 0.0580
+检测到新最佳准确率，正在保存最佳模型检查点 (Round 5)...
+本轮耗时: 682.12 秒
+
+------------- 全局轮次: 6 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.6487066 0.6523646 3.2651892 3.2651892 3.4654617 2.0149407 1.8535136
+ 1.2309457 2.7642572 1.5170681 1.2309457 1.4905665 1.8757595 0.6523646
+ 1.6827263]
+全局最小类间距离 (Min Gap): 0.6524
+全局最大类间距离 (Max Gap): 3.4655
+------------------------------------------
+--- 轮次 6 评估 ---
+Client 0: Acc: 0.8636, AUC macro: 0.9890, AUC micro: 0.9894, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7940, AUC macro: 0.8516, AUC micro: 0.9655, FNR: 0.0000 (2208/2781 正确)
+Client 2: Acc: 0.8411, AUC macro: 0.9544, AUC micro: 0.9790, FNR: 0.0493 (21940/26085 正确)
+Client 3: Acc: 0.7829, AUC macro: 0.9004, AUC micro: 0.9290, FNR: 0.0532 (63171/80685 正确)
+Client 4: Acc: 0.8840, AUC macro: 0.9361, AUC micro: 0.9805, FNR: 0.0546 (106505/120476 正确)
+Client 5: Acc: 0.7616, AUC macro: 0.7916, AUC micro: 0.9114, FNR: 0.0000 (1051/1380 正确)
+Client 6: Acc: 0.8337, AUC macro: 0.8142, AUC micro: 0.9877, FNR: 0.1855 (150321/180304 正确)
+Client 7: Acc: 0.6878, AUC macro: 0.9019, AUC micro: 0.9228, FNR: 0.0025 (3870/5627 正确)
+Client 8: Acc: 0.8553, AUC macro: 0.9326, AUC micro: 0.9469, FNR: 0.0002 (16007/18714 正确)
+Client 9: Acc: 0.8704, AUC macro: 0.9437, AUC micro: 0.9791, FNR: 0.0018 (106146/121950 正确)
+Averaged Test Accurancy: 0.8445
+Averaged Test AUC Macro: 0.8929
+Averaged Test AUC Micro: 0.9731
+Averaged Test FNR: 0.0347
+Std Test Accurancy: 0.0577
+Std Test AUC Macro: 0.0605
+Std Test AUC Micro: 0.0277
+Std Test FNR: 0.0553
+检测到新最佳准确率，正在保存最佳模型检查点 (Round 6)...
+本轮耗时: 682.37 秒
+
+------------- 全局轮次: 7 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.6078997  0.70272213 3.4143755  3.4312618  3.387611   2.0400355
+ 1.9739089  1.2886518  2.8547864  1.3525567  1.2886518  1.6643186
+ 1.8711951  0.70272213 1.824488  ]
+全局最小类间距离 (Min Gap): 0.7027
+全局最大类间距离 (Max Gap): 3.4313
+------------------------------------------
+--- 轮次 7 评估 ---
+Client 0: Acc: 0.8636, AUC macro: 0.9905, AUC micro: 0.9906, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.8317, AUC macro: 0.8538, AUC micro: 0.9691, FNR: 0.0000 (2313/2781 正确)
+Client 2: Acc: 0.8585, AUC macro: 0.9551, AUC micro: 0.9816, FNR: 0.0461 (22393/26085 正确)
+Client 3: Acc: 0.7606, AUC macro: 0.8967, AUC micro: 0.9228, FNR: 0.0532 (61372/80685 正确)
+Client 4: Acc: 0.8853, AUC macro: 0.9207, AUC micro: 0.9816, FNR: 0.0518 (106662/120476 正确)
+Client 5: Acc: 0.7681, AUC macro: 0.7924, AUC micro: 0.9178, FNR: 0.0000 (1060/1380 正确)
+Client 6: Acc: 0.8614, AUC macro: 0.8180, AUC micro: 0.9912, FNR: 0.1971 (155316/180304 正确)
+Client 7: Acc: 0.6913, AUC macro: 0.9049, AUC micro: 0.9225, FNR: 0.0031 (3890/5627 正确)
+Client 8: Acc: 0.8549, AUC macro: 0.9335, AUC micro: 0.9457, FNR: 0.0002 (15999/18714 正确)
+Client 9: Acc: 0.8806, AUC macro: 0.9468, AUC micro: 0.9787, FNR: 0.0045 (107389/121950 正确)
+Averaged Test Accurancy: 0.8538
+Averaged Test AUC Macro: 0.8911
+Averaged Test AUC Micro: 0.9736
+Averaged Test FNR: 0.0356
+Std Test Accurancy: 0.0607
+Std Test AUC Macro: 0.0595
+Std Test AUC Micro: 0.0284
+Std Test FNR: 0.0582
+检测到新最佳准确率，正在保存最佳模型检查点 (Round 7)...
+本轮耗时: 683.18 秒
+
+------------- 全局轮次: 8 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.5760514 0.7645448 3.3796782 3.4549537 3.417192  1.9708816 1.9708816
+ 1.2182854 2.995562  1.3912003 1.2182854 1.5303288 1.8727535 0.7645448
+ 1.8702022]
+全局最小类间距离 (Min Gap): 0.7645
+全局最大类间距离 (Max Gap): 3.4550
+------------------------------------------
+--- 轮次 8 评估 ---
+Client 0: Acc: 0.8636, AUC macro: 0.9905, AUC micro: 0.9904, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9000, AUC macro: 0.8532, AUC micro: 0.9677, FNR: 0.0000 (2503/2781 正确)
+Client 2: Acc: 0.8032, AUC macro: 0.9573, AUC micro: 0.9791, FNR: 0.0122 (20952/26085 正确)
+Client 3: Acc: 0.7925, AUC macro: 0.8979, AUC micro: 0.9269, FNR: 0.0532 (63944/80685 正确)
+Client 4: Acc: 0.8913, AUC macro: 0.9048, AUC micro: 0.9828, FNR: 0.0518 (107376/120476 正确)
+Client 5: Acc: 0.8080, AUC macro: 0.7926, AUC micro: 0.9198, FNR: 0.0000 (1115/1380 正确)
+Client 6: Acc: 0.8401, AUC macro: 0.8089, AUC micro: 0.9896, FNR: 0.1739 (151481/180304 正确)
+Client 7: Acc: 0.6757, AUC macro: 0.9088, AUC micro: 0.9145, FNR: 0.0015 (3802/5627 正确)
+Client 8: Acc: 0.8521, AUC macro: 0.9426, AUC micro: 0.9447, FNR: 0.0001 (15946/18714 正确)
+Client 9: Acc: 0.9115, AUC macro: 0.9500, AUC micro: 0.9870, FNR: 0.0261 (111161/121950 正确)
+Averaged Test Accurancy: 0.8571
+Averaged Test AUC Macro: 0.8860
+Averaged Test AUC Micro: 0.9755
+Averaged Test FNR: 0.0319
+Std Test Accurancy: 0.0658
+Std Test AUC Macro: 0.0616
+Std Test AUC Micro: 0.0291
+Std Test FNR: 0.0514
+检测到新最佳准确率，正在保存最佳模型检查点 (Round 8)...
+本轮耗时: 682.06 秒
+
+------------- 全局轮次: 9 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.533399   0.82911515 3.5271335  3.5271335  3.4569929  2.0158932
+ 2.0158932  1.1503953  2.9573734  1.3730614  1.1503953  1.513204
+ 1.9642137  0.82911515 1.9642137 ]
+全局最小类间距离 (Min Gap): 0.8291
+全局最大类间距离 (Max Gap): 3.5271
+------------------------------------------
+--- 轮次 9 评估 ---
+Client 0: Acc: 0.8636, AUC macro: 0.9905, AUC micro: 0.9910, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9479, AUC macro: 0.8505, AUC micro: 0.9666, FNR: 0.0000 (2636/2781 正确)
+Client 2: Acc: 0.8638, AUC macro: 0.9586, AUC micro: 0.9822, FNR: 0.0160 (22531/26085 正确)
+Client 3: Acc: 0.8128, AUC macro: 0.8972, AUC micro: 0.9262, FNR: 0.0532 (65580/80685 正确)
+Client 4: Acc: 0.8342, AUC macro: 0.9013, AUC micro: 0.9766, FNR: 0.0113 (100500/120476 正确)
+Client 5: Acc: 0.8087, AUC macro: 0.7924, AUC micro: 0.9255, FNR: 0.0000 (1116/1380 正确)
+Client 6: Acc: 0.8404, AUC macro: 0.8085, AUC micro: 0.9891, FNR: 0.0870 (151534/180304 正确)
+Client 7: Acc: 0.6812, AUC macro: 0.9096, AUC micro: 0.9039, FNR: 0.0015 (3833/5627 正确)
+Client 8: Acc: 0.8490, AUC macro: 0.9453, AUC micro: 0.9474, FNR: 0.0002 (15888/18714 正确)
+Client 9: Acc: 0.9051, AUC macro: 0.9601, AUC micro: 0.9856, FNR: 0.0194 (110381/121950 正确)
+Averaged Test Accurancy: 0.8495
+Averaged Test AUC Macro: 0.8874
+Averaged Test AUC Micro: 0.9737
+Averaged Test FNR: 0.0188
+Std Test Accurancy: 0.0664
+Std Test AUC Macro: 0.0631
+Std Test AUC Micro: 0.0298
+Std Test FNR: 0.0276
+本轮耗时: 680.98 秒
+
+------------- 全局轮次: 10 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.4840103 0.8645771 3.3943813 3.3943813 3.3621674 2.0495195 2.0495195
+ 1.346738  2.975641  1.393223  1.346738  1.6279474 1.8794315 0.8645771
+ 1.8794315]
+全局最小类间距离 (Min Gap): 0.8646
+全局最大类间距离 (Max Gap): 3.3944
+------------------------------------------
+--- 轮次 10 评估 ---
+Client 0: Acc: 0.8636, AUC macro: 0.9902, AUC micro: 0.9915, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9123, AUC macro: 0.8495, AUC micro: 0.9644, FNR: 0.0000 (2537/2781 正确)
+Client 2: Acc: 0.7901, AUC macro: 0.9556, AUC micro: 0.9797, FNR: 0.0109 (20611/26085 正确)
+Client 3: Acc: 0.7735, AUC macro: 0.8878, AUC micro: 0.9250, FNR: 0.0030 (62407/80685 正确)
+Client 4: Acc: 0.8948, AUC macro: 0.9299, AUC micro: 0.9830, FNR: 0.0490 (107798/120476 正确)
+Client 5: Acc: 0.8116, AUC macro: 0.7961, AUC micro: 0.9305, FNR: 0.0000 (1120/1380 正确)
+Client 6: Acc: 0.8616, AUC macro: 0.8089, AUC micro: 0.9914, FNR: 0.0638 (155357/180304 正确)
+Client 7: Acc: 0.6876, AUC macro: 0.9108, AUC micro: 0.9207, FNR: 0.0015 (3869/5627 正确)
+Client 8: Acc: 0.8229, AUC macro: 0.9480, AUC micro: 0.9507, FNR: 0.0002 (15400/18714 正确)
+Client 9: Acc: 0.8662, AUC macro: 0.9753, AUC micro: 0.9856, FNR: 0.0009 (105627/121950 正确)
+Averaged Test Accurancy: 0.8508
+Averaged Test AUC Macro: 0.8956
+Averaged Test AUC Micro: 0.9758
+Averaged Test FNR: 0.0129
+Std Test Accurancy: 0.0631
+Std Test AUC Macro: 0.0646
+Std Test AUC Micro: 0.0269
+Std Test FNR: 0.0222
+本轮耗时: 680.82 秒
+
+------------- 全局轮次: 11 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.4306506 0.9305599 3.4426947 3.5895169 3.3295457 2.1225286 2.1225286
+ 1.3846177 3.0150409 1.4306506 1.3846177 1.6093823 1.9485757 0.9305599
+ 1.9485757]
+全局最小类间距离 (Min Gap): 0.9306
+全局最大类间距离 (Max Gap): 3.5895
+------------------------------------------
+--- 轮次 11 评估 ---
+Client 0: Acc: 0.8636, AUC macro: 0.9899, AUC micro: 0.9970, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9004, AUC macro: 0.8540, AUC micro: 0.9705, FNR: 0.0000 (2504/2781 正确)
+Client 2: Acc: 0.8703, AUC macro: 0.9554, AUC micro: 0.9839, FNR: 0.0179 (22702/26085 正确)
+Client 3: Acc: 0.7937, AUC macro: 0.8874, AUC micro: 0.9274, FNR: 0.0034 (64042/80685 正确)
+Client 4: Acc: 0.8979, AUC macro: 0.9262, AUC micro: 0.9842, FNR: 0.0507 (108172/120476 正确)
+Client 5: Acc: 0.8138, AUC macro: 0.7964, AUC micro: 0.9344, FNR: 0.0000 (1123/1380 正确)
+Client 6: Acc: 0.8541, AUC macro: 0.7860, AUC micro: 0.9908, FNR: 0.0493 (153990/180304 正确)
+Client 7: Acc: 0.6828, AUC macro: 0.9129, AUC micro: 0.9199, FNR: 0.0015 (3842/5627 正确)
+Client 8: Acc: 0.8185, AUC macro: 0.9475, AUC micro: 0.9469, FNR: 0.0002 (15317/18714 正确)
+Client 9: Acc: 0.8581, AUC macro: 0.9746, AUC micro: 0.9854, FNR: 0.0006 (104645/121950 正确)
+Averaged Test Accurancy: 0.8537
+Averaged Test AUC Macro: 0.8872
+Averaged Test AUC Micro: 0.9763
+Averaged Test FNR: 0.0124
+Std Test Accurancy: 0.0607
+Std Test AUC Macro: 0.0676
+Std Test AUC Micro: 0.0275
+Std Test FNR: 0.0195
+本轮耗时: 682.12 秒
+
+------------- 全局轮次: 12 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3808719 0.9972839 3.3538575 3.5975273 3.3108177 2.047472  2.047472
+ 1.4066175 2.9883213 1.3808719 1.4066175 1.4855944 1.9504303 0.9972839
+ 1.9504303]
+全局最小类间距离 (Min Gap): 0.9973
+全局最大类间距离 (Max Gap): 3.5975
+------------------------------------------
+--- 轮次 12 评估 ---
+Client 0: Acc: 0.8571, AUC macro: 0.9903, AUC micro: 0.9971, FNR: 0.0000 (264/308 正确)
+Client 1: Acc: 0.8759, AUC macro: 0.8532, AUC micro: 0.9712, FNR: 0.0000 (2436/2781 正确)
+Client 2: Acc: 0.8720, AUC macro: 0.9553, AUC micro: 0.9829, FNR: 0.0173 (22745/26085 正确)
+Client 3: Acc: 0.8314, AUC macro: 0.8841, AUC micro: 0.9269, FNR: 0.0530 (67082/80685 正确)
+Client 4: Acc: 0.8464, AUC macro: 0.9247, AUC micro: 0.9795, FNR: 0.0124 (101971/120476 正确)
+Client 5: Acc: 0.8225, AUC macro: 0.7957, AUC micro: 0.9387, FNR: 0.0000 (1135/1380 正确)
+Client 6: Acc: 0.8498, AUC macro: 0.7596, AUC micro: 0.9906, FNR: 0.0464 (153226/180304 正确)
+Client 7: Acc: 0.6833, AUC macro: 0.9131, AUC micro: 0.9172, FNR: 0.0015 (3845/5627 正确)
+Client 8: Acc: 0.8252, AUC macro: 0.9537, AUC micro: 0.9545, FNR: 0.0014 (15442/18714 正确)
+Client 9: Acc: 0.8561, AUC macro: 0.9744, AUC micro: 0.9855, FNR: 0.0006 (104396/121950 正确)
+Averaged Test Accurancy: 0.8464
+Averaged Test AUC Macro: 0.8780
+Averaged Test AUC Micro: 0.9753
+Averaged Test FNR: 0.0133
+Std Test Accurancy: 0.0524
+Std Test AUC Macro: 0.0731
+Std Test AUC Micro: 0.0268
+Std Test FNR: 0.0191
+本轮耗时: 684.23 秒
+
+------------- 全局轮次: 13 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3123791 1.0396193 3.429663  3.571396  3.2466984 2.190639  2.190639
+ 1.4655676 2.9727516 1.3123791 1.4655676 1.5174735 2.0215926 1.0396193
+ 2.0215926]
+全局最小类间距离 (Min Gap): 1.0396
+全局最大类间距离 (Max Gap): 3.5714
+------------------------------------------
+--- 轮次 13 评估 ---
+Client 0: Acc: 0.9805, AUC macro: 0.9900, AUC micro: 0.9973, FNR: 0.0000 (302/308 正确)
+Client 1: Acc: 0.9151, AUC macro: 0.8533, AUC micro: 0.9693, FNR: 0.0000 (2545/2781 正确)
+Client 2: Acc: 0.8114, AUC macro: 0.9563, AUC micro: 0.9826, FNR: 0.0147 (21166/26085 正确)
+Client 3: Acc: 0.7955, AUC macro: 0.8820, AUC micro: 0.9286, FNR: 0.0026 (64187/80685 正确)
+Client 4: Acc: 0.8547, AUC macro: 0.9270, AUC micro: 0.9805, FNR: 0.0101 (102966/120476 正确)
+Client 5: Acc: 0.8333, AUC macro: 0.7954, AUC micro: 0.9435, FNR: 0.0000 (1150/1380 正确)
+Client 6: Acc: 0.8599, AUC macro: 0.7560, AUC micro: 0.9929, FNR: 0.0464 (155043/180304 正确)
+Client 7: Acc: 0.6819, AUC macro: 0.9111, AUC micro: 0.9108, FNR: 0.0015 (3837/5627 正确)
+Client 8: Acc: 0.8177, AUC macro: 0.9522, AUC micro: 0.9525, FNR: 0.0008 (15302/18714 正确)
+Client 9: Acc: 0.8631, AUC macro: 0.9743, AUC micro: 0.9875, FNR: 0.0006 (105261/121950 正确)
+Averaged Test Accurancy: 0.8450
+Averaged Test AUC Macro: 0.8770
+Averaged Test AUC Micro: 0.9769
+Averaged Test FNR: 0.0077
+Std Test Accurancy: 0.0741
+Std Test AUC Macro: 0.0739
+Std Test AUC Micro: 0.0279
+Std Test FNR: 0.0138
+本轮耗时: 684.19 秒
+
+------------- 全局轮次: 14 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.2945853 1.1066959 3.1950736 3.6972215 3.3020854 2.1753438 2.1753438
+ 1.5186383 2.8212826 1.2945853 1.5186383 1.617196  1.9957852 1.1066959
+ 1.9957852]
+全局最小类间距离 (Min Gap): 1.1067
+全局最大类间距离 (Max Gap): 3.6972
+------------------------------------------
+--- 轮次 14 评估 ---
+Client 0: Acc: 0.8961, AUC macro: 0.9901, AUC micro: 0.9973, FNR: 0.0000 (276/308 正确)
+Client 1: Acc: 0.9015, AUC macro: 0.8659, AUC micro: 0.9731, FNR: 0.0000 (2507/2781 正确)
+Client 2: Acc: 0.8206, AUC macro: 0.9565, AUC micro: 0.9820, FNR: 0.0122 (21406/26085 正确)
+Client 3: Acc: 0.8051, AUC macro: 0.8799, AUC micro: 0.9293, FNR: 0.0013 (64959/80685 正确)
+Client 4: Acc: 0.9085, AUC macro: 0.9261, AUC micro: 0.9851, FNR: 0.0501 (109457/120476 正确)
+Client 5: Acc: 0.8522, AUC macro: 0.7991, AUC micro: 0.9473, FNR: 0.0000 (1176/1380 正确)
+Client 6: Acc: 0.8599, AUC macro: 0.7409, AUC micro: 0.9941, FNR: 0.0464 (155041/180304 正确)
+Client 7: Acc: 0.6847, AUC macro: 0.9135, AUC micro: 0.9144, FNR: 0.0015 (3853/5627 正确)
+Client 8: Acc: 0.8249, AUC macro: 0.9504, AUC micro: 0.9522, FNR: 0.0008 (15437/18714 正确)
+Client 9: Acc: 0.8531, AUC macro: 0.9718, AUC micro: 0.9867, FNR: 0.0006 (104036/121950 正确)
+Averaged Test Accurancy: 0.8564
+Averaged Test AUC Macro: 0.8711
+Averaged Test AUC Micro: 0.9782
+Averaged Test FNR: 0.0113
+Std Test Accurancy: 0.0619
+Std Test AUC Macro: 0.0754
+Std Test AUC Micro: 0.0273
+Std Test FNR: 0.0188
+本轮耗时: 680.58 秒
+
+------------- 全局轮次: 15 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3049504 1.2113379 3.2974634 3.7632034 3.5363877 2.2248597 2.2248597
+ 1.5467342 2.8807929 1.3049504 1.5467342 1.6176213 1.9539533 1.2113379
+ 1.9539533]
+全局最小类间距离 (Min Gap): 1.2113
+全局最大类间距离 (Max Gap): 3.7632
+------------------------------------------
+--- 轮次 15 评估 ---
+Client 0: Acc: 0.9091, AUC macro: 0.9901, AUC micro: 0.9959, FNR: 0.0000 (280/308 正确)
+Client 1: Acc: 0.9097, AUC macro: 0.8693, AUC micro: 0.9738, FNR: 0.0000 (2530/2781 正确)
+Client 2: Acc: 0.8037, AUC macro: 0.9575, AUC micro: 0.9833, FNR: 0.0147 (20964/26085 正确)
+Client 3: Acc: 0.8349, AUC macro: 0.8811, AUC micro: 0.9330, FNR: 0.0024 (67360/80685 正确)
+Client 4: Acc: 0.9144, AUC macro: 0.9253, AUC micro: 0.9860, FNR: 0.0422 (110169/120476 正确)
+Client 5: Acc: 0.8500, AUC macro: 0.7963, AUC micro: 0.9486, FNR: 0.0000 (1173/1380 正确)
+Client 6: Acc: 0.8499, AUC macro: 0.7498, AUC micro: 0.9917, FNR: 0.0464 (153244/180304 正确)
+Client 7: Acc: 0.6748, AUC macro: 0.9127, AUC micro: 0.9074, FNR: 0.0015 (3797/5627 正确)
+Client 8: Acc: 0.8708, AUC macro: 0.9555, AUC micro: 0.9555, FNR: 0.0009 (16297/18714 正确)
+Client 9: Acc: 0.8853, AUC macro: 0.9745, AUC micro: 0.9892, FNR: 0.0006 (107957/121950 正确)
+Averaged Test Accurancy: 0.8665
+Averaged Test AUC Macro: 0.8748
+Averaged Test AUC Micro: 0.9788
+Averaged Test FNR: 0.0109
+Std Test Accurancy: 0.0678
+Std Test AUC Macro: 0.0745
+Std Test AUC Micro: 0.0279
+Std Test FNR: 0.0173
+检测到新最佳准确率，正在保存最佳模型检查点 (Round 15)...
+本轮耗时: 680.91 秒
+
+------------- 全局轮次: 16 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3444302 1.2390261 3.2155097 3.6790988 3.604629  2.16748   2.16748
+ 1.4270883 2.884887  1.3444302 1.4270883 1.6304226 1.9744045 1.2390261
+ 1.9744045]
+全局最小类间距离 (Min Gap): 1.2390
+全局最大类间距离 (Max Gap): 3.6791
+------------------------------------------
+--- 轮次 16 评估 ---
+Client 0: Acc: 0.9416, AUC macro: 0.9899, AUC micro: 0.9963, FNR: 0.0000 (290/308 正确)
+Client 1: Acc: 0.9277, AUC macro: 0.8635, AUC micro: 0.9723, FNR: 0.0000 (2580/2781 正确)
+Client 2: Acc: 0.7693, AUC macro: 0.9593, AUC micro: 0.9853, FNR: 0.0083 (20066/26085 正确)
+Client 3: Acc: 0.8094, AUC macro: 0.8852, AUC micro: 0.9288, FNR: 0.0014 (65304/80685 正确)
+Client 4: Acc: 0.9039, AUC macro: 0.9312, AUC micro: 0.9845, FNR: 0.0484 (108895/120476 正确)
+Client 5: Acc: 0.8522, AUC macro: 0.7986, AUC micro: 0.9481, FNR: 0.0000 (1176/1380 正确)
+Client 6: Acc: 0.8828, AUC macro: 0.7379, AUC micro: 0.9953, FNR: 0.0464 (159170/180304 正确)
+Client 7: Acc: 0.6995, AUC macro: 0.9157, AUC micro: 0.9255, FNR: 0.0015 (3936/5627 正确)
+Client 8: Acc: 0.8710, AUC macro: 0.9507, AUC micro: 0.9575, FNR: 0.0009 (16299/18714 正确)
+Client 9: Acc: 0.8857, AUC macro: 0.9727, AUC micro: 0.9879, FNR: 0.0007 (108015/121950 正确)
+Averaged Test Accurancy: 0.8700
+Averaged Test AUC Macro: 0.8724
+Averaged Test AUC Micro: 0.9791
+Averaged Test FNR: 0.0108
+Std Test Accurancy: 0.0712
+Std Test AUC Macro: 0.0767
+Std Test AUC Micro: 0.0253
+Std Test FNR: 0.0185
+检测到新最佳准确率，正在保存最佳模型检查点 (Round 16)...
+本轮耗时: 684.11 秒
+
+------------- 全局轮次: 17 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3096298 1.2968102 3.0660474 3.7249465 3.626779  2.1993444 2.1993444
+ 1.4669088 2.8385284 1.3096298 1.4669088 1.6184908 2.0002067 1.2968102
+ 2.0002067]
+全局最小类间距离 (Min Gap): 1.2968
+全局最大类间距离 (Max Gap): 3.7249
+------------------------------------------
+--- 轮次 17 评估 ---
+Client 0: Acc: 0.9123, AUC macro: 0.9899, AUC micro: 0.9934, FNR: 0.0000 (281/308 正确)
+Client 1: Acc: 0.9335, AUC macro: 0.8697, AUC micro: 0.9737, FNR: 0.0000 (2596/2781 正确)
+Client 2: Acc: 0.8217, AUC macro: 0.9580, AUC micro: 0.9863, FNR: 0.0179 (21433/26085 正确)
+Client 3: Acc: 0.7917, AUC macro: 0.8811, AUC micro: 0.9240, FNR: 0.0013 (63877/80685 正确)
+Client 4: Acc: 0.9175, AUC macro: 0.9308, AUC micro: 0.9806, FNR: 0.0490 (110536/120476 正确)
+Client 5: Acc: 0.8529, AUC macro: 0.8099, AUC micro: 0.9474, FNR: 0.0000 (1177/1380 正确)
+Client 6: Acc: 0.8953, AUC macro: 0.7399, AUC micro: 0.9962, FNR: 0.0464 (161420/180304 正确)
+Client 7: Acc: 0.6972, AUC macro: 0.9146, AUC micro: 0.9191, FNR: 0.0015 (3923/5627 正确)
+Client 8: Acc: 0.8749, AUC macro: 0.9504, AUC micro: 0.9583, FNR: 0.0008 (16372/18714 正确)
+Client 9: Acc: 0.8808, AUC macro: 0.9682, AUC micro: 0.9881, FNR: 0.0005 (107419/121950 正确)
+Averaged Test Accurancy: 0.8759
+Averaged Test AUC Macro: 0.8713
+Averaged Test AUC Micro: 0.9779
+Averaged Test FNR: 0.0117
+Std Test Accurancy: 0.0678
+Std Test AUC Macro: 0.0740
+Std Test AUC Micro: 0.0268
+Std Test FNR: 0.0187
+检测到新最佳准确率，正在保存最佳模型检查点 (Round 17)...
+本轮耗时: 682.07 秒
+
+------------- 全局轮次: 18 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3728753 1.3590888 3.0619457 3.6897166 3.6328573 2.1830251 2.1830251
+ 1.5697443 2.9043663 1.3728753 1.5697443 1.5930518 1.9594669 1.3590888
+ 1.9594669]
+全局最小类间距离 (Min Gap): 1.3591
+全局最大类间距离 (Max Gap): 3.6897
+------------------------------------------
+--- 轮次 18 评估 ---
+Client 0: Acc: 0.9416, AUC macro: 0.9900, AUC micro: 0.9931, FNR: 0.0000 (290/308 正确)
+Client 1: Acc: 0.9270, AUC macro: 0.8727, AUC micro: 0.9746, FNR: 0.0000 (2578/2781 正确)
+Client 2: Acc: 0.7823, AUC macro: 0.9589, AUC micro: 0.9856, FNR: 0.0083 (20407/26085 正确)
+Client 3: Acc: 0.8389, AUC macro: 0.8856, AUC micro: 0.9303, FNR: 0.0023 (67689/80685 正确)
+Client 4: Acc: 0.8487, AUC macro: 0.9291, AUC micro: 0.9775, FNR: 0.0090 (102253/120476 正确)
+Client 5: Acc: 0.8543, AUC macro: 0.8078, AUC micro: 0.9558, FNR: 0.0000 (1179/1380 正确)
+Client 6: Acc: 0.8943, AUC macro: 0.6626, AUC micro: 0.9967, FNR: 0.0261 (161245/180304 正确)
+Client 7: Acc: 0.6986, AUC macro: 0.9155, AUC micro: 0.9218, FNR: 0.0015 (3931/5627 正确)
+Client 8: Acc: 0.8713, AUC macro: 0.9568, AUC micro: 0.9547, FNR: 0.0006 (16306/18714 正确)
+Client 9: Acc: 0.8688, AUC macro: 0.9692, AUC micro: 0.9884, FNR: 0.0006 (105955/121950 正确)
+Averaged Test Accurancy: 0.8630
+Averaged Test AUC Macro: 0.8471
+Averaged Test AUC Micro: 0.9782
+Averaged Test FNR: 0.0048
+Std Test Accurancy: 0.0668
+Std Test AUC Macro: 0.0929
+Std Test AUC Micro: 0.0249
+Std Test FNR: 0.0078
+本轮耗时: 681.50 秒
+
+------------- 全局轮次: 19 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.2540832 1.4104894 3.1221967 3.7944095 3.6158628 2.322925  2.322925
+ 1.6008841 2.9445353 1.2540832 1.6008841 1.7546401 1.9857508 1.4104894
+ 1.9857508]
+全局最小类间距离 (Min Gap): 1.2541
+全局最大类间距离 (Max Gap): 3.7944
+------------------------------------------
+--- 轮次 19 评估 ---
+Client 0: Acc: 0.8539, AUC macro: 0.9899, AUC micro: 0.9879, FNR: 0.0000 (263/308 正确)
+Client 1: Acc: 0.9202, AUC macro: 0.8755, AUC micro: 0.9764, FNR: 0.0000 (2559/2781 正确)
+Client 2: Acc: 0.7804, AUC macro: 0.9589, AUC micro: 0.9871, FNR: 0.0102 (20357/26085 正确)
+Client 3: Acc: 0.8231, AUC macro: 0.8937, AUC micro: 0.9323, FNR: 0.0440 (66412/80685 正确)
+Client 4: Acc: 0.9252, AUC macro: 0.9282, AUC micro: 0.9824, FNR: 0.0428 (111470/120476 正确)
+Client 5: Acc: 0.8572, AUC macro: 0.8122, AUC micro: 0.9579, FNR: 0.0000 (1183/1380 正确)
+Client 6: Acc: 0.9110, AUC macro: 0.6505, AUC micro: 0.9955, FNR: 0.0493 (164250/180304 正确)
+Client 7: Acc: 0.6991, AUC macro: 0.9149, AUC micro: 0.9197, FNR: 0.0015 (3934/5627 正确)
+Client 8: Acc: 0.8707, AUC macro: 0.9536, AUC micro: 0.9589, FNR: 0.0006 (16294/18714 正确)
+Client 9: Acc: 0.8673, AUC macro: 0.9659, AUC micro: 0.9891, FNR: 0.0002 (105769/121950 正确)
+Averaged Test Accurancy: 0.8821
+Averaged Test AUC Macro: 0.8434
+Averaged Test AUC Micro: 0.9796
+Averaged Test FNR: 0.0149
+Std Test Accurancy: 0.0659
+Std Test AUC Macro: 0.0949
+Std Test AUC Micro: 0.0246
+Std Test FNR: 0.0202
+检测到新最佳准确率，正在保存最佳模型检查点 (Round 19)...
+本轮耗时: 682.10 秒
+
+------------- 全局轮次: 20 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3572531 1.4786042 3.0351908 3.5279353 3.6938522 2.3019903 2.3019903
+ 1.5161083 2.9930744 1.3572531 1.5161083 1.7478118 1.8897756 1.4786042
+ 1.8897756]
+全局最小类间距离 (Min Gap): 1.3573
+全局最大类间距离 (Max Gap): 3.6939
+------------------------------------------
+--- 轮次 20 评估 ---
+Client 0: Acc: 0.9351, AUC macro: 0.9899, AUC micro: 0.9892, FNR: 0.0000 (288/308 正确)
+Client 1: Acc: 0.9313, AUC macro: 0.8739, AUC micro: 0.9720, FNR: 0.0000 (2590/2781 正确)
+Client 2: Acc: 0.7715, AUC macro: 0.9595, AUC micro: 0.9865, FNR: 0.0038 (20124/26085 正确)
+Client 3: Acc: 0.8554, AUC macro: 0.8993, AUC micro: 0.9346, FNR: 0.0021 (69016/80685 正确)
+Client 4: Acc: 0.9108, AUC macro: 0.9278, AUC micro: 0.9843, FNR: 0.0405 (109731/120476 正确)
+Client 5: Acc: 0.8572, AUC macro: 0.8119, AUC micro: 0.9576, FNR: 0.0000 (1183/1380 正确)
+Client 6: Acc: 0.9326, AUC macro: 0.6498, AUC micro: 0.9965, FNR: 0.0493 (168144/180304 正确)
+Client 7: Acc: 0.6961, AUC macro: 0.9115, AUC micro: 0.9179, FNR: 0.0015 (3917/5627 正确)
+Client 8: Acc: 0.8335, AUC macro: 0.9551, AUC micro: 0.9553, FNR: 0.0002 (15599/18714 正确)
+Client 9: Acc: 0.8652, AUC macro: 0.9691, AUC micro: 0.9902, FNR: 0.0003 (105515/121950 正确)
+Averaged Test Accurancy: 0.8886
+Averaged Test AUC Macro: 0.8446
+Averaged Test AUC Micro: 0.9807
+Averaged Test FNR: 0.0098
+Std Test Accurancy: 0.0735
+Std Test AUC Macro: 0.0955
+Std Test AUC Micro: 0.0251
+Std Test FNR: 0.0177
+检测到新最佳准确率，正在保存最佳模型检查点 (Round 20)...
+本轮耗时: 697.57 秒
+
+------------- 全局轮次: 21 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.313112  1.4306269 3.1915622 3.666995  3.9061065 2.2918952 2.2918952
+ 1.685422  2.9152505 1.313112  1.6558498 1.7017899 1.9424412 1.4306269
+ 1.9424412]
+全局最小类间距离 (Min Gap): 1.3131
+全局最大类间距离 (Max Gap): 3.9061
+------------------------------------------
+--- 轮次 21 评估 ---
+Client 0: Acc: 0.9416, AUC macro: 0.9902, AUC micro: 0.9876, FNR: 0.0000 (290/308 正确)
+Client 1: Acc: 0.9133, AUC macro: 0.8749, AUC micro: 0.9735, FNR: 0.0000 (2540/2781 正确)
+Client 2: Acc: 0.7691, AUC macro: 0.9586, AUC micro: 0.9856, FNR: 0.0083 (20062/26085 正确)
+Client 3: Acc: 0.8762, AUC macro: 0.9023, AUC micro: 0.9430, FNR: 0.0014 (70699/80685 正确)
+Client 4: Acc: 0.9082, AUC macro: 0.9271, AUC micro: 0.9790, FNR: 0.0411 (109420/120476 正确)
+Client 5: Acc: 0.8565, AUC macro: 0.8123, AUC micro: 0.9570, FNR: 0.0000 (1182/1380 正确)
+Client 6: Acc: 0.9227, AUC macro: 0.6490, AUC micro: 0.9959, FNR: 0.0464 (166358/180304 正确)
+Client 7: Acc: 0.6835, AUC macro: 0.9097, AUC micro: 0.9072, FNR: 0.0015 (3846/5627 正确)
+Client 8: Acc: 0.8782, AUC macro: 0.9544, AUC micro: 0.9610, FNR: 0.0012 (16434/18714 正确)
+Client 9: Acc: 0.8888, AUC macro: 0.9659, AUC micro: 0.9908, FNR: 0.0006 (108386/121950 正确)
+Averaged Test Accurancy: 0.8942
+Averaged Test AUC Macro: 0.8439
+Averaged Test AUC Micro: 0.9807
+Averaged Test FNR: 0.0101
+Std Test Accurancy: 0.0751
+Std Test AUC Macro: 0.0952
+Std Test AUC Micro: 0.0258
+Std Test FNR: 0.0170
+检测到新最佳准确率，正在保存最佳模型检查点 (Round 21)...
+本轮耗时: 683.48 秒
+
+------------- 全局轮次: 22 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.2274117 1.5051844 3.4273932 3.6600785 3.882664  2.332092  2.332092
+ 1.5248209 2.8879926 1.2274117 1.5248209 1.7149172 1.940531  1.5051844
+ 1.940531 ]
+全局最小类间距离 (Min Gap): 1.2274
+全局最大类间距离 (Max Gap): 3.8827
+------------------------------------------
+--- 轮次 22 评估 ---
+Client 0: Acc: 0.8864, AUC macro: 0.9901, AUC micro: 0.9830, FNR: 0.0000 (273/308 正确)
+Client 1: Acc: 0.9457, AUC macro: 0.8746, AUC micro: 0.9722, FNR: 0.0000 (2630/2781 正确)
+Client 2: Acc: 0.7798, AUC macro: 0.9604, AUC micro: 0.9865, FNR: 0.0038 (20340/26085 正确)
+Client 3: Acc: 0.8622, AUC macro: 0.9131, AUC micro: 0.9553, FNR: 0.0017 (69564/80685 正确)
+Client 4: Acc: 0.9364, AUC macro: 0.9298, AUC micro: 0.9804, FNR: 0.0591 (112812/120476 正确)
+Client 5: Acc: 0.8587, AUC macro: 0.8126, AUC micro: 0.9601, FNR: 0.0000 (1185/1380 正确)
+Client 6: Acc: 0.8464, AUC macro: 0.6536, AUC micro: 0.9967, FNR: 0.0232 (152611/180304 正确)
+Client 7: Acc: 0.6934, AUC macro: 0.9087, AUC micro: 0.9217, FNR: 0.0015 (3902/5627 正确)
+Client 8: Acc: 0.8753, AUC macro: 0.9552, AUC micro: 0.9565, FNR: 0.0012 (16380/18714 正确)
+Client 9: Acc: 0.8827, AUC macro: 0.9674, AUC micro: 0.9912, FNR: 0.0007 (107650/121950 正确)
+Averaged Test Accurancy: 0.8729
+Averaged Test AUC Macro: 0.8480
+Averaged Test AUC Micro: 0.9832
+Averaged Test FNR: 0.0091
+Std Test Accurancy: 0.0699
+Std Test AUC Macro: 0.0945
+Std Test AUC Micro: 0.0213
+Std Test FNR: 0.0179
+本轮耗时: 682.28 秒
+
+------------- 全局轮次: 23 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3197336 1.5849999 3.2095425 3.7286952 3.8955765 2.3619044 2.3619044
+ 1.627512  3.0189483 1.3197336 1.6185611 1.7934858 1.9324886 1.5849999
+ 1.9324886]
+全局最小类间距离 (Min Gap): 1.3197
+全局最大类间距离 (Max Gap): 3.8956
+------------------------------------------
+--- 轮次 23 评估 ---
+Client 0: Acc: 0.9156, AUC macro: 0.9902, AUC micro: 0.9860, FNR: 0.0000 (282/308 正确)
+Client 1: Acc: 0.9533, AUC macro: 0.8806, AUC micro: 0.9760, FNR: 0.0000 (2651/2781 正确)
+Client 2: Acc: 0.7833, AUC macro: 0.9595, AUC micro: 0.9872, FNR: 0.0083 (20432/26085 正确)
+Client 3: Acc: 0.8470, AUC macro: 0.9148, AUC micro: 0.9583, FNR: 0.0011 (68344/80685 正确)
+Client 4: Acc: 0.8536, AUC macro: 0.9015, AUC micro: 0.9811, FNR: 0.0084 (102835/120476 正确)
+Client 5: Acc: 0.8587, AUC macro: 0.7453, AUC micro: 0.9596, FNR: 0.0000 (1185/1380 正确)
+Client 6: Acc: 0.9443, AUC macro: 0.6497, AUC micro: 0.9971, FNR: 0.0493 (170253/180304 正确)
+Client 7: Acc: 0.6959, AUC macro: 0.9113, AUC micro: 0.9168, FNR: 0.0015 (3916/5627 正确)
+Client 8: Acc: 0.8345, AUC macro: 0.9568, AUC micro: 0.9614, FNR: 0.0004 (15616/18714 正确)
+Client 9: Acc: 0.8696, AUC macro: 0.9648, AUC micro: 0.9917, FNR: 0.0002 (106048/121950 正确)
+Averaged Test Accurancy: 0.8804
+Averaged Test AUC Macro: 0.8401
+Averaged Test AUC Micro: 0.9842
+Averaged Test FNR: 0.0069
+Std Test Accurancy: 0.0724
+Std Test AUC Macro: 0.1024
+Std Test AUC Micro: 0.0225
+Std Test FNR: 0.0145
+本轮耗时: 685.20 秒
+
+------------- 全局轮次: 24 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3630472 1.5528809 3.1157105 3.7535222 3.965807  2.3068132 2.3068132
+ 1.6197207 2.975305  1.3630472 1.6197207 1.8087542 1.9211289 1.5528809
+ 1.9211289]
+全局最小类间距离 (Min Gap): 1.3630
+全局最大类间距离 (Max Gap): 3.9658
+------------------------------------------
+--- 轮次 24 评估 ---
+Client 0: Acc: 0.9091, AUC macro: 0.9902, AUC micro: 0.9842, FNR: 0.0000 (280/308 正确)
+Client 1: Acc: 0.9108, AUC macro: 0.8836, AUC micro: 0.9764, FNR: 0.0000 (2533/2781 正确)
+Client 2: Acc: 0.7843, AUC macro: 0.9589, AUC micro: 0.9872, FNR: 0.0083 (20459/26085 正确)
+Client 3: Acc: 0.8691, AUC macro: 0.9138, AUC micro: 0.9603, FNR: 0.0016 (70125/80685 正确)
+Client 4: Acc: 0.8621, AUC macro: 0.8900, AUC micro: 0.9802, FNR: 0.0084 (103860/120476 正确)
+Client 5: Acc: 0.8587, AUC macro: 0.8349, AUC micro: 0.9625, FNR: 0.0000 (1185/1380 正确)
+Client 6: Acc: 0.9516, AUC macro: 0.6564, AUC micro: 0.9974, FNR: 0.0493 (171576/180304 正确)
+Client 7: Acc: 0.6885, AUC macro: 0.9094, AUC micro: 0.9194, FNR: 0.0015 (3874/5627 正确)
+Client 8: Acc: 0.8790, AUC macro: 0.9623, AUC micro: 0.9679, FNR: 0.0004 (16450/18714 正确)
+Client 9: Acc: 0.8812, AUC macro: 0.9658, AUC micro: 0.9930, FNR: 0.0002 (107458/121950 正确)
+Averaged Test Accurancy: 0.8916
+Averaged Test AUC Macro: 0.8403
+Averaged Test AUC Micro: 0.9849
+Averaged Test FNR: 0.0070
+Std Test Accurancy: 0.0703
+Std Test AUC Macro: 0.0916
+Std Test AUC Micro: 0.0213
+Std Test FNR: 0.0144
+本轮耗时: 682.55 秒
+
+------------- 全局轮次: 25 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.2858875 1.642693  3.0692139 3.6732404 3.9062748 2.3194733 2.3194733
+ 1.6453369 2.948995  1.2858875 1.6453369 1.7717441 1.941908  1.642693
+ 1.941908 ]
+全局最小类间距离 (Min Gap): 1.2859
+全局最大类间距离 (Max Gap): 3.9063
+------------------------------------------
+--- 轮次 25 评估 ---
+Client 0: Acc: 0.9351, AUC macro: 0.9902, AUC micro: 0.9834, FNR: 0.0000 (288/308 正确)
+Client 1: Acc: 0.9123, AUC macro: 0.8815, AUC micro: 0.9756, FNR: 0.0000 (2537/2781 正确)
+Client 2: Acc: 0.7813, AUC macro: 0.9593, AUC micro: 0.9872, FNR: 0.0038 (20380/26085 正确)
+Client 3: Acc: 0.8729, AUC macro: 0.9141, AUC micro: 0.9642, FNR: 0.0013 (70433/80685 正确)
+Client 4: Acc: 0.8548, AUC macro: 0.8820, AUC micro: 0.9837, FNR: 0.0090 (102981/120476 正确)
+Client 5: Acc: 0.8587, AUC macro: 0.7853, AUC micro: 0.9604, FNR: 0.0000 (1185/1380 正确)
+Client 6: Acc: 0.9407, AUC macro: 0.6917, AUC micro: 0.9970, FNR: 0.0493 (169620/180304 正确)
+Client 7: Acc: 0.6771, AUC macro: 0.9071, AUC micro: 0.9129, FNR: 0.0015 (3810/5627 正确)
+Client 8: Acc: 0.8763, AUC macro: 0.9594, AUC micro: 0.9642, FNR: 0.0005 (16399/18714 正确)
+Client 9: Acc: 0.8640, AUC macro: 0.9658, AUC micro: 0.9941, FNR: 0.0002 (105368/121950 正确)
+Averaged Test Accurancy: 0.8830
+Averaged Test AUC Macro: 0.8498
+Averaged Test AUC Micro: 0.9862
+Averaged Test FNR: 0.0066
+Std Test Accurancy: 0.0741
+Std Test AUC Macro: 0.0875
+Std Test AUC Micro: 0.0232
+Std Test FNR: 0.0145
+本轮耗时: 684.10 秒
+
+------------- 全局轮次: 26 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.2642896 1.5855514 3.1883779 3.7373357 3.842264  2.400979  2.4248576
+ 1.6896847 3.032377  1.2642896 1.679584  1.7523123 1.8540674 1.5855514
+ 1.8540674]
+全局最小类间距离 (Min Gap): 1.2643
+全局最大类间距离 (Max Gap): 3.8423
+------------------------------------------
+--- 轮次 26 评估 ---
+Client 0: Acc: 0.9351, AUC macro: 0.9903, AUC micro: 0.9848, FNR: 0.0000 (288/308 正确)
+Client 1: Acc: 0.9234, AUC macro: 0.8869, AUC micro: 0.9764, FNR: 0.0000 (2568/2781 正确)
+Client 2: Acc: 0.7728, AUC macro: 0.9592, AUC micro: 0.9881, FNR: 0.0115 (20158/26085 正确)
+Client 3: Acc: 0.8664, AUC macro: 0.9157, AUC micro: 0.9640, FNR: 0.0012 (69903/80685 正确)
+Client 4: Acc: 0.9213, AUC macro: 0.8775, AUC micro: 0.9792, FNR: 0.0400 (110993/120476 正确)
+Client 5: Acc: 0.8587, AUC macro: 0.8369, AUC micro: 0.9631, FNR: 0.0000 (1185/1380 正确)
+Client 6: Acc: 0.9458, AUC macro: 0.7211, AUC micro: 0.9974, FNR: 0.0493 (170534/180304 正确)
+Client 7: Acc: 0.7085, AUC macro: 0.9092, AUC micro: 0.9226, FNR: 0.0015 (3987/5627 正确)
+Client 8: Acc: 0.8381, AUC macro: 0.9579, AUC micro: 0.9556, FNR: 0.0001 (15685/18714 正确)
+Client 9: Acc: 0.8667, AUC macro: 0.9652, AUC micro: 0.9940, FNR: 0.0002 (105692/121950 正确)
+Averaged Test Accurancy: 0.8973
+Averaged Test AUC Macro: 0.8585
+Averaged Test AUC Micro: 0.9851
+Averaged Test FNR: 0.0104
+Std Test Accurancy: 0.0719
+Std Test AUC Macro: 0.0750
+Std Test AUC Micro: 0.0212
+Std Test FNR: 0.0176
+检测到新最佳准确率，正在保存最佳模型检查点 (Round 26)...
+本轮耗时: 681.96 秒
+
+------------- 全局轮次: 27 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3273493 1.6096143 3.130503  3.6714861 3.924407  2.2787175 2.340515
+ 1.6738033 3.0548866 1.3273493 1.6738033 1.7422103 1.8839245 1.6096143
+ 1.8839245]
+全局最小类间距离 (Min Gap): 1.3273
+全局最大类间距离 (Max Gap): 3.9244
+------------------------------------------
+--- 轮次 27 评估 ---
+Client 0: Acc: 0.9351, AUC macro: 0.9903, AUC micro: 0.9832, FNR: 0.0000 (288/308 正确)
+Client 1: Acc: 0.9205, AUC macro: 0.8894, AUC micro: 0.9752, FNR: 0.0000 (2560/2781 正确)
+Client 2: Acc: 0.7993, AUC macro: 0.9591, AUC micro: 0.9878, FNR: 0.0134 (20849/26085 正确)
+Client 3: Acc: 0.8857, AUC macro: 0.9152, AUC micro: 0.9715, FNR: 0.0027 (71464/80685 正确)
+Client 4: Acc: 0.8604, AUC macro: 0.8734, AUC micro: 0.9807, FNR: 0.0084 (103659/120476 正确)
+Client 5: Acc: 0.8587, AUC macro: 0.8324, AUC micro: 0.9618, FNR: 0.0000 (1185/1380 正确)
+Client 6: Acc: 0.9425, AUC macro: 0.8014, AUC micro: 0.9966, FNR: 0.0493 (169941/180304 正确)
+Client 7: Acc: 0.7020, AUC macro: 0.9093, AUC micro: 0.9244, FNR: 0.0015 (3950/5627 正确)
+Client 8: Acc: 0.8782, AUC macro: 0.9627, AUC micro: 0.9686, FNR: 0.0005 (16434/18714 正确)
+Client 9: Acc: 0.8718, AUC macro: 0.9651, AUC micro: 0.9949, FNR: 0.0002 (106311/121950 正确)
+Averaged Test Accurancy: 0.8895
+Averaged Test AUC Macro: 0.8836
+Averaged Test AUC Micro: 0.9869
+Averaged Test FNR: 0.0076
+Std Test Accurancy: 0.0675
+Std Test AUC Macro: 0.0585
+Std Test AUC Micro: 0.0198
+Std Test FNR: 0.0145
+本轮耗时: 684.14 秒
+
+------------- 全局轮次: 28 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.2539927 1.6284714 3.1242375 3.7747514 3.8617716 2.3574152 2.3574152
+ 1.6738727 2.982177  1.2539927 1.6001153 1.7163695 1.8459411 1.6284714
+ 1.8459411]
+全局最小类间距离 (Min Gap): 1.2540
+全局最大类间距离 (Max Gap): 3.8618
+------------------------------------------
+--- 轮次 28 评估 ---
+Client 0: Acc: 0.9156, AUC macro: 0.9904, AUC micro: 0.9768, FNR: 0.0000 (282/308 正确)
+Client 1: Acc: 0.9504, AUC macro: 0.8951, AUC micro: 0.9785, FNR: 0.0000 (2643/2781 正确)
+Client 2: Acc: 0.7852, AUC macro: 0.9592, AUC micro: 0.9864, FNR: 0.0083 (20481/26085 正确)
+Client 3: Acc: 0.8886, AUC macro: 0.9182, AUC micro: 0.9741, FNR: 0.0030 (71700/80685 正确)
+Client 4: Acc: 0.8765, AUC macro: 0.8765, AUC micro: 0.9802, FNR: 0.0248 (105597/120476 正确)
+Client 5: Acc: 0.8587, AUC macro: 0.8470, AUC micro: 0.9622, FNR: 0.0000 (1185/1380 正确)
+Client 6: Acc: 0.8924, AUC macro: 0.8081, AUC micro: 0.9977, FNR: 0.0232 (160911/180304 正确)
+Client 7: Acc: 0.6913, AUC macro: 0.9096, AUC micro: 0.9157, FNR: 0.0015 (3890/5627 正确)
+Client 8: Acc: 0.8840, AUC macro: 0.9595, AUC micro: 0.9648, FNR: 0.0002 (16544/18714 正确)
+Client 9: Acc: 0.8852, AUC macro: 0.9675, AUC micro: 0.9956, FNR: 0.0002 (107947/121950 正确)
+Averaged Test Accurancy: 0.8798
+Averaged Test AUC Macro: 0.8874
+Averaged Test AUC Micro: 0.9874
+Averaged Test FNR: 0.0061
+Std Test Accurancy: 0.0697
+Std Test AUC Macro: 0.0551
+Std Test AUC Micro: 0.0221
+Std Test FNR: 0.0093
+本轮耗时: 683.22 秒
+
+------------- 全局轮次: 29 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3372709 1.6772133 3.105297  3.7256794 3.9158885 2.345176  2.345176
+ 1.7381395 3.0349226 1.3372709 1.7381395 1.7427304 1.8183752 1.6772133
+ 1.8183752]
+全局最小类间距离 (Min Gap): 1.3373
+全局最大类间距离 (Max Gap): 3.9159
+------------------------------------------
+--- 轮次 29 评估 ---
+Client 0: Acc: 0.9188, AUC macro: 0.9905, AUC micro: 0.9816, FNR: 0.0000 (283/308 正确)
+Client 1: Acc: 0.9608, AUC macro: 0.8932, AUC micro: 0.9789, FNR: 0.0000 (2672/2781 正确)
+Client 2: Acc: 0.7936, AUC macro: 0.9571, AUC micro: 0.9876, FNR: 0.0064 (20700/26085 正确)
+Client 3: Acc: 0.8860, AUC macro: 0.9182, AUC micro: 0.9751, FNR: 0.0021 (71486/80685 正确)
+Client 4: Acc: 0.9211, AUC macro: 0.8804, AUC micro: 0.9800, FNR: 0.0377 (110970/120476 正确)
+Client 5: Acc: 0.8587, AUC macro: 0.7802, AUC micro: 0.9627, FNR: 0.0000 (1185/1380 正确)
+Client 6: Acc: 0.9592, AUC macro: 0.7388, AUC micro: 0.9971, FNR: 0.0493 (172948/180304 正确)
+Client 7: Acc: 0.6917, AUC macro: 0.9084, AUC micro: 0.9134, FNR: 0.0015 (3892/5627 正确)
+Client 8: Acc: 0.8799, AUC macro: 0.9642, AUC micro: 0.9690, FNR: 0.0002 (16467/18714 正确)
+Client 9: Acc: 0.8299, AUC macro: 0.9664, AUC micro: 0.9945, FNR: 0.0001 (101201/121950 正确)
+Averaged Test Accurancy: 0.8988
+Averaged Test AUC Macro: 0.8655
+Averaged Test AUC Micro: 0.9873
+Averaged Test FNR: 0.0097
+Std Test Accurancy: 0.0781
+Std Test AUC Macro: 0.0782
+Std Test AUC Micro: 0.0225
+Std Test FNR: 0.0172
+检测到新最佳准确率，正在保存最佳模型检查点 (Round 29)...
+本轮耗时: 684.18 秒
+
+------------- 全局轮次: 30 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.2769759 1.6301426 3.2137754 3.8643506 3.8524969 2.3565943 2.3565943
+ 1.7623093 3.1289864 1.2769759 1.7623093 1.7722166 1.8242598 1.6301426
+ 1.8242598]
+全局最小类间距离 (Min Gap): 1.2770
+全局最大类间距离 (Max Gap): 3.8644
+------------------------------------------
+--- 轮次 30 评估 ---
+Client 0: Acc: 0.9156, AUC macro: 0.9911, AUC micro: 0.9775, FNR: 0.0000 (282/308 正确)
+Client 1: Acc: 0.9763, AUC macro: 0.8937, AUC micro: 0.9797, FNR: 0.0000 (2715/2781 正确)
+Client 2: Acc: 0.7730, AUC macro: 0.9589, AUC micro: 0.9861, FNR: 0.0038 (20164/26085 正确)
+Client 3: Acc: 0.8819, AUC macro: 0.9194, AUC micro: 0.9721, FNR: 0.0014 (71156/80685 正确)
+Client 4: Acc: 0.9227, AUC macro: 0.8777, AUC micro: 0.9805, FNR: 0.0405 (111169/120476 正确)
+Client 5: Acc: 0.8587, AUC macro: 0.8472, AUC micro: 0.9641, FNR: 0.0000 (1185/1380 正确)
+Client 6: Acc: 0.9176, AUC macro: 0.7087, AUC micro: 0.9982, FNR: 0.0377 (165454/180304 正确)
+Client 7: Acc: 0.7000, AUC macro: 0.9088, AUC micro: 0.9185, FNR: 0.0015 (3939/5627 正确)
+Client 8: Acc: 0.8863, AUC macro: 0.9618, AUC micro: 0.9669, FNR: 0.0009 (16587/18714 正确)
+Client 9: Acc: 0.8490, AUC macro: 0.9654, AUC micro: 0.9941, FNR: 0.0001 (103539/121950 正确)
+Averaged Test Accurancy: 0.8887
+Averaged Test AUC Macro: 0.8553
+Averaged Test AUC Micro: 0.9871
+Averaged Test FNR: 0.0086
+Std Test Accurancy: 0.0759
+Std Test AUC Macro: 0.0775
+Std Test AUC Micro: 0.0211
+Std Test FNR: 0.0153
+本轮耗时: 690.70 秒
+
+------------- 全局轮次: 31 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.2339275 1.638068  3.160896  3.6866798 3.8329608 2.4082868 2.425402
+ 1.7818663 3.1012042 1.2339275 1.6985117 1.7995937 1.8352065 1.638068
+ 1.8352065]
+全局最小类间距离 (Min Gap): 1.2339
+全局最大类间距离 (Max Gap): 3.8330
+------------------------------------------
+--- 轮次 31 评估 ---
+Client 0: Acc: 0.9156, AUC macro: 0.9908, AUC micro: 0.9767, FNR: 0.0000 (282/308 正确)
+Client 1: Acc: 0.9310, AUC macro: 0.8921, AUC micro: 0.9763, FNR: 0.0000 (2589/2781 正确)
+Client 2: Acc: 0.7943, AUC macro: 0.9593, AUC micro: 0.9879, FNR: 0.0115 (20720/26085 正确)
+Client 3: Acc: 0.8854, AUC macro: 0.9203, AUC micro: 0.9743, FNR: 0.0025 (71441/80685 正确)
+Client 4: Acc: 0.8898, AUC macro: 0.8749, AUC micro: 0.9827, FNR: 0.0231 (107198/120476 正确)
+Client 5: Acc: 0.8587, AUC macro: 0.8423, AUC micro: 0.9632, FNR: 0.0000 (1185/1380 正确)
+Client 6: Acc: 0.8880, AUC macro: 0.8389, AUC micro: 0.9977, FNR: 0.0232 (160103/180304 正确)
+Client 7: Acc: 0.6988, AUC macro: 0.9051, AUC micro: 0.9185, FNR: 0.0015 (3932/5627 正确)
+Client 8: Acc: 0.8820, AUC macro: 0.9592, AUC micro: 0.9681, FNR: 0.0004 (16505/18714 正确)
+Client 9: Acc: 0.8629, AUC macro: 0.9678, AUC micro: 0.9955, FNR: 0.0001 (105236/121950 正确)
+Averaged Test Accurancy: 0.8762
+Averaged Test AUC Macro: 0.8973
+Averaged Test AUC Micro: 0.9882
+Averaged Test FNR: 0.0062
+Std Test Accurancy: 0.0642
+Std Test AUC Macro: 0.0508
+Std Test AUC Micro: 0.0213
+Std Test FNR: 0.0091
+本轮耗时: 682.63 秒
+
+------------- 全局轮次: 32 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.374664  1.6619811 3.0539355 3.7916987 3.7647235 2.31801   2.31801
+ 1.7006009 3.0147042 1.374664  1.7006009 1.8278615 1.841429  1.6619811
+ 1.841429 ]
+全局最小类间距离 (Min Gap): 1.3747
+全局最大类间距离 (Max Gap): 3.7917
+------------------------------------------
+--- 轮次 32 评估 ---
+Client 0: Acc: 0.9156, AUC macro: 0.9914, AUC micro: 0.9775, FNR: 0.0000 (282/308 正确)
+Client 1: Acc: 0.9630, AUC macro: 0.8985, AUC micro: 0.9794, FNR: 0.0000 (2678/2781 正确)
+Client 2: Acc: 0.7409, AUC macro: 0.9598, AUC micro: 0.9827, FNR: 0.0013 (19326/26085 正确)
+Client 3: Acc: 0.8942, AUC macro: 0.9189, AUC micro: 0.9748, FNR: 0.0025 (72151/80685 正确)
+Client 4: Acc: 0.8657, AUC macro: 0.8742, AUC micro: 0.9792, FNR: 0.0079 (104296/120476 正确)
+Client 5: Acc: 0.8587, AUC macro: 0.8177, AUC micro: 0.9641, FNR: 0.0000 (1185/1380 正确)
+Client 6: Acc: 0.9675, AUC macro: 0.8261, AUC micro: 0.9987, FNR: 0.1449 (174441/180304 正确)
+Client 7: Acc: 0.6934, AUC macro: 0.9083, AUC micro: 0.9138, FNR: 0.0015 (3902/5627 正确)
+Client 8: Acc: 0.8815, AUC macro: 0.9594, AUC micro: 0.9653, FNR: 0.0005 (16496/18714 正确)
+Client 9: Acc: 0.9007, AUC macro: 0.9671, AUC micro: 0.9958, FNR: 0.0006 (109844/121950 正确)
+Averaged Test Accurancy: 0.9038
+Averaged Test AUC Macro: 0.8927
+Averaged Test AUC Micro: 0.9875
+Averaged Test FNR: 0.0159
+Std Test Accurancy: 0.0836
+Std Test AUC Macro: 0.0564
+Std Test AUC Micro: 0.0224
+Std Test FNR: 0.0431
+检测到新最佳准确率，正在保存最佳模型检查点 (Round 32)...
+本轮耗时: 682.47 秒
+
+------------- 全局轮次: 33 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.2457922 1.6800443 3.1737719 3.7836812 3.7371888 2.337486  2.4325888
+ 1.6444978 3.040093  1.2457922 1.6444978 1.8500429 1.7819219 1.6800443
+ 1.7819219]
+全局最小类间距离 (Min Gap): 1.2458
+全局最大类间距离 (Max Gap): 3.7837
+------------------------------------------
+--- 轮次 33 评估 ---
+Client 0: Acc: 0.9123, AUC macro: 0.9914, AUC micro: 0.9739, FNR: 0.0000 (281/308 正确)
+Client 1: Acc: 0.9723, AUC macro: 0.8956, AUC micro: 0.9785, FNR: 0.0000 (2704/2781 正确)
+Client 2: Acc: 0.7855, AUC macro: 0.9600, AUC micro: 0.9872, FNR: 0.0058 (20489/26085 正确)
+Client 3: Acc: 0.8949, AUC macro: 0.9199, AUC micro: 0.9773, FNR: 0.0023 (72208/80685 正确)
+Client 4: Acc: 0.8824, AUC macro: 0.8759, AUC micro: 0.9810, FNR: 0.0118 (106312/120476 正确)
+Client 5: Acc: 0.8587, AUC macro: 0.8203, AUC micro: 0.9635, FNR: 0.0000 (1185/1380 正确)
+Client 6: Acc: 0.8921, AUC macro: 0.8505, AUC micro: 0.9978, FNR: 0.0232 (160854/180304 正确)
+Client 7: Acc: 0.6910, AUC macro: 0.9048, AUC micro: 0.9146, FNR: 0.0015 (3888/5627 正确)
+Client 8: Acc: 0.8817, AUC macro: 0.9586, AUC micro: 0.9670, FNR: 0.0002 (16501/18714 正确)
+Client 9: Acc: 0.8833, AUC macro: 0.9687, AUC micro: 0.9951, FNR: 0.0005 (107724/121950 正确)
+Averaged Test Accurancy: 0.8815
+Averaged Test AUC Macro: 0.9014
+Averaged Test AUC Micro: 0.9881
+Averaged Test FNR: 0.0045
+Std Test Accurancy: 0.0728
+Std Test AUC Macro: 0.0527
+Std Test AUC Micro: 0.0222
+Std Test FNR: 0.0072
+本轮耗时: 686.20 秒
+
+------------- 全局轮次: 34 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.2957401 1.7125119 3.1249924 3.8460395 3.7094996 2.361022  2.4217644
+ 1.7380086 3.0622902 1.2957401 1.7380086 1.7971492 1.827288  1.7125119
+ 1.827288 ]
+全局最小类间距离 (Min Gap): 1.2957
+全局最大类间距离 (Max Gap): 3.8460
+------------------------------------------
+--- 轮次 34 评估 ---
+Client 0: Acc: 0.8961, AUC macro: 0.9917, AUC micro: 0.9689, FNR: 0.0000 (276/308 正确)
+Client 1: Acc: 0.9680, AUC macro: 0.8996, AUC micro: 0.9826, FNR: 0.0000 (2692/2781 正确)
+Client 2: Acc: 0.7874, AUC macro: 0.9594, AUC micro: 0.9877, FNR: 0.0038 (20539/26085 正确)
+Client 3: Acc: 0.8749, AUC macro: 0.9232, AUC micro: 0.9784, FNR: 0.0013 (70588/80685 正确)
+Client 4: Acc: 0.9329, AUC macro: 0.8737, AUC micro: 0.9817, FNR: 0.0411 (112398/120476 正确)
+Client 5: Acc: 0.8884, AUC macro: 0.8395, AUC micro: 0.9661, FNR: 0.0000 (1226/1380 正确)
+Client 6: Acc: 0.9466, AUC macro: 0.8350, AUC micro: 0.9978, FNR: 0.0464 (170671/180304 正确)
+Client 7: Acc: 0.6915, AUC macro: 0.9037, AUC micro: 0.9119, FNR: 0.0015 (3891/5627 正确)
+Client 8: Acc: 0.8807, AUC macro: 0.9577, AUC micro: 0.9655, FNR: 0.0002 (16481/18714 正确)
+Client 9: Acc: 0.8890, AUC macro: 0.9678, AUC micro: 0.9957, FNR: 0.0006 (108409/121950 正确)
+Averaged Test Accurancy: 0.9084
+Averaged Test AUC Macro: 0.8961
+Averaged Test AUC Micro: 0.9885
+Averaged Test FNR: 0.0095
+Std Test Accurancy: 0.0770
+Std Test AUC Macro: 0.0517
+Std Test AUC Micro: 0.0232
+Std Test FNR: 0.0172
+检测到新最佳准确率，正在保存最佳模型检查点 (Round 34)...
+本轮耗时: 685.06 秒
+
+------------- 全局轮次: 35 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3791227 1.7043835 3.1948335 3.8047106 3.6379406 2.3119357 2.397137
+ 1.8025595 3.0525262 1.3791227 1.7967403 1.8439522 1.8005489 1.7043835
+ 1.8005489]
+全局最小类间距离 (Min Gap): 1.3791
+全局最大类间距离 (Max Gap): 3.8047
+------------------------------------------
+--- 轮次 35 评估 ---
+Client 0: Acc: 0.9091, AUC macro: 0.9918, AUC micro: 0.9731, FNR: 0.0000 (280/308 正确)
+Client 1: Acc: 0.9705, AUC macro: 0.8984, AUC micro: 0.9812, FNR: 0.0000 (2699/2781 正确)
+Client 2: Acc: 0.7709, AUC macro: 0.9618, AUC micro: 0.9860, FNR: 0.0013 (20109/26085 正确)
+Client 3: Acc: 0.8886, AUC macro: 0.9241, AUC micro: 0.9821, FNR: 0.0020 (71696/80685 正确)
+Client 4: Acc: 0.8630, AUC macro: 0.8776, AUC micro: 0.9790, FNR: 0.0079 (103971/120476 正确)
+Client 5: Acc: 0.8884, AUC macro: 0.8395, AUC micro: 0.9669, FNR: 0.0000 (1226/1380 正确)
+Client 6: Acc: 0.9654, AUC macro: 0.8520, AUC micro: 0.9984, FNR: 0.0609 (174069/180304 正确)
+Client 7: Acc: 0.7125, AUC macro: 0.9053, AUC micro: 0.9243, FNR: 0.0020 (4009/5627 正确)
+Client 8: Acc: 0.8829, AUC macro: 0.9579, AUC micro: 0.9681, FNR: 0.0002 (16523/18714 正确)
+Client 9: Acc: 0.8826, AUC macro: 0.9665, AUC micro: 0.9945, FNR: 0.0003 (107629/121950 正确)
+Averaged Test Accurancy: 0.8995
+Averaged Test AUC Macro: 0.9025
+Averaged Test AUC Micro: 0.9885
+Averaged Test FNR: 0.0075
+Std Test Accurancy: 0.0750
+Std Test AUC Macro: 0.0490
+Std Test AUC Micro: 0.0196
+Std Test FNR: 0.0179
+本轮耗时: 684.76 秒
+
+------------- 全局轮次: 36 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3708016 1.7523293 2.986109  3.7058945 3.5399175 2.3082564 2.5334232
+ 1.7141907 3.0816643 1.3708016 1.7141907 1.9310639 1.8066604 1.7523293
+ 1.8066604]
+全局最小类间距离 (Min Gap): 1.3708
+全局最大类间距离 (Max Gap): 3.7059
+------------------------------------------
+--- 轮次 36 评估 ---
+Client 0: Acc: 0.9156, AUC macro: 0.9918, AUC micro: 0.9754, FNR: 0.0000 (282/308 正确)
+Client 1: Acc: 0.9471, AUC macro: 0.9004, AUC micro: 0.9791, FNR: 0.0000 (2634/2781 正确)
+Client 2: Acc: 0.7583, AUC macro: 0.9650, AUC micro: 0.9846, FNR: 0.0013 (19779/26085 正确)
+Client 3: Acc: 0.8941, AUC macro: 0.9210, AUC micro: 0.9781, FNR: 0.0027 (72137/80685 正确)
+Client 4: Acc: 0.8621, AUC macro: 0.8802, AUC micro: 0.9782, FNR: 0.0073 (103863/120476 正确)
+Client 5: Acc: 0.8891, AUC macro: 0.7815, AUC micro: 0.9652, FNR: 0.0000 (1227/1380 正确)
+Client 6: Acc: 0.9698, AUC macro: 0.8631, AUC micro: 0.9986, FNR: 0.0667 (174867/180304 正确)
+Client 7: Acc: 0.6963, AUC macro: 0.8987, AUC micro: 0.9138, FNR: 0.0015 (3918/5627 正确)
+Client 8: Acc: 0.8782, AUC macro: 0.9570, AUC micro: 0.9657, FNR: 0.0004 (16434/18714 正确)
+Client 9: Acc: 0.8683, AUC macro: 0.9662, AUC micro: 0.9945, FNR: 0.0002 (105893/121950 正确)
+Averaged Test Accurancy: 0.8974
+Averaged Test AUC Macro: 0.9060
+Averaged Test AUC Micro: 0.9875
+Averaged Test FNR: 0.0080
+Std Test Accurancy: 0.0785
+Std Test AUC Macro: 0.0591
+Std Test AUC Micro: 0.0223
+Std Test FNR: 0.0197
+本轮耗时: 685.35 秒
+
+------------- 全局轮次: 37 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.4305289 1.7585448 3.0503995 3.8287675 3.516967  2.266471  2.368316
+ 1.7892827 2.9962196 1.4305289 1.7892827 1.8027488 1.7622851 1.7585448
+ 1.7622851]
+全局最小类间距离 (Min Gap): 1.4305
+全局最大类间距离 (Max Gap): 3.8288
+------------------------------------------
+--- 轮次 37 评估 ---
+Client 0: Acc: 0.9091, AUC macro: 0.9919, AUC micro: 0.9715, FNR: 0.0000 (280/308 正确)
+Client 1: Acc: 0.9698, AUC macro: 0.9047, AUC micro: 0.9830, FNR: 0.0000 (2697/2781 正确)
+Client 2: Acc: 0.7908, AUC macro: 0.9604, AUC micro: 0.9880, FNR: 0.0058 (20629/26085 正确)
+Client 3: Acc: 0.8944, AUC macro: 0.9220, AUC micro: 0.9772, FNR: 0.0019 (72165/80685 正确)
+Client 4: Acc: 0.8661, AUC macro: 0.8710, AUC micro: 0.9800, FNR: 0.0079 (104340/120476 正确)
+Client 5: Acc: 0.8884, AUC macro: 0.8414, AUC micro: 0.9660, FNR: 0.0000 (1226/1380 正确)
+Client 6: Acc: 0.9611, AUC macro: 0.8678, AUC micro: 0.9976, FNR: 0.0493 (173283/180304 正确)
+Client 7: Acc: 0.7299, AUC macro: 0.9066, AUC micro: 0.9219, FNR: 0.0071 (4107/5627 正确)
+Client 8: Acc: 0.8799, AUC macro: 0.9569, AUC micro: 0.9668, FNR: 0.0003 (16467/18714 正确)
+Client 9: Acc: 0.9093, AUC macro: 0.9622, AUC micro: 0.9949, FNR: 0.0015 (110886/121950 正确)
+Averaged Test Accurancy: 0.9064
+Averaged Test AUC Macro: 0.9048
+Averaged Test AUC Micro: 0.9878
+Averaged Test FNR: 0.0074
+Std Test Accurancy: 0.0688
+Std Test AUC Macro: 0.0465
+Std Test AUC Micro: 0.0204
+Std Test FNR: 0.0143
+本轮耗时: 686.25 秒
+
+------------- 全局轮次: 38 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3281982 1.6742516 2.9440594 3.735316  3.4990265 2.363919  2.4078739
+ 1.8371633 3.0896654 1.3281982 1.7936789 1.8433597 1.8536804 1.6742516
+ 1.8536804]
+全局最小类间距离 (Min Gap): 1.3282
+全局最大类间距离 (Max Gap): 3.7353
+------------------------------------------
+--- 轮次 38 评估 ---
+Client 0: Acc: 0.9188, AUC macro: 0.9919, AUC micro: 0.9740, FNR: 0.0000 (283/308 正确)
+Client 1: Acc: 0.9489, AUC macro: 0.8988, AUC micro: 0.9792, FNR: 0.0000 (2639/2781 正确)
+Client 2: Acc: 0.7768, AUC macro: 0.9623, AUC micro: 0.9862, FNR: 0.0038 (20263/26085 正确)
+Client 3: Acc: 0.8874, AUC macro: 0.9240, AUC micro: 0.9769, FNR: 0.0016 (71598/80685 正确)
+Client 4: Acc: 0.9357, AUC macro: 0.8721, AUC micro: 0.9872, FNR: 0.0417 (112728/120476 正确)
+Client 5: Acc: 0.8587, AUC macro: 0.8518, AUC micro: 0.9658, FNR: 0.0000 (1185/1380 正确)
+Client 6: Acc: 0.9751, AUC macro: 0.8500, AUC micro: 0.9989, FNR: 0.0696 (175812/180304 正确)
+Client 7: Acc: 0.6936, AUC macro: 0.8994, AUC micro: 0.9190, FNR: 0.0015 (3903/5627 正确)
+Client 8: Acc: 0.8809, AUC macro: 0.9638, AUC micro: 0.9704, FNR: 0.0006 (16485/18714 正确)
+Client 9: Acc: 0.8804, AUC macro: 0.9667, AUC micro: 0.9949, FNR: 0.0002 (107364/121950 正确)
+Averaged Test Accurancy: 0.9175
+Averaged Test AUC Macro: 0.9008
+Averaged Test AUC Micro: 0.9898
+Averaged Test FNR: 0.0119
+Std Test Accurancy: 0.0801
+Std Test AUC Macro: 0.0487
+Std Test AUC Micro: 0.0212
+Std Test FNR: 0.0228
+检测到新最佳准确率，正在保存最佳模型检查点 (Round 38)...
+本轮耗时: 684.46 秒
+
+------------- 全局轮次: 39 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.385377  1.7132334 3.0969288 3.900449  3.5969088 2.209834  2.4242744
+ 1.856686  3.0769393 1.385377  1.8157758 1.8770399 1.7768921 1.7132334
+ 1.7768921]
+全局最小类间距离 (Min Gap): 1.3854
+全局最大类间距离 (Max Gap): 3.9004
+------------------------------------------
+--- 轮次 39 评估 ---
+Client 0: Acc: 0.9058, AUC macro: 0.9919, AUC micro: 0.9674, FNR: 0.0000 (279/308 正确)
+Client 1: Acc: 0.9705, AUC macro: 0.9039, AUC micro: 0.9833, FNR: 0.0000 (2699/2781 正确)
+Client 2: Acc: 0.7971, AUC macro: 0.9624, AUC micro: 0.9858, FNR: 0.0032 (20793/26085 正确)
+Client 3: Acc: 0.8666, AUC macro: 0.9291, AUC micro: 0.9803, FNR: 0.0013 (69923/80685 正确)
+Client 4: Acc: 0.8732, AUC macro: 0.8789, AUC micro: 0.9810, FNR: 0.0208 (105203/120476 正确)
+Client 5: Acc: 0.8587, AUC macro: 0.8538, AUC micro: 0.9668, FNR: 0.0000 (1185/1380 正确)
+Client 6: Acc: 0.9815, AUC macro: 0.8611, AUC micro: 0.9990, FNR: 0.1710 (176974/180304 正确)
+Client 7: Acc: 0.6918, AUC macro: 0.9000, AUC micro: 0.9126, FNR: 0.0015 (3893/5627 正确)
+Client 8: Acc: 0.8855, AUC macro: 0.9624, AUC micro: 0.9716, FNR: 0.0003 (16572/18714 正确)
+Client 9: Acc: 0.8788, AUC macro: 0.9635, AUC micro: 0.9953, FNR: 0.0004 (107164/121950 正确)
+Averaged Test Accurancy: 0.9040
+Averaged Test AUC Macro: 0.9059
+Averaged Test AUC Micro: 0.9890
+Averaged Test FNR: 0.0199
+Std Test Accurancy: 0.0783
+Std Test AUC Macro: 0.0457
+Std Test AUC Micro: 0.0230
+Std Test FNR: 0.0507
+本轮耗时: 696.47 秒
+
+------------- 全局轮次: 40 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.4001758 1.7831539 3.1016583 3.7747562 3.5319605 2.3242748 2.4263647
+ 1.7702035 3.0869055 1.4001758 1.7702035 1.854153  1.7998502 1.7831539
+ 1.7998502]
+全局最小类间距离 (Min Gap): 1.4002
+全局最大类间距离 (Max Gap): 3.7748
+------------------------------------------
+--- 轮次 40 评估 ---
+Client 0: Acc: 0.9091, AUC macro: 0.9919, AUC micro: 0.9730, FNR: 0.0000 (280/308 正确)
+Client 1: Acc: 0.9676, AUC macro: 0.9033, AUC micro: 0.9818, FNR: 0.0000 (2691/2781 正确)
+Client 2: Acc: 0.8536, AUC macro: 0.9662, AUC micro: 0.9866, FNR: 0.0038 (22267/26085 正确)
+Client 3: Acc: 0.8952, AUC macro: 0.9221, AUC micro: 0.9824, FNR: 0.0023 (72231/80685 正确)
+Client 4: Acc: 0.9263, AUC macro: 0.8720, AUC micro: 0.9803, FNR: 0.0389 (111592/120476 正确)
+Client 5: Acc: 0.8891, AUC macro: 0.7893, AUC micro: 0.9664, FNR: 0.0000 (1227/1380 正确)
+Client 6: Acc: 0.9706, AUC macro: 0.8773, AUC micro: 0.9989, FNR: 0.1652 (175002/180304 正确)
+Client 7: Acc: 0.7126, AUC macro: 0.9002, AUC micro: 0.9233, FNR: 0.0015 (4010/5627 正确)
+Client 8: Acc: 0.8808, AUC macro: 0.9619, AUC micro: 0.9686, FNR: 0.0004 (16484/18714 正确)
+Client 9: Acc: 0.9077, AUC macro: 0.9643, AUC micro: 0.9961, FNR: 0.0015 (110690/121950 正确)
+Averaged Test Accurancy: 0.9251
+Averaged Test AUC Macro: 0.9089
+Averaged Test AUC Micro: 0.9894
+Averaged Test FNR: 0.0214
+Std Test Accurancy: 0.0688
+Std Test AUC Macro: 0.0571
+Std Test AUC Micro: 0.0202
+Std Test FNR: 0.0493
+检测到新最佳准确率，正在保存最佳模型检查点 (Round 40)...
+本轮耗时: 686.38 秒
+
+------------- 全局轮次: 41 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3571117 1.7886325 2.971303  3.6519785 3.3748815 2.280488  2.4469743
+ 1.7423916 3.0561602 1.3571117 1.7423916 1.8585789 1.8031788 1.7886325
+ 1.8031788]
+全局最小类间距离 (Min Gap): 1.3571
+全局最大类间距离 (Max Gap): 3.6520
+------------------------------------------
+--- 轮次 41 评估 ---
+Client 0: Acc: 0.9058, AUC macro: 0.9919, AUC micro: 0.9704, FNR: 0.0000 (279/308 正确)
+Client 1: Acc: 0.9662, AUC macro: 0.9030, AUC micro: 0.9811, FNR: 0.0000 (2687/2781 正确)
+Client 2: Acc: 0.9174, AUC macro: 0.9641, AUC micro: 0.9892, FNR: 0.0128 (23930/26085 正确)
+Client 3: Acc: 0.8950, AUC macro: 0.9251, AUC micro: 0.9762, FNR: 0.0020 (72214/80685 正确)
+Client 4: Acc: 0.8835, AUC macro: 0.8785, AUC micro: 0.9833, FNR: 0.0107 (106439/120476 正确)
+Client 5: Acc: 0.8891, AUC macro: 0.7819, AUC micro: 0.9662, FNR: 0.0000 (1227/1380 正确)
+Client 6: Acc: 0.9439, AUC macro: 0.8887, AUC micro: 0.9988, FNR: 0.0493 (170193/180304 正确)
+Client 7: Acc: 0.6990, AUC macro: 0.9004, AUC micro: 0.9148, FNR: 0.0015 (3933/5627 正确)
+Client 8: Acc: 0.8834, AUC macro: 0.9610, AUC micro: 0.9688, FNR: 0.0002 (16532/18714 正确)
+Client 9: Acc: 0.8958, AUC macro: 0.9656, AUC micro: 0.9942, FNR: 0.0007 (109239/121950 正确)
+Averaged Test Accurancy: 0.9075
+Averaged Test AUC Macro: 0.9145
+Averaged Test AUC Micro: 0.9887
+Averaged Test FNR: 0.0077
+Std Test Accurancy: 0.0681
+Std Test AUC Macro: 0.0576
+Std Test AUC Micro: 0.0223
+Std Test FNR: 0.0146
+本轮耗时: 683.51 秒
+
+------------- 全局轮次: 42 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3612245 1.8045386 2.961659  3.737103  3.4679549 2.2283597 2.4103162
+ 1.6897708 3.011858  1.3612245 1.6897708 1.8197798 1.7984681 1.8045386
+ 1.7984681]
+全局最小类间距离 (Min Gap): 1.3612
+全局最大类间距离 (Max Gap): 3.7371
+------------------------------------------
+--- 轮次 42 评估 ---
+Client 0: Acc: 0.9058, AUC macro: 0.9919, AUC micro: 0.9698, FNR: 0.0000 (279/308 正确)
+Client 1: Acc: 0.9622, AUC macro: 0.9048, AUC micro: 0.9819, FNR: 0.0000 (2676/2781 正确)
+Client 2: Acc: 0.7860, AUC macro: 0.9613, AUC micro: 0.9876, FNR: 0.0038 (20504/26085 正确)
+Client 3: Acc: 0.8887, AUC macro: 0.9289, AUC micro: 0.9794, FNR: 0.0016 (71708/80685 正确)
+Client 4: Acc: 0.9164, AUC macro: 0.8709, AUC micro: 0.9826, FNR: 0.0349 (110399/120476 正确)
+Client 5: Acc: 0.8891, AUC macro: 0.7809, AUC micro: 0.9657, FNR: 0.0000 (1227/1380 正确)
+Client 6: Acc: 0.9703, AUC macro: 0.8789, AUC micro: 0.9986, FNR: 0.0667 (174951/180304 正确)
+Client 7: Acc: 0.6988, AUC macro: 0.9081, AUC micro: 0.9189, FNR: 0.0015 (3932/5627 正确)
+Client 8: Acc: 0.8826, AUC macro: 0.9637, AUC micro: 0.9682, FNR: 0.0001 (16517/18714 正确)
+Client 9: Acc: 0.9025, AUC macro: 0.9649, AUC micro: 0.9954, FNR: 0.0007 (110057/121950 正确)
+Averaged Test Accurancy: 0.9175
+Averaged Test AUC Macro: 0.9101
+Averaged Test AUC Micro: 0.9892
+Averaged Test FNR: 0.0109
+Std Test Accurancy: 0.0770
+Std Test AUC Macro: 0.0587
+Std Test AUC Micro: 0.0214
+Std Test FNR: 0.0212
+本轮耗时: 682.75 秒
+
+------------- 全局轮次: 43 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.32658   1.7902676 2.9460802 3.786632  3.4859102 2.298098  2.4883666
+ 1.7819756 3.0409849 1.32658   1.7819756 1.8373268 1.8268231 1.7902676
+ 1.8268231]
+全局最小类间距离 (Min Gap): 1.3266
+全局最大类间距离 (Max Gap): 3.7866
+------------------------------------------
+--- 轮次 43 评估 ---
+Client 0: Acc: 0.9058, AUC macro: 0.9919, AUC micro: 0.9682, FNR: 0.0000 (279/308 正确)
+Client 1: Acc: 0.9651, AUC macro: 0.9031, AUC micro: 0.9812, FNR: 0.0000 (2684/2781 正确)
+Client 2: Acc: 0.8192, AUC macro: 0.9667, AUC micro: 0.9875, FNR: 0.0038 (21369/26085 正确)
+Client 3: Acc: 0.9017, AUC macro: 0.9270, AUC micro: 0.9808, FNR: 0.0021 (72756/80685 正确)
+Client 4: Acc: 0.9258, AUC macro: 0.8745, AUC micro: 0.9845, FNR: 0.0400 (111536/120476 正确)
+Client 5: Acc: 0.8891, AUC macro: 0.8527, AUC micro: 0.9668, FNR: 0.0000 (1227/1380 正确)
+Client 6: Acc: 0.9668, AUC macro: 0.8855, AUC micro: 0.9989, FNR: 0.1565 (174322/180304 正确)
+Client 7: Acc: 0.7014, AUC macro: 0.9051, AUC micro: 0.9190, FNR: 0.0015 (3947/5627 正确)
+Client 8: Acc: 0.8833, AUC macro: 0.9610, AUC micro: 0.9674, FNR: 0.0009 (16530/18714 正确)
+Client 9: Acc: 0.8902, AUC macro: 0.9625, AUC micro: 0.9955, FNR: 0.0003 (108562/121950 正确)
+Averaged Test Accurancy: 0.9192
+Averaged Test AUC Macro: 0.9126
+Averaged Test AUC Micro: 0.9898
+Averaged Test FNR: 0.0205
+Std Test Accurancy: 0.0732
+Std Test AUC Macro: 0.0437
+Std Test AUC Micro: 0.0215
+Std Test FNR: 0.0468
+本轮耗时: 684.35 秒
+
+------------- 全局轮次: 44 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.4059948 1.776999  3.023016  3.7970805 3.5303903 2.2444456 2.3853078
+ 1.7762407 2.9901965 1.4059948 1.7762407 1.7802533 1.8510467 1.776999
+ 1.8510467]
+全局最小类间距离 (Min Gap): 1.4060
+全局最大类间距离 (Max Gap): 3.7971
+------------------------------------------
+--- 轮次 44 评估 ---
+Client 0: Acc: 0.9058, AUC macro: 0.9920, AUC micro: 0.9654, FNR: 0.0000 (279/308 正确)
+Client 1: Acc: 0.9705, AUC macro: 0.9064, AUC micro: 0.9836, FNR: 0.0000 (2699/2781 正确)
+Client 2: Acc: 0.7976, AUC macro: 0.9646, AUC micro: 0.9874, FNR: 0.0038 (20806/26085 正确)
+Client 3: Acc: 0.9000, AUC macro: 0.9257, AUC micro: 0.9822, FNR: 0.0030 (72613/80685 正确)
+Client 4: Acc: 0.8768, AUC macro: 0.8656, AUC micro: 0.9811, FNR: 0.0208 (105637/120476 正确)
+Client 5: Acc: 0.8884, AUC macro: 0.8486, AUC micro: 0.9667, FNR: 0.0000 (1226/1380 正确)
+Client 6: Acc: 0.9751, AUC macro: 0.9046, AUC micro: 0.9991, FNR: 0.1594 (175823/180304 正确)
+Client 7: Acc: 0.7059, AUC macro: 0.9044, AUC micro: 0.9127, FNR: 0.0015 (3972/5627 正确)
+Client 8: Acc: 0.8808, AUC macro: 0.9641, AUC micro: 0.9697, FNR: 0.0006 (16483/18714 正确)
+Client 9: Acc: 0.8627, AUC macro: 0.9642, AUC micro: 0.9951, FNR: 0.0006 (105207/121950 正确)
+Averaged Test Accurancy: 0.9041
+Averaged Test AUC Macro: 0.9170
+Averaged Test AUC Micro: 0.9893
+Averaged Test FNR: 0.0190
+Std Test Accurancy: 0.0746
+Std Test AUC Macro: 0.0443
+Std Test AUC Micro: 0.0232
+Std Test FNR: 0.0472
+本轮耗时: 684.44 秒
+
+------------- 全局轮次: 45 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3337466 1.8214822 2.952239  3.72274   3.381083  2.2884564 2.3997915
+ 1.8013598 3.0718946 1.3337466 1.8013598 1.8467525 1.7459484 1.8214822
+ 1.7459484]
+全局最小类间距离 (Min Gap): 1.3337
+全局最大类间距离 (Max Gap): 3.7227
+------------------------------------------
+--- 轮次 45 评估 ---
+Client 0: Acc: 0.9091, AUC macro: 0.9920, AUC micro: 0.9684, FNR: 0.0000 (280/308 正确)
+Client 1: Acc: 0.9648, AUC macro: 0.9065, AUC micro: 0.9834, FNR: 0.0000 (2683/2781 正确)
+Client 2: Acc: 0.8592, AUC macro: 0.9663, AUC micro: 0.9872, FNR: 0.0058 (22411/26085 正确)
+Client 3: Acc: 0.8884, AUC macro: 0.9283, AUC micro: 0.9803, FNR: 0.0013 (71679/80685 正确)
+Client 4: Acc: 0.8909, AUC macro: 0.8763, AUC micro: 0.9843, FNR: 0.0090 (107331/120476 正确)
+Client 5: Acc: 0.8891, AUC macro: 0.7842, AUC micro: 0.9668, FNR: 0.0000 (1227/1380 正确)
+Client 6: Acc: 0.9199, AUC macro: 0.8868, AUC micro: 0.9987, FNR: 0.1362 (165867/180304 正确)
+Client 7: Acc: 0.7412, AUC macro: 0.9057, AUC micro: 0.9198, FNR: 0.0142 (4171/5627 正确)
+Client 8: Acc: 0.8817, AUC macro: 0.9684, AUC micro: 0.9725, FNR: 0.0003 (16500/18714 正确)
+Client 9: Acc: 0.9048, AUC macro: 0.9650, AUC micro: 0.9956, FNR: 0.0006 (110345/121950 正确)
+Averaged Test Accurancy: 0.9000
+Averaged Test AUC Macro: 0.9142
+Averaged Test AUC Micro: 0.9899
+Averaged Test FNR: 0.0168
+Std Test Accurancy: 0.0547
+Std Test AUC Macro: 0.0579
+Std Test AUC Micro: 0.0212
+Std Test FNR: 0.0401
+本轮耗时: 683.39 秒
+
+------------- 全局轮次: 46 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.393014  1.8704596 3.0085065 3.7434046 3.3422735 2.229708  2.3755012
+ 1.7905693 3.0555263 1.393014  1.7905693 1.905268  1.8121641 1.8704596
+ 1.8121641]
+全局最小类间距离 (Min Gap): 1.3930
+全局最大类间距离 (Max Gap): 3.7434
+------------------------------------------
+--- 轮次 46 评估 ---
+Client 0: Acc: 0.9091, AUC macro: 0.9920, AUC micro: 0.9650, FNR: 0.0000 (280/308 正确)
+Client 1: Acc: 0.9651, AUC macro: 0.9086, AUC micro: 0.9843, FNR: 0.0000 (2684/2781 正确)
+Client 2: Acc: 0.7958, AUC macro: 0.9659, AUC micro: 0.9888, FNR: 0.0013 (20758/26085 正确)
+Client 3: Acc: 0.8978, AUC macro: 0.9295, AUC micro: 0.9798, FNR: 0.0021 (72443/80685 正确)
+Client 4: Acc: 0.9311, AUC macro: 0.8711, AUC micro: 0.9819, FNR: 0.0405 (112176/120476 正确)
+Client 5: Acc: 0.8891, AUC macro: 0.7858, AUC micro: 0.9658, FNR: 0.0000 (1227/1380 正确)
+Client 6: Acc: 0.9727, AUC macro: 0.9001, AUC micro: 0.9985, FNR: 0.1188 (175373/180304 正确)
+Client 7: Acc: 0.6927, AUC macro: 0.9075, AUC micro: 0.9044, FNR: 0.0020 (3898/5627 正确)
+Client 8: Acc: 0.8858, AUC macro: 0.9591, AUC micro: 0.9698, FNR: 0.0004 (16577/18714 正确)
+Client 9: Acc: 0.9036, AUC macro: 0.9581, AUC micro: 0.9943, FNR: 0.0008 (110188/121950 正确)
+Averaged Test Accurancy: 0.9235
+Averaged Test AUC Macro: 0.9157
+Averaged Test AUC Micro: 0.9888
+Averaged Test FNR: 0.0166
+Std Test Accurancy: 0.0789
+Std Test AUC Macro: 0.0560
+Std Test AUC Micro: 0.0254
+Std Test FNR: 0.0361
+本轮耗时: 682.55 秒
+
+------------- 全局轮次: 47 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3964137 1.8736455 2.9517238 3.8365378 3.4307823 2.309703  2.4325845
+ 1.8158106 3.0514207 1.3964137 1.8158106 1.9027377 1.7340615 1.8736455
+ 1.7340615]
+全局最小类间距离 (Min Gap): 1.3964
+全局最大类间距离 (Max Gap): 3.8365
+------------------------------------------
+--- 轮次 47 评估 ---
+Client 0: Acc: 0.8929, AUC macro: 0.9920, AUC micro: 0.9596, FNR: 0.0000 (275/308 正确)
+Client 1: Acc: 0.9680, AUC macro: 0.9055, AUC micro: 0.9824, FNR: 0.0000 (2692/2781 正确)
+Client 2: Acc: 0.7834, AUC macro: 0.9676, AUC micro: 0.9861, FNR: 0.0006 (20434/26085 正确)
+Client 3: Acc: 0.9010, AUC macro: 0.9319, AUC micro: 0.9829, FNR: 0.0020 (72699/80685 正确)
+Client 4: Acc: 0.8732, AUC macro: 0.8756, AUC micro: 0.9815, FNR: 0.0073 (105203/120476 正确)
+Client 5: Acc: 0.8884, AUC macro: 0.8443, AUC micro: 0.9661, FNR: 0.0000 (1226/1380 正确)
+Client 6: Acc: 0.9817, AUC macro: 0.8897, AUC micro: 0.9991, FNR: 0.1855 (177009/180304 正确)
+Client 7: Acc: 0.7409, AUC macro: 0.9077, AUC micro: 0.9172, FNR: 0.0142 (4169/5627 正确)
+Client 8: Acc: 0.8845, AUC macro: 0.9660, AUC micro: 0.9734, FNR: 0.0003 (16553/18714 正确)
+Client 9: Acc: 0.9138, AUC macro: 0.9620, AUC micro: 0.9953, FNR: 0.0007 (111435/121950 正确)
+Averaged Test Accurancy: 0.9165
+Averaged Test AUC Macro: 0.9149
+Averaged Test AUC Micro: 0.9896
+Averaged Test FNR: 0.0211
+Std Test Accurancy: 0.0697
+Std Test AUC Macro: 0.0450
+Std Test AUC Micro: 0.0222
+Std Test FNR: 0.0550
+本轮耗时: 684.87 秒
+
+------------- 全局轮次: 48 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3827208 1.8715745 2.9589665 3.665375  3.332091  2.296803  2.4061131
+ 1.8949925 3.0262883 1.3827208 1.8422966 1.8422966 1.7627797 1.8715745
+ 1.7627797]
+全局最小类间距离 (Min Gap): 1.3827
+全局最大类间距离 (Max Gap): 3.6654
+------------------------------------------
+--- 轮次 48 评估 ---
+Client 0: Acc: 0.9253, AUC macro: 0.9920, AUC micro: 0.9706, FNR: 0.0000 (285/308 正确)
+Client 1: Acc: 0.9759, AUC macro: 0.9038, AUC micro: 0.9811, FNR: 0.0000 (2714/2781 正确)
+Client 2: Acc: 0.8516, AUC macro: 0.9631, AUC micro: 0.9878, FNR: 0.0038 (22214/26085 正确)
+Client 3: Acc: 0.8947, AUC macro: 0.9317, AUC micro: 0.9805, FNR: 0.0017 (72189/80685 正确)
+Client 4: Acc: 0.8866, AUC macro: 0.8739, AUC micro: 0.9838, FNR: 0.0214 (106816/120476 正确)
+Client 5: Acc: 0.8891, AUC macro: 0.8396, AUC micro: 0.9663, FNR: 0.0000 (1227/1380 正确)
+Client 6: Acc: 0.9793, AUC macro: 0.9055, AUC micro: 0.9985, FNR: 0.0667 (176580/180304 正确)
+Client 7: Acc: 0.6934, AUC macro: 0.9040, AUC micro: 0.9076, FNR: 0.0015 (3902/5627 正确)
+Client 8: Acc: 0.8851, AUC macro: 0.9617, AUC micro: 0.9698, FNR: 0.0004 (16563/18714 正确)
+Client 9: Acc: 0.8879, AUC macro: 0.9640, AUC micro: 0.9945, FNR: 0.0003 (108285/121950 正确)
+Averaged Test Accurancy: 0.9149
+Averaged Test AUC Macro: 0.9197
+Averaged Test AUC Micro: 0.9893
+Averaged Test FNR: 0.0096
+Std Test Accurancy: 0.0753
+Std Test AUC Macro: 0.0447
+Std Test AUC Micro: 0.0243
+Std Test FNR: 0.0200
+本轮耗时: 682.69 秒
+
+------------- 全局轮次: 49 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3982912 1.8898972 3.0811572 3.8246353 3.3900628 2.248418  2.4159787
+ 1.8390085 3.039637  1.3982912 1.8390085 1.9135665 1.7460197 1.8898972
+ 1.7460197]
+全局最小类间距离 (Min Gap): 1.3983
+全局最大类间距离 (Max Gap): 3.8246
+------------------------------------------
+--- 轮次 49 评估 ---
+Client 0: Acc: 0.8961, AUC macro: 0.9920, AUC micro: 0.9627, FNR: 0.0000 (276/308 正确)
+Client 1: Acc: 0.9809, AUC macro: 0.9102, AUC micro: 0.9867, FNR: 0.0000 (2728/2781 正确)
+Client 2: Acc: 0.9202, AUC macro: 0.9659, AUC micro: 0.9903, FNR: 0.0122 (24003/26085 正确)
+Client 3: Acc: 0.9065, AUC macro: 0.9305, AUC micro: 0.9855, FNR: 0.0027 (73140/80685 正确)
+Client 4: Acc: 0.8745, AUC macro: 0.8740, AUC micro: 0.9817, FNR: 0.0084 (105359/120476 正确)
+Client 5: Acc: 0.8891, AUC macro: 0.8388, AUC micro: 0.9669, FNR: 0.0000 (1227/1380 正确)
+Client 6: Acc: 0.9672, AUC macro: 0.9181, AUC micro: 0.9985, FNR: 0.0638 (174389/180304 正确)
+Client 7: Acc: 0.7459, AUC macro: 0.9075, AUC micro: 0.9267, FNR: 0.0132 (4197/5627 正确)
+Client 8: Acc: 0.8832, AUC macro: 0.9684, AUC micro: 0.9749, FNR: 0.0002 (16528/18714 正确)
+Client 9: Acc: 0.9224, AUC macro: 0.9580, AUC micro: 0.9949, FNR: 0.0021 (112485/121950 正确)
+Averaged Test Accurancy: 0.9212
+Averaged Test AUC Macro: 0.9227
+Averaged Test AUC Micro: 0.9901
+Averaged Test FNR: 0.0103
+Std Test Accurancy: 0.0607
+Std Test AUC Macro: 0.0444
+Std Test AUC Micro: 0.0200
+Std Test FNR: 0.0185
+本轮耗时: 695.33 秒
+
+------------- 全局轮次: 50 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3513587 1.8793886 3.042576  3.8062053 3.3469944 2.288592  2.566679
+ 1.9010617 3.105867  1.3513587 1.9010617 1.9590012 1.7769175 1.8793886
+ 1.7769175]
+全局最小类间距离 (Min Gap): 1.3514
+全局最大类间距离 (Max Gap): 3.8062
+------------------------------------------
+--- 轮次 50 评估 ---
+Client 0: Acc: 0.8961, AUC macro: 0.9920, AUC micro: 0.9607, FNR: 0.0000 (276/308 正确)
+Client 1: Acc: 0.9809, AUC macro: 0.9074, AUC micro: 0.9838, FNR: 0.0000 (2728/2781 正确)
+Client 2: Acc: 0.9165, AUC macro: 0.9685, AUC micro: 0.9899, FNR: 0.0122 (23908/26085 正确)
+Client 3: Acc: 0.9062, AUC macro: 0.9313, AUC micro: 0.9867, FNR: 0.0020 (73120/80685 正确)
+Client 4: Acc: 0.8940, AUC macro: 0.8779, AUC micro: 0.9832, FNR: 0.0096 (107706/120476 正确)
+Client 5: Acc: 0.8891, AUC macro: 0.8516, AUC micro: 0.9666, FNR: 0.0000 (1227/1380 正确)
+Client 6: Acc: 0.9767, AUC macro: 0.9049, AUC micro: 0.9986, FNR: 0.0667 (176105/180304 正确)
+Client 7: Acc: 0.6915, AUC macro: 0.9059, AUC micro: 0.9143, FNR: 0.0015 (3891/5627 正确)
+Client 8: Acc: 0.8840, AUC macro: 0.9601, AUC micro: 0.9702, FNR: 0.0005 (16544/18714 正确)
+Client 9: Acc: 0.8719, AUC macro: 0.9654, AUC micro: 0.9942, FNR: 0.0005 (106323/121950 正确)
+Averaged Test Accurancy: 0.9167
+Averaged Test AUC Macro: 0.9209
+Averaged Test AUC Micro: 0.9902
+Averaged Test FNR: 0.0093
+Std Test Accurancy: 0.0752
+Std Test AUC Macro: 0.0424
+Std Test AUC Micro: 0.0233
+Std Test FNR: 0.0196
+
+--- 迄今为止最佳准确率 ---
+本地测试集: 0.9251 (在第 40 轮)
+本轮耗时: 686.15 秒
+
+------------- 全局轮次: 51 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.4192766 1.7970649 3.0920727 3.8229487 3.3340259 2.259885  2.4319415
+ 1.9364617 3.1008058 1.4192766 1.9364617 1.9438262 1.7674841 1.7970649
+ 1.7674841]
+全局最小类间距离 (Min Gap): 1.4193
+全局最大类间距离 (Max Gap): 3.8229
+------------------------------------------
+--- 轮次 51 评估 ---
+Client 0: Acc: 0.9091, AUC macro: 0.9920, AUC micro: 0.9628, FNR: 0.0000 (280/308 正确)
+Client 1: Acc: 0.9720, AUC macro: 0.9081, AUC micro: 0.9842, FNR: 0.0000 (2703/2781 正确)
+Client 2: Acc: 0.8070, AUC macro: 0.9701, AUC micro: 0.9889, FNR: 0.0019 (21051/26085 正确)
+Client 3: Acc: 0.8983, AUC macro: 0.9313, AUC micro: 0.9850, FNR: 0.0018 (72483/80685 正确)
+Client 4: Acc: 0.9370, AUC macro: 0.8718, AUC micro: 0.9837, FNR: 0.0417 (112888/120476 正确)
+Client 5: Acc: 0.8884, AUC macro: 0.8489, AUC micro: 0.9712, FNR: 0.0000 (1226/1380 正确)
+Client 6: Acc: 0.9643, AUC macro: 0.9194, AUC micro: 0.9978, FNR: 0.0464 (173859/180304 正确)
+Client 7: Acc: 0.7610, AUC macro: 0.9063, AUC micro: 0.9263, FNR: 0.0142 (4282/5627 正确)
+Client 8: Acc: 0.8830, AUC macro: 0.9664, AUC micro: 0.9730, FNR: 0.0004 (16525/18714 正确)
+Client 9: Acc: 0.9370, AUC macro: 0.9574, AUC micro: 0.9947, FNR: 0.0017 (114262/121950 正确)
+Averaged Test Accurancy: 0.9306
+Averaged Test AUC Macro: 0.9228
+Averaged Test AUC Micro: 0.9901
+Averaged Test FNR: 0.0108
+Std Test Accurancy: 0.0635
+Std Test AUC Macro: 0.0431
+Std Test AUC Micro: 0.0197
+Std Test FNR: 0.0171
+检测到新最佳准确率，正在保存最佳模型检查点 (Round 51)...
+本轮耗时: 681.40 秒
+
+------------- 全局轮次: 52 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.3883014 1.8845838 3.191307  3.8404746 3.4983475 2.2447975 2.52233
+ 1.8628943 3.1312003 1.3883014 1.8628943 1.9132814 1.848587  1.8845838
+ 1.848587 ]
+全局最小类间距离 (Min Gap): 1.3883
+全局最大类间距离 (Max Gap): 3.8405
+------------------------------------------
+--- 轮次 52 评估 ---
+Client 0: Acc: 0.9091, AUC macro: 0.9921, AUC micro: 0.9643, FNR: 0.0000 (280/308 正确)
+Client 1: Acc: 0.9716, AUC macro: 0.9107, AUC micro: 0.9870, FNR: 0.0000 (2702/2781 正确)
+Client 2: Acc: 0.8845, AUC macro: 0.9663, AUC micro: 0.9905, FNR: 0.0032 (23073/26085 正确)
+Client 3: Acc: 0.9031, AUC macro: 0.9296, AUC micro: 0.9907, FNR: 0.0024 (72866/80685 正确)
+Client 4: Acc: 0.8915, AUC macro: 0.8634, AUC micro: 0.9827, FNR: 0.0220 (107409/120476 正确)
+Client 5: Acc: 0.8891, AUC macro: 0.8520, AUC micro: 0.9671, FNR: 0.0000 (1227/1380 正确)
+Client 6: Acc: 0.9674, AUC macro: 0.9271, AUC micro: 0.9983, FNR: 0.0638 (174426/180304 正确)
+Client 7: Acc: 0.7482, AUC macro: 0.9037, AUC micro: 0.9176, FNR: 0.0142 (4210/5627 正确)
+Client 8: Acc: 0.8836, AUC macro: 0.9709, AUC micro: 0.9789, FNR: 0.0006 (16536/18714 正确)
+Client 9: Acc: 0.9079, AUC macro: 0.9614, AUC micro: 0.9947, FNR: 0.0007 (110720/121950 正确)
+Averaged Test Accurancy: 0.9196
+Averaged Test AUC Macro: 0.9241
+Averaged Test AUC Micro: 0.9911
+Averaged Test FNR: 0.0107
+Std Test Accurancy: 0.0578
+Std Test AUC Macro: 0.0440
+Std Test AUC Micro: 0.0225
+Std Test FNR: 0.0190
+本轮耗时: 680.53 秒
+
+------------- 全局轮次: 53 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.4218681 1.8765051 2.988332  3.8358655 3.1902783 2.2330577 2.4098523
+ 1.8748072 3.074691  1.4218681 1.8748072 1.8978972 1.7920302 1.8765051
+ 1.7920302]
+全局最小类间距离 (Min Gap): 1.4219
+全局最大类间距离 (Max Gap): 3.8359
+------------------------------------------
+--- 轮次 53 评估 ---
+Client 0: Acc: 0.8994, AUC macro: 0.9921, AUC micro: 0.9600, FNR: 0.0000 (277/308 正确)
+Client 1: Acc: 0.9817, AUC macro: 0.9133, AUC micro: 0.9882, FNR: 0.0000 (2730/2781 正确)
+Client 2: Acc: 0.9140, AUC macro: 0.9699, AUC micro: 0.9888, FNR: 0.0122 (23842/26085 正确)
+Client 3: Acc: 0.9040, AUC macro: 0.9319, AUC micro: 0.9870, FNR: 0.0024 (72942/80685 正确)
+Client 4: Acc: 0.8889, AUC macro: 0.8705, AUC micro: 0.9834, FNR: 0.0220 (107086/120476 正确)
+Client 5: Acc: 0.8891, AUC macro: 0.8471, AUC micro: 0.9673, FNR: 0.0000 (1227/1380 正确)
+Client 6: Acc: 0.9826, AUC macro: 0.9000, AUC micro: 0.9988, FNR: 0.1594 (177174/180304 正确)
+Client 7: Acc: 0.7604, AUC macro: 0.9092, AUC micro: 0.9246, FNR: 0.0142 (4279/5627 正确)
+Client 8: Acc: 0.8870, AUC macro: 0.9604, AUC micro: 0.9707, FNR: 0.0003 (16599/18714 正确)
+Client 9: Acc: 0.9069, AUC macro: 0.9615, AUC micro: 0.9940, FNR: 0.0006 (110602/121950 正确)
+Averaged Test Accurancy: 0.9256
+Averaged Test AUC Macro: 0.9170
+Averaged Test AUC Micro: 0.9904
+Averaged Test FNR: 0.0211
+Std Test Accurancy: 0.0580
+Std Test AUC Macro: 0.0438
+Std Test AUC Micro: 0.0208
+Std Test FNR: 0.0467
+本轮耗时: 681.18 秒
+
+------------- 全局轮次: 54 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.4746429 1.9578158 2.9581227 3.8427458 3.3150303 2.2363937 2.4134858
+ 1.8800104 3.0817375 1.4746429 1.8800104 1.9039645 1.8416661 1.9578158
+ 1.8416661]
+全局最小类间距离 (Min Gap): 1.4746
+全局最大类间距离 (Max Gap): 3.8427
+------------------------------------------
+--- 轮次 54 评估 ---
+Client 0: Acc: 0.8929, AUC macro: 0.9921, AUC micro: 0.9590, FNR: 0.0000 (275/308 正确)
+Client 1: Acc: 0.9727, AUC macro: 0.9143, AUC micro: 0.9895, FNR: 0.0000 (2705/2781 正确)
+Client 2: Acc: 0.9131, AUC macro: 0.9690, AUC micro: 0.9900, FNR: 0.0096 (23819/26085 正确)
+Client 3: Acc: 0.9076, AUC macro: 0.9339, AUC micro: 0.9865, FNR: 0.0028 (73230/80685 正确)
+Client 4: Acc: 0.8806, AUC macro: 0.8783, AUC micro: 0.9832, FNR: 0.0079 (106091/120476 正确)
+Client 5: Acc: 0.8891, AUC macro: 0.8345, AUC micro: 0.9675, FNR: 0.0000 (1227/1380 正确)
+Client 6: Acc: 0.9831, AUC macro: 0.9285, AUC micro: 0.9991, FNR: 0.0696 (177252/180304 正确)
+Client 7: Acc: 0.7460, AUC macro: 0.9081, AUC micro: 0.9192, FNR: 0.0142 (4198/5627 正确)
+Client 8: Acc: 0.8846, AUC macro: 0.9666, AUC micro: 0.9725, FNR: 0.0006 (16554/18714 正确)
+Client 9: Acc: 0.9138, AUC macro: 0.9639, AUC micro: 0.9954, FNR: 0.0007 (111437/121950 正确)
+Averaged Test Accurancy: 0.9256
+Averaged Test AUC Macro: 0.9289
+Averaged Test AUC Micro: 0.9908
+Averaged Test FNR: 0.0105
+Std Test Accurancy: 0.0609
+Std Test AUC Macro: 0.0452
+Std Test AUC Micro: 0.0225
+Std Test FNR: 0.0202
+本轮耗时: 682.17 秒
+
+------------- 全局轮次: 55 -------------
+服务器已基于【类别样本量加权】聚合了来自 10 个客户端的原型。
+
+--- 类间距离统计 (Inter-class Margins) ---
+各类别最小类间距离: [1.4819037 1.9437362 2.7914548 3.8223517 3.3145854 2.3007417 2.385994
+ 1.9433131 3.1266334 1.4819037 1.8584783 1.9288329 1.8084887 1.9437362
+ 1.8084887]
+全局最小类间距离 (Min Gap): 1.4819
+全局最大类间距离 (Max Gap): 3.8224
+------------------------------------------
+--- 轮次 55 评估 ---
+Client 0: Acc: 0.8961, AUC macro: 0.9921, AUC micro: 0.9586, FNR: 0.0000 (276/308 正确)
+Client 1: Acc: 0.9669, AUC macro: 0.9059, AUC micro: 0.9826, FNR: 0.0000 (2689/2781 正确)
+Client 2: Acc: 0.9144, AUC macro: 0.9695, AUC micro: 0.9872, FNR: 0.0096 (23852/26085 正确)
+Client 3: Acc: 0.8991, AUC macro: 0.9349, AUC micro: 0.9855, FNR: 0.0016 (72544/80685 正确)
+Client 4: Acc: 0.8931, AUC macro: 0.8738, AUC micro: 0.9839, FNR: 0.0101 (107597/120476 正确)
+Client 5: Acc: 0.8891, AUC macro: 0.8477, AUC micro: 0.9684, FNR: 0.0000 (1227/1380 正确)
+Client 6: Acc: 0.9862, AUC macro: 0.9181, AUC micro: 0.9986, FNR: 0.1623 (177823/180304 正确)
+Client 7: Acc: 0.6918, AUC macro: 0.9082, AUC micro: 0.9165, FNR: 0.0020 (3893/5627 正确)
+Client 8: Acc: 0.8846, AUC macro: 0.9777, AUC micro: 0.9796, FNR: 0.0006 (16555/18714 正确)
+Client 9: Acc: 0.8937, AUC macro: 0.9566, AUC micro: 0.9968, FNR: 0.0003 (108985/121950 正确)
+Averaged Test Accurancy: 0.9232
+Averaged Test AUC Macro: 0.9235
+Averaged Test AUC Micro: 0.9910
+Averaged Test FNR: 0.0187
+Std Test Accurancy: 0.0743
+Std Test AUC Macro: 0.0442
+Std Test AUC Micro: 0.0227
+Std Test FNR: 0.0480
+本轮耗时: 681.86 秒
+
+------------- 全局轮次: 56 -------------

@@ -116,8 +116,11 @@ class FedProto(Server):
 
         if self.Budget:
             print("平均每轮训练时间:", sum(self.Budget) / len(self.Budget))
-        self.draw_tsne()
-        self.draw_proto_distribution_tsne()
+        if getattr(self.args, "skip_figures", False):
+            print("已跳过 t-SNE / 原型图 (--skip_figures)。")
+        else:
+            self.draw_tsne()
+            self.draw_proto_distribution_tsne()
         self.save_results()
 
     # ### MODIFIED START: 新的核心服务器逻辑 ###
@@ -128,21 +131,26 @@ class FedProto(Server):
         assert (len(self.selected_clients) > 0)
 
         uploaded_protos_per_client = []
+        uploaded_weights_per_client = []
         for client in self.selected_clients:
             protos = client.local_protos
             if protos:
                 uploaded_protos_per_client.append(protos)
+                uploaded_weights_per_client.append(client.local_proto_weights or {})
 
         if not uploaded_protos_per_client:
             print("警告：本轮没有收到任何客户端原型，跳过服务器更新。")
             return
 
-    # 1. 按类别进行客户端等权聚合 (得到 global_protos)
-        global_protos = proto_aggregation(uploaded_protos_per_client)
+    # 1. 按类别样本量进行加权聚合 (得到 global_protos)
+        global_protos = proto_aggregation_with_weights(
+            uploaded_protos_per_client,
+            uploaded_weights_per_client,
+        )
 
         # 2. 保存聚合结果
         self.global_protos = global_protos
-        print(f"服务器已基于【客户端等权】聚合了来自 {len(uploaded_protos_per_client)} 个客户端的原型。")
+        print(f"服务器已基于【类别样本量加权】聚合了来自 {len(uploaded_protos_per_client)} 个客户端的原型。")
         # 3. ### ADDED: 计算类间距离 (Gap Calculation) ###
         # 初始化 gap 为无穷大
         self.gap = torch.ones(self.num_classes, device=self.device) * 1e9
@@ -379,22 +387,36 @@ class FedProto(Server):
 
 
 
-# ### MODIFIED: 使用标准 FedProto 的客户端等权平均 ###
-def proto_aggregation(protos_list):
+# ### MODIFIED: 使用按类别样本量加权的 FedProto 聚合 ###
+def proto_aggregation_with_weights(protos_list, weights_list):
     """
-    按类别（Class-specific）对参与该类别的客户端原型做等权平均。
+    按类别（Class-specific）对参与该类别的客户端原型做加权平均。
+    权重为该类别在对应客户端本地训练集中的样本数。
     """
     proto_clusters = defaultdict(list)
+    weight_clusters = defaultdict(list)
 
-    # 按类别收集所有客户端上传的原型
-    for protos in protos_list:
+    # 按类别收集所有客户端上传的原型及其权重
+    for protos, weights in zip(protos_list, weights_list):
         for k in protos.keys():
             proto_clusters[k].append(protos[k])
+            weight_clusters[k].append(float(weights.get(k, 0)))
 
     aggregated_protos = defaultdict(list)
     for k in proto_clusters.keys():
         class_protos = torch.stack(proto_clusters[k])  # (N, D)
-        aggregated_protos[k] = torch.mean(class_protos, dim=0).detach()
+        class_weights = torch.tensor(
+            weight_clusters[k],
+            dtype=class_protos.dtype,
+            device=class_protos.device,
+        ).view(-1, 1)
+        total_weight = torch.sum(class_weights)
+
+        if total_weight.item() <= 0:
+            aggregated_protos[k] = torch.mean(class_protos, dim=0).detach()
+        else:
+            weighted_sum = torch.sum(class_protos * class_weights, dim=0)
+            aggregated_protos[k] = (weighted_sum / total_weight).detach()
 
     return aggregated_protos
 

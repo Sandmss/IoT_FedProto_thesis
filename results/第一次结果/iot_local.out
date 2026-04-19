@@ -1,0 +1,2068 @@
+==================================================
+Algorithm: Local
+Dataset: IoT
+Model family: IoT_MLP
+Input dimension: 77
+Number of classes: 15
+Normal class label: 0
+Number of clients: 10
+Local batch size: 64
+DataLoader workers: 4
+Pin memory: True
+Local epochs: 100
+Local learning rate: 0.01
+Client join ratio: 1.0
+Random join ratio: False
+Client drop rate: 0.0
+Time-based client selection: False
+Runs: 1
+Device: cuda
+Feature dimension: 64
+Lambda: 0.1
+Packet weight: 1.0
+Auto break: False
+Global rounds: 100
+==================================================
+
+============= Run 0 =============
+Creating server and clients...
+Model family: IoT_MLP
+Resolved models:
+  MLP_IoT(dim_in=77, dim_hidden=128, dim_out=64, num_classes=15)
+
+Local baseline / 客户端总数: 10
+Local 模式创建完成：仅执行客户端本地训练，不做服务器聚合。
+
+------------- Local Epoch: 0 (初始状态) -------------
+Client 0: Acc: 0.8636, AUC macro: 0.4678, AUC micro: 0.8767, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.4450, AUC micro: 0.8330, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.0000, AUC macro: 0.4741, AUC micro: 0.2039, FNR: 0.0000 (0/26085 正确)
+Client 3: Acc: 0.0000, AUC macro: 0.6433, AUC micro: 0.5438, FNR: 0.0000 (0/80685 正确)
+Client 4: Acc: 0.0000, AUC macro: 0.4292, AUC micro: 0.3049, FNR: 0.0000 (0/120476 正确)
+Client 5: Acc: 0.0000, AUC macro: 0.5985, AUC micro: 0.5862, FNR: 0.0000 (0/1380 正确)
+Client 6: Acc: 0.0003, AUC macro: 0.4058, AUC micro: 0.2543, FNR: 0.0000 (46/180304 正确)
+Client 7: Acc: 0.0341, AUC macro: 0.4620, AUC micro: 0.4455, FNR: 0.0000 (192/5627 正确)
+Client 8: Acc: 0.0000, AUC macro: 0.4854, AUC micro: 0.7848, FNR: 0.0000 (0/18714 正确)
+Client 9: Acc: 0.0000, AUC macro: 0.4442, AUC micro: 0.5380, FNR: 0.0000 (0/121950 正确)
+Averaged Test Accurancy: 0.0046
+Averaged Test AUC Macro: 0.4607
+Averaged Test AUC Micro: 0.3904
+Averaged Test FNR: 0.0000
+Std Test Accurancy: 0.3211
+Std Test AUC Macro: 0.0718
+Std Test AUC Micro: 0.2281
+Std Test FNR: 0.0000
+-----------------------------------------------------
+
+------------- Local Epoch: 1 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.4799, AUC micro: 0.8782, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.7384, AUC micro: 0.9450, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.9401, AUC macro: 0.7918, AUC micro: 0.9907, FNR: 1.0000 (24522/26085 正确)
+Client 3: Acc: 0.9712, AUC macro: 0.5999, AUC micro: 0.9984, FNR: 0.0608 (78361/80685 正确)
+Client 4: Acc: 0.9853, AUC macro: 0.8014, AUC micro: 0.9987, FNR: 1.0000 (118700/120476 正确)
+Client 5: Acc: 0.7145, AUC macro: 0.8177, AUC micro: 0.9581, FNR: 0.0000 (986/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.6373, AUC micro: 0.9996, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.6508, AUC macro: 0.4986, AUC micro: 0.9180, FNR: 1.0000 (3662/5627 正确)
+Client 8: Acc: 0.7913, AUC macro: 0.8693, AUC micro: 0.9758, FNR: 0.0127 (14808/18714 正确)
+Client 9: Acc: 0.9434, AUC macro: 0.6720, AUC micro: 0.9969, FNR: 0.0396 (115046/121950 正确)
+Averaged Test Accurancy: 0.9643
+Averaged Test AUC Macro: 0.6893
+Averaged Test AUC Micro: 0.9962
+Averaged Test FNR: 0.4113
+Std Test Accurancy: 0.1198
+Std Test AUC Macro: 0.1287
+Std Test AUC Micro: 0.0393
+Std Test FNR: 0.4810
+
+------------- Local Epoch: 2 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.5659, AUC micro: 0.9272, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.7732, AUC micro: 0.9479, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.9401, AUC macro: 0.8365, AUC micro: 0.9907, FNR: 1.0000 (24522/26085 正确)
+Client 3: Acc: 0.9713, AUC macro: 0.6055, AUC micro: 0.9987, FNR: 0.0593 (78366/80685 正确)
+Client 4: Acc: 0.9853, AUC macro: 0.8003, AUC micro: 0.9988, FNR: 1.0000 (118700/120476 正确)
+Client 5: Acc: 0.7145, AUC macro: 0.7746, AUC micro: 0.9713, FNR: 0.0000 (986/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8391, AUC micro: 0.9997, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.6508, AUC macro: 0.7817, AUC micro: 0.9487, FNR: 1.0000 (3662/5627 正确)
+Client 8: Acc: 0.9002, AUC macro: 0.9095, AUC micro: 0.9853, FNR: 0.0318 (16846/18714 正确)
+Client 9: Acc: 0.9727, AUC macro: 0.7421, AUC micro: 0.9981, FNR: 0.0864 (118624/121950 正确)
+Averaged Test Accurancy: 0.9744
+Averaged Test AUC Macro: 0.7768
+Averaged Test AUC Micro: 0.9972
+Averaged Test FNR: 0.4178
+Std Test Accurancy: 0.1201
+Std Test AUC Macro: 0.0994
+Std Test AUC Micro: 0.0251
+Std Test FNR: 0.4761
+
+------------- Local Epoch: 3 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.6132, AUC micro: 0.9483, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.7889, AUC micro: 0.9476, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.9401, AUC macro: 0.8528, AUC micro: 0.9922, FNR: 1.0000 (24522/26085 正确)
+Client 3: Acc: 0.9721, AUC macro: 0.6106, AUC micro: 0.9987, FNR: 0.0594 (78430/80685 正确)
+Client 4: Acc: 0.9853, AUC macro: 0.8165, AUC micro: 0.9991, FNR: 1.0000 (118700/120476 正确)
+Client 5: Acc: 0.7145, AUC macro: 0.7741, AUC micro: 0.9691, FNR: 0.0000 (986/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8376, AUC micro: 0.9997, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.6508, AUC macro: 0.7970, AUC micro: 0.9488, FNR: 1.0000 (3662/5627 正确)
+Client 8: Acc: 0.8775, AUC macro: 0.9465, AUC micro: 0.9876, FNR: 0.0928 (16422/18714 正确)
+Client 9: Acc: 0.9785, AUC macro: 0.7633, AUC micro: 0.9985, FNR: 0.0549 (119323/121950 正确)
+Averaged Test Accurancy: 0.9750
+Averaged Test AUC Macro: 0.7874
+Averaged Test AUC Micro: 0.9975
+Averaged Test FNR: 0.4207
+Std Test Accurancy: 0.1204
+Std Test AUC Macro: 0.0974
+Std Test AUC Micro: 0.0219
+Std Test FNR: 0.4738
+
+------------- Local Epoch: 4 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.4930, AUC micro: 0.9501, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.7862, AUC micro: 0.9472, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.9401, AUC macro: 0.8573, AUC micro: 0.9933, FNR: 1.0000 (24522/26085 正确)
+Client 3: Acc: 0.9721, AUC macro: 0.6133, AUC micro: 0.9988, FNR: 0.0593 (78430/80685 正确)
+Client 4: Acc: 0.9868, AUC macro: 0.8087, AUC micro: 0.9993, FNR: 0.8936 (118889/120476 正确)
+Client 5: Acc: 0.7145, AUC macro: 0.7762, AUC micro: 0.9696, FNR: 0.0000 (986/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8385, AUC micro: 0.9997, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.7297, AUC macro: 0.7862, AUC micro: 0.9510, FNR: 0.7695 (4106/5627 正确)
+Client 8: Acc: 0.9079, AUC macro: 0.9507, AUC micro: 0.9895, FNR: 0.0384 (16991/18714 正确)
+Client 9: Acc: 0.9734, AUC macro: 0.7783, AUC micro: 0.9987, FNR: 0.0848 (118701/121950 正确)
+Averaged Test Accurancy: 0.9760
+Averaged Test AUC Macro: 0.7899
+Averaged Test AUC Micro: 0.9978
+Averaged Test FNR: 0.3846
+Std Test Accurancy: 0.1075
+Std Test AUC Macro: 0.1218
+Std Test AUC Micro: 0.0216
+Std Test FNR: 0.4386
+
+------------- Local Epoch: 5 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.6336, AUC micro: 0.9746, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.7920, AUC micro: 0.9483, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.9401, AUC macro: 0.8643, AUC micro: 0.9941, FNR: 1.0000 (24522/26085 正确)
+Client 3: Acc: 0.9728, AUC macro: 0.6480, AUC micro: 0.9989, FNR: 0.0594 (78490/80685 正确)
+Client 4: Acc: 0.9869, AUC macro: 0.7956, AUC micro: 0.9993, FNR: 0.8846 (118899/120476 正确)
+Client 5: Acc: 0.7145, AUC macro: 0.7770, AUC micro: 0.9698, FNR: 0.0000 (986/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8397, AUC micro: 0.9997, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.8109, AUC macro: 0.8093, AUC micro: 0.9604, FNR: 0.4809 (4563/5627 正确)
+Client 8: Acc: 0.9081, AUC macro: 0.9519, AUC micro: 0.9907, FNR: 0.0382 (16994/18714 正确)
+Client 9: Acc: 0.9775, AUC macro: 0.8041, AUC micro: 0.9989, FNR: 0.0672 (119207/121950 正确)
+Averaged Test Accurancy: 0.9779
+Averaged Test AUC Macro: 0.7988
+Averaged Test AUC Micro: 0.9980
+Averaged Test FNR: 0.3530
+Std Test Accurancy: 0.0987
+Std Test AUC Macro: 0.0892
+Std Test AUC Micro: 0.0179
+Std Test FNR: 0.4215
+
+------------- Local Epoch: 6 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.6520, AUC micro: 0.9774, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.7975, AUC micro: 0.9500, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.9401, AUC macro: 0.8701, AUC micro: 0.9947, FNR: 1.0000 (24522/26085 正确)
+Client 3: Acc: 0.9726, AUC macro: 0.7302, AUC micro: 0.9990, FNR: 0.0593 (78471/80685 正确)
+Client 4: Acc: 0.9897, AUC macro: 0.8012, AUC micro: 0.9994, FNR: 0.6926 (119239/120476 正确)
+Client 5: Acc: 0.7145, AUC macro: 0.7769, AUC micro: 0.9702, FNR: 0.0000 (986/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8404, AUC micro: 0.9998, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.8132, AUC macro: 0.8258, AUC micro: 0.9669, FNR: 0.4651 (4576/5627 正确)
+Client 8: Acc: 0.9086, AUC macro: 0.9544, AUC micro: 0.9916, FNR: 0.0384 (17004/18714 正确)
+Client 9: Acc: 0.9816, AUC macro: 0.8269, AUC micro: 0.9991, FNR: 0.0478 (119702/121950 正确)
+Averaged Test Accurancy: 0.9794
+Averaged Test AUC Macro: 0.8176
+Averaged Test AUC Micro: 0.9982
+Averaged Test FNR: 0.3303
+Std Test Accurancy: 0.0991
+Std Test AUC Macro: 0.0765
+Std Test AUC Micro: 0.0167
+Std Test FNR: 0.4015
+
+------------- Local Epoch: 7 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.6554, AUC micro: 0.9777, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.8055, AUC micro: 0.9521, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.9401, AUC macro: 0.8794, AUC micro: 0.9953, FNR: 1.0000 (24522/26085 正确)
+Client 3: Acc: 0.9730, AUC macro: 0.7575, AUC micro: 0.9991, FNR: 0.0592 (78505/80685 正确)
+Client 4: Acc: 0.9898, AUC macro: 0.8052, AUC micro: 0.9994, FNR: 0.6881 (119246/120476 正确)
+Client 5: Acc: 0.7145, AUC macro: 0.7805, AUC micro: 0.9715, FNR: 0.0000 (986/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8421, AUC micro: 0.9998, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.8123, AUC macro: 0.8370, AUC micro: 0.9743, FNR: 0.4494 (4571/5627 正确)
+Client 8: Acc: 0.9088, AUC macro: 0.9574, AUC micro: 0.9924, FNR: 0.0385 (17008/18714 正确)
+Client 9: Acc: 0.9855, AUC macro: 0.8501, AUC micro: 0.9992, FNR: 0.0336 (120181/121950 正确)
+Averaged Test Accurancy: 0.9803
+Averaged Test AUC Macro: 0.8288
+Averaged Test AUC Micro: 0.9984
+Averaged Test FNR: 0.3269
+Std Test Accurancy: 0.0996
+Std Test AUC Macro: 0.0755
+Std Test AUC Micro: 0.0155
+Std Test FNR: 0.4016
+
+------------- Local Epoch: 8 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.6586, AUC micro: 0.9779, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.8092, AUC micro: 0.9532, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.9401, AUC macro: 0.8932, AUC micro: 0.9957, FNR: 1.0000 (24522/26085 正确)
+Client 3: Acc: 0.9748, AUC macro: 0.7778, AUC micro: 0.9992, FNR: 0.0592 (78650/80685 正确)
+Client 4: Acc: 0.9899, AUC macro: 0.8048, AUC micro: 0.9995, FNR: 0.6836 (119254/120476 正确)
+Client 5: Acc: 0.7145, AUC macro: 0.7808, AUC micro: 0.9735, FNR: 0.0000 (986/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8450, AUC micro: 0.9998, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.8607, AUC macro: 0.8415, AUC micro: 0.9767, FNR: 0.3084 (4843/5627 正确)
+Client 8: Acc: 0.9090, AUC macro: 0.9590, AUC micro: 0.9929, FNR: 0.0385 (17011/18714 正确)
+Client 9: Acc: 0.9817, AUC macro: 0.8642, AUC micro: 0.9992, FNR: 0.0517 (119714/121950 正确)
+Averaged Test Accurancy: 0.9802
+Averaged Test AUC Macro: 0.8364
+Averaged Test AUC Micro: 0.9985
+Averaged Test FNR: 0.3141
+Std Test Accurancy: 0.0965
+Std Test AUC Macro: 0.0757
+Std Test AUC Micro: 0.0150
+Std Test FNR: 0.3979
+
+------------- Local Epoch: 9 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.6676, AUC micro: 0.9790, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.8167, AUC micro: 0.9550, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.9401, AUC macro: 0.9101, AUC micro: 0.9959, FNR: 1.0000 (24522/26085 正确)
+Client 3: Acc: 0.9747, AUC macro: 0.7781, AUC micro: 0.9992, FNR: 0.0591 (78643/80685 正确)
+Client 4: Acc: 0.9899, AUC macro: 0.8050, AUC micro: 0.9995, FNR: 0.6819 (119257/120476 正确)
+Client 5: Acc: 0.8841, AUC macro: 0.7930, AUC micro: 0.9793, FNR: 0.0000 (1220/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8479, AUC micro: 0.9998, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.8571, AUC macro: 0.8525, AUC micro: 0.9791, FNR: 0.2031 (4823/5627 正确)
+Client 8: Acc: 0.9127, AUC macro: 0.9605, AUC micro: 0.9934, FNR: 0.0324 (17081/18714 正确)
+Client 9: Acc: 0.9816, AUC macro: 0.8697, AUC micro: 0.9992, FNR: 0.0543 (119711/121950 正确)
+Averaged Test Accurancy: 0.9807
+Averaged Test AUC Macro: 0.8396
+Averaged Test AUC Micro: 0.9986
+Averaged Test FNR: 0.3031
+Std Test Accurancy: 0.0756
+Std Test AUC Macro: 0.0755
+Std Test AUC Micro: 0.0139
+Std Test FNR: 0.3994
+
+------------- Local Epoch: 10 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.6721, AUC micro: 0.9793, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.8280, AUC micro: 0.9564, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.9401, AUC macro: 0.9223, AUC micro: 0.9962, FNR: 1.0000 (24522/26085 正确)
+Client 3: Acc: 0.9749, AUC macro: 0.8011, AUC micro: 0.9993, FNR: 0.0592 (78661/80685 正确)
+Client 4: Acc: 0.9900, AUC macro: 0.8087, AUC micro: 0.9995, FNR: 0.6768 (119266/120476 正确)
+Client 5: Acc: 0.8841, AUC macro: 0.7990, AUC micro: 0.9812, FNR: 0.0000 (1220/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8524, AUC micro: 0.9998, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.8646, AUC macro: 0.8556, AUC micro: 0.9807, FNR: 0.2061 (4865/5627 正确)
+Client 8: Acc: 0.9126, AUC macro: 0.9659, AUC micro: 0.9940, FNR: 0.0323 (17078/18714 正确)
+Client 9: Acc: 0.9860, AUC macro: 0.8909, AUC micro: 0.9994, FNR: 0.0320 (120248/121950 正确)
+Averaged Test Accurancy: 0.9818
+Averaged Test AUC Macro: 0.8507
+Averaged Test AUC Micro: 0.9988
+Averaged Test FNR: 0.3006
+Std Test Accurancy: 0.0755
+Std Test AUC Macro: 0.0762
+Std Test AUC Micro: 0.0134
+Std Test FNR: 0.4003
+
+------------- Local Epoch: 11 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.6774, AUC micro: 0.9800, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.8364, AUC micro: 0.9578, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.9401, AUC macro: 0.9335, AUC micro: 0.9967, FNR: 1.0000 (24522/26085 正确)
+Client 3: Acc: 0.9747, AUC macro: 0.8055, AUC micro: 0.9993, FNR: 0.0589 (78641/80685 正确)
+Client 4: Acc: 0.9899, AUC macro: 0.8112, AUC micro: 0.9995, FNR: 0.6791 (119263/120476 正确)
+Client 5: Acc: 0.8826, AUC macro: 0.8032, AUC micro: 0.9824, FNR: 0.0000 (1218/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8579, AUC micro: 0.9998, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.8644, AUC macro: 0.8698, AUC micro: 0.9827, FNR: 0.2066 (4864/5627 正确)
+Client 8: Acc: 0.9127, AUC macro: 0.9693, AUC micro: 0.9944, FNR: 0.0324 (17080/18714 正确)
+Client 9: Acc: 0.9856, AUC macro: 0.8753, AUC micro: 0.9994, FNR: 0.0388 (120191/121950 正确)
+Averaged Test Accurancy: 0.9817
+Averaged Test AUC Macro: 0.8511
+Averaged Test AUC Micro: 0.9988
+Averaged Test FNR: 0.3016
+Std Test Accurancy: 0.0755
+Std Test AUC Macro: 0.0759
+Std Test AUC Micro: 0.0129
+Std Test FNR: 0.4000
+
+------------- Local Epoch: 12 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.6832, AUC micro: 0.9808, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.8388, AUC micro: 0.9584, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.9401, AUC macro: 0.9387, AUC micro: 0.9970, FNR: 1.0000 (24522/26085 正确)
+Client 3: Acc: 0.9752, AUC macro: 0.8267, AUC micro: 0.9993, FNR: 0.0591 (78680/80685 正确)
+Client 4: Acc: 0.9900, AUC macro: 0.8127, AUC micro: 0.9995, FNR: 0.6768 (119266/120476 正确)
+Client 5: Acc: 0.8797, AUC macro: 0.8143, AUC micro: 0.9841, FNR: 0.0000 (1214/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8635, AUC micro: 0.9998, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.8534, AUC macro: 0.8814, AUC micro: 0.9836, FNR: 0.2051 (4802/5627 正确)
+Client 8: Acc: 0.9177, AUC macro: 0.9711, AUC micro: 0.9948, FNR: 0.0266 (17174/18714 正确)
+Client 9: Acc: 0.9861, AUC macro: 0.9094, AUC micro: 0.9995, FNR: 0.0364 (120252/121950 正确)
+Averaged Test Accurancy: 0.9819
+Averaged Test AUC Macro: 0.8642
+Averaged Test AUC Micro: 0.9989
+Averaged Test FNR: 0.3004
+Std Test Accurancy: 0.0766
+Std Test AUC Macro: 0.0763
+Std Test AUC Micro: 0.0126
+Std Test FNR: 0.4004
+
+------------- Local Epoch: 13 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.6861, AUC micro: 0.9812, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.8430, AUC micro: 0.9592, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.9400, AUC macro: 0.9407, AUC micro: 0.9971, FNR: 1.0000 (24521/26085 正确)
+Client 3: Acc: 0.9753, AUC macro: 0.8386, AUC micro: 0.9993, FNR: 0.0591 (78692/80685 正确)
+Client 4: Acc: 0.9900, AUC macro: 0.8151, AUC micro: 0.9996, FNR: 0.6762 (119267/120476 正确)
+Client 5: Acc: 0.8797, AUC macro: 0.8171, AUC micro: 0.9844, FNR: 0.0000 (1214/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8685, AUC micro: 0.9998, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.8610, AUC macro: 0.8827, AUC micro: 0.9842, FNR: 0.2066 (4845/5627 正确)
+Client 8: Acc: 0.9174, AUC macro: 0.9751, AUC micro: 0.9951, FNR: 0.0263 (17168/18714 正确)
+Client 9: Acc: 0.9867, AUC macro: 0.9117, AUC micro: 0.9995, FNR: 0.0333 (120331/121950 正确)
+Averaged Test Accurancy: 0.9821
+Averaged Test AUC Macro: 0.8688
+Averaged Test AUC Micro: 0.9989
+Averaged Test FNR: 0.3002
+Std Test Accurancy: 0.0761
+Std Test AUC Macro: 0.0760
+Std Test AUC Micro: 0.0124
+Std Test FNR: 0.4005
+
+------------- Local Epoch: 14 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.6889, AUC micro: 0.9815, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.8516, AUC micro: 0.9609, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.9401, AUC macro: 0.9416, AUC micro: 0.9972, FNR: 1.0000 (24522/26085 正确)
+Client 3: Acc: 0.9752, AUC macro: 0.8461, AUC micro: 0.9994, FNR: 0.0589 (78687/80685 正确)
+Client 4: Acc: 0.9900, AUC macro: 0.8181, AUC micro: 0.9996, FNR: 0.6745 (119271/120476 正确)
+Client 5: Acc: 0.8826, AUC macro: 0.8175, AUC micro: 0.9848, FNR: 0.0000 (1218/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8729, AUC micro: 0.9998, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.8676, AUC macro: 0.8826, AUC micro: 0.9847, FNR: 0.2066 (4882/5627 正确)
+Client 8: Acc: 0.9199, AUC macro: 0.9767, AUC micro: 0.9952, FNR: 0.0259 (17215/18714 正确)
+Client 9: Acc: 0.9849, AUC macro: 0.9160, AUC micro: 0.9995, FNR: 0.0427 (120109/121950 正确)
+Averaged Test Accurancy: 0.9819
+Averaged Test AUC Macro: 0.8730
+Averaged Test AUC Micro: 0.9990
+Averaged Test FNR: 0.3009
+Std Test Accurancy: 0.0753
+Std Test AUC Macro: 0.0756
+Std Test AUC Micro: 0.0119
+Std Test FNR: 0.3998
+
+------------- Local Epoch: 15 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.6921, AUC micro: 0.9819, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.8541, AUC micro: 0.9617, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.9665, AUC macro: 0.9416, AUC micro: 0.9975, FNR: 0.5074 (25211/26085 正确)
+Client 3: Acc: 0.9754, AUC macro: 0.8557, AUC micro: 0.9994, FNR: 0.0589 (78698/80685 正确)
+Client 4: Acc: 0.9901, AUC macro: 0.8240, AUC micro: 0.9996, FNR: 0.6684 (119281/120476 正确)
+Client 5: Acc: 0.8812, AUC macro: 0.8184, AUC micro: 0.9849, FNR: 0.0000 (1216/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8775, AUC micro: 0.9998, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.8630, AUC macro: 0.8900, AUC micro: 0.9852, FNR: 0.2066 (4856/5627 正确)
+Client 8: Acc: 0.9225, AUC macro: 0.9779, AUC micro: 0.9956, FNR: 0.0262 (17263/18714 正确)
+Client 9: Acc: 0.9828, AUC macro: 0.9182, AUC micro: 0.9995, FNR: 0.0531 (119855/121950 正确)
+Averaged Test Accurancy: 0.9827
+Averaged Test AUC Macro: 0.8778
+Averaged Test AUC Micro: 0.9990
+Averaged Test FNR: 0.2521
+Std Test Accurancy: 0.0768
+Std Test AUC Macro: 0.0749
+Std Test AUC Micro: 0.0117
+Std Test FNR: 0.3344
+
+------------- Local Epoch: 16 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.6974, AUC micro: 0.9824, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.8630, AUC micro: 0.9633, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.9659, AUC macro: 0.9419, AUC micro: 0.9977, FNR: 0.5054 (25195/26085 正确)
+Client 3: Acc: 0.9753, AUC macro: 0.8633, AUC micro: 0.9994, FNR: 0.0588 (78691/80685 正确)
+Client 4: Acc: 0.9901, AUC macro: 0.8304, AUC micro: 0.9996, FNR: 0.6661 (119285/120476 正确)
+Client 5: Acc: 0.8841, AUC macro: 0.8191, AUC micro: 0.9852, FNR: 0.0000 (1220/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8800, AUC micro: 0.9998, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.8630, AUC macro: 0.8922, AUC micro: 0.9859, FNR: 0.2071 (4856/5627 正确)
+Client 8: Acc: 0.9249, AUC macro: 0.9806, AUC micro: 0.9959, FNR: 0.0260 (17309/18714 正确)
+Client 9: Acc: 0.9855, AUC macro: 0.9287, AUC micro: 0.9996, FNR: 0.0404 (120183/121950 正确)
+Averaged Test Accurancy: 0.9834
+Averaged Test AUC Macro: 0.8836
+Averaged Test AUC Micro: 0.9991
+Averaged Test FNR: 0.2504
+Std Test Accurancy: 0.0769
+Std Test AUC Macro: 0.0745
+Std Test AUC Micro: 0.0113
+Std Test FNR: 0.3348
+
+------------- Local Epoch: 17 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.6993, AUC micro: 0.9827, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.8721, AUC micro: 0.9648, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.9659, AUC macro: 0.9428, AUC micro: 0.9977, FNR: 0.5054 (25195/26085 正确)
+Client 3: Acc: 0.9754, AUC macro: 0.8824, AUC micro: 0.9995, FNR: 0.0590 (78700/80685 正确)
+Client 4: Acc: 0.9901, AUC macro: 0.8308, AUC micro: 0.9996, FNR: 0.6684 (119281/120476 正确)
+Client 5: Acc: 0.8848, AUC macro: 0.8192, AUC micro: 0.9855, FNR: 0.0000 (1221/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8853, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.8630, AUC macro: 0.8948, AUC micro: 0.9867, FNR: 0.2071 (4856/5627 正确)
+Client 8: Acc: 0.9271, AUC macro: 0.9813, AUC micro: 0.9960, FNR: 0.0261 (17349/18714 正确)
+Client 9: Acc: 0.9873, AUC macro: 0.9355, AUC micro: 0.9996, FNR: 0.0326 (120398/121950 正确)
+Averaged Test Accurancy: 0.9839
+Averaged Test AUC Macro: 0.8897
+Averaged Test AUC Micro: 0.9991
+Averaged Test FNR: 0.2499
+Std Test Accurancy: 0.0770
+Std Test AUC Macro: 0.0749
+Std Test AUC Micro: 0.0108
+Std Test FNR: 0.3356
+
+------------- Local Epoch: 18 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7010, AUC micro: 0.9830, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.8758, AUC micro: 0.9682, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.9658, AUC macro: 0.9443, AUC micro: 0.9979, FNR: 0.5054 (25193/26085 正确)
+Client 3: Acc: 0.9756, AUC macro: 0.8869, AUC micro: 0.9994, FNR: 0.0592 (78719/80685 正确)
+Client 4: Acc: 0.9901, AUC macro: 0.8336, AUC micro: 0.9997, FNR: 0.6678 (119282/120476 正确)
+Client 5: Acc: 0.8855, AUC macro: 0.8200, AUC micro: 0.9857, FNR: 0.0000 (1222/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8928, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.8630, AUC macro: 0.8987, AUC micro: 0.9876, FNR: 0.2071 (4856/5627 正确)
+Client 8: Acc: 0.9298, AUC macro: 0.9820, AUC micro: 0.9963, FNR: 0.0249 (17400/18714 正确)
+Client 9: Acc: 0.9870, AUC macro: 0.9323, AUC micro: 0.9996, FNR: 0.0350 (120366/121950 正确)
+Averaged Test Accurancy: 0.9839
+Averaged Test AUC Macro: 0.8929
+Averaged Test AUC Micro: 0.9992
+Averaged Test FNR: 0.2499
+Std Test Accurancy: 0.0770
+Std Test AUC Macro: 0.0745
+Std Test AUC Micro: 0.0100
+Std Test FNR: 0.3354
+
+------------- Local Epoch: 19 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7028, AUC micro: 0.9833, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7443, AUC macro: 0.8797, AUC micro: 0.9694, FNR: 0.0000 (2070/2781 正确)
+Client 2: Acc: 0.9662, AUC macro: 0.9448, AUC micro: 0.9980, FNR: 0.5074 (25204/26085 正确)
+Client 3: Acc: 0.9755, AUC macro: 0.9010, AUC micro: 0.9995, FNR: 0.0590 (78709/80685 正确)
+Client 4: Acc: 0.9901, AUC macro: 0.8341, AUC micro: 0.9997, FNR: 0.6678 (119282/120476 正确)
+Client 5: Acc: 0.9101, AUC macro: 0.8187, AUC micro: 0.9859, FNR: 0.0000 (1256/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8936, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.8674, AUC macro: 0.9004, AUC micro: 0.9884, FNR: 0.2092 (4881/5627 正确)
+Client 8: Acc: 0.9327, AUC macro: 0.9827, AUC micro: 0.9964, FNR: 0.0250 (17455/18714 正确)
+Client 9: Acc: 0.9844, AUC macro: 0.9352, AUC micro: 0.9996, FNR: 0.0492 (120053/121950 正确)
+Averaged Test Accurancy: 0.9836
+Averaged Test AUC Macro: 0.8960
+Averaged Test AUC Micro: 0.9992
+Averaged Test FNR: 0.2517
+Std Test Accurancy: 0.0757
+Std Test AUC Macro: 0.0749
+Std Test AUC Micro: 0.0096
+Std Test FNR: 0.3346
+
+------------- Local Epoch: 20 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7047, AUC micro: 0.9836, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7469, AUC macro: 0.8829, AUC micro: 0.9708, FNR: 0.0000 (2077/2781 正确)
+Client 2: Acc: 0.9655, AUC macro: 0.9472, AUC micro: 0.9981, FNR: 0.4997 (25184/26085 正确)
+Client 3: Acc: 0.9756, AUC macro: 0.9082, AUC micro: 0.9995, FNR: 0.0590 (78716/80685 正确)
+Client 4: Acc: 0.9901, AUC macro: 0.8350, AUC micro: 0.9997, FNR: 0.6650 (119287/120476 正确)
+Client 5: Acc: 0.9094, AUC macro: 0.8197, AUC micro: 0.9860, FNR: 0.0000 (1255/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8943, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.8685, AUC macro: 0.9022, AUC micro: 0.9887, FNR: 0.2102 (4887/5627 正确)
+Client 8: Acc: 0.9335, AUC macro: 0.9832, AUC micro: 0.9966, FNR: 0.0247 (17470/18714 正确)
+Client 9: Acc: 0.9836, AUC macro: 0.9351, AUC micro: 0.9996, FNR: 0.0516 (119951/121950 正确)
+Averaged Test Accurancy: 0.9834
+Averaged Test AUC Macro: 0.8976
+Averaged Test AUC Micro: 0.9992
+Averaged Test FNR: 0.2510
+Std Test Accurancy: 0.0750
+Std Test AUC Macro: 0.0749
+Std Test AUC Micro: 0.0093
+Std Test FNR: 0.3336
+
+------------- Local Epoch: 21 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7053, AUC micro: 0.9838, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7569, AUC macro: 0.8831, AUC micro: 0.9743, FNR: 0.0000 (2105/2781 正确)
+Client 2: Acc: 0.9680, AUC macro: 0.9490, AUC micro: 0.9981, FNR: 0.4696 (25249/26085 正确)
+Client 3: Acc: 0.9756, AUC macro: 0.9136, AUC micro: 0.9995, FNR: 0.0590 (78714/80685 正确)
+Client 4: Acc: 0.9901, AUC macro: 0.8387, AUC micro: 0.9997, FNR: 0.6678 (119282/120476 正确)
+Client 5: Acc: 0.9101, AUC macro: 0.8415, AUC micro: 0.9870, FNR: 0.0000 (1256/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8950, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.8658, AUC macro: 0.9042, AUC micro: 0.9892, FNR: 0.2097 (4872/5627 正确)
+Client 8: Acc: 0.9339, AUC macro: 0.9838, AUC micro: 0.9967, FNR: 0.0242 (17477/18714 正确)
+Client 9: Acc: 0.9841, AUC macro: 0.9359, AUC micro: 0.9996, FNR: 0.0490 (120006/121950 正确)
+Averaged Test Accurancy: 0.9837
+Averaged Test AUC Macro: 0.8998
+Averaged Test AUC Micro: 0.9993
+Averaged Test FNR: 0.2479
+Std Test Accurancy: 0.0730
+Std Test AUC Macro: 0.0735
+Std Test AUC Micro: 0.0084
+Std Test FNR: 0.3320
+
+------------- Local Epoch: 22 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7079, AUC micro: 0.9839, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7627, AUC macro: 0.8836, AUC micro: 0.9774, FNR: 0.0000 (2121/2781 正确)
+Client 2: Acc: 0.9672, AUC macro: 0.9506, AUC micro: 0.9982, FNR: 0.4690 (25229/26085 正确)
+Client 3: Acc: 0.9755, AUC macro: 0.9159, AUC micro: 0.9996, FNR: 0.0590 (78712/80685 正确)
+Client 4: Acc: 0.9902, AUC macro: 0.8409, AUC micro: 0.9997, FNR: 0.6565 (119295/120476 正确)
+Client 5: Acc: 0.9094, AUC macro: 0.8619, AUC micro: 0.9874, FNR: 0.0000 (1255/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8957, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.8662, AUC macro: 0.9053, AUC micro: 0.9895, FNR: 0.2102 (4874/5627 正确)
+Client 8: Acc: 0.9400, AUC macro: 0.9840, AUC micro: 0.9968, FNR: 0.0247 (17591/18714 正确)
+Client 9: Acc: 0.9878, AUC macro: 0.9444, AUC micro: 0.9997, FNR: 0.0298 (120464/121950 正确)
+Averaged Test Accurancy: 0.9847
+Averaged Test AUC Macro: 0.9028
+Averaged Test AUC Micro: 0.9993
+Averaged Test FNR: 0.2449
+Std Test Accurancy: 0.0720
+Std Test AUC Macro: 0.0727
+Std Test AUC Micro: 0.0077
+Std Test FNR: 0.3317
+
+------------- Local Epoch: 23 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7089, AUC micro: 0.9841, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.7983, AUC macro: 0.8802, AUC micro: 0.9799, FNR: 0.0000 (2220/2781 正确)
+Client 2: Acc: 0.9673, AUC macro: 0.9515, AUC micro: 0.9983, FNR: 0.4690 (25232/26085 正确)
+Client 3: Acc: 0.9757, AUC macro: 0.9174, AUC micro: 0.9996, FNR: 0.0590 (78724/80685 正确)
+Client 4: Acc: 0.9902, AUC macro: 0.8523, AUC micro: 0.9997, FNR: 0.6588 (119295/120476 正确)
+Client 5: Acc: 0.9101, AUC macro: 0.8689, AUC micro: 0.9876, FNR: 0.0000 (1256/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8964, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.8614, AUC macro: 0.9074, AUC micro: 0.9896, FNR: 0.2092 (4847/5627 正确)
+Client 8: Acc: 0.9401, AUC macro: 0.9843, AUC micro: 0.9970, FNR: 0.0247 (17593/18714 正确)
+Client 9: Acc: 0.9874, AUC macro: 0.9380, AUC micro: 0.9997, FNR: 0.0343 (120419/121950 正确)
+Averaged Test Accurancy: 0.9848
+Averaged Test AUC Macro: 0.9044
+Averaged Test AUC Micro: 0.9993
+Averaged Test FNR: 0.2455
+Std Test Accurancy: 0.0648
+Std Test AUC Macro: 0.0713
+Std Test AUC Micro: 0.0072
+Std Test FNR: 0.3317
+
+------------- Local Epoch: 24 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7106, AUC micro: 0.9843, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.8109, AUC macro: 0.8821, AUC micro: 0.9816, FNR: 0.0000 (2255/2781 正确)
+Client 2: Acc: 0.9673, AUC macro: 0.9525, AUC micro: 0.9983, FNR: 0.4690 (25232/26085 正确)
+Client 3: Acc: 0.9757, AUC macro: 0.9191, AUC micro: 0.9996, FNR: 0.0591 (78727/80685 正确)
+Client 4: Acc: 0.9901, AUC macro: 0.8501, AUC micro: 0.9997, FNR: 0.6644 (119289/120476 正确)
+Client 5: Acc: 0.9094, AUC macro: 0.8703, AUC micro: 0.9879, FNR: 0.0000 (1255/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8972, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.8681, AUC macro: 0.9071, AUC micro: 0.9899, FNR: 0.2127 (4885/5627 正确)
+Client 8: Acc: 0.9430, AUC macro: 0.9846, AUC micro: 0.9971, FNR: 0.0203 (17647/18714 正确)
+Client 9: Acc: 0.9871, AUC macro: 0.9383, AUC micro: 0.9997, FNR: 0.0355 (120375/121950 正确)
+Averaged Test Accurancy: 0.9849
+Averaged Test AUC Macro: 0.9045
+Averaged Test AUC Micro: 0.9994
+Averaged Test FNR: 0.2461
+Std Test Accurancy: 0.0616
+Std Test AUC Macro: 0.0711
+Std Test AUC Micro: 0.0068
+Std Test FNR: 0.3326
+
+------------- Local Epoch: 25 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7115, AUC micro: 0.9844, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.8051, AUC macro: 0.8855, AUC micro: 0.9832, FNR: 0.0000 (2239/2781 正确)
+Client 2: Acc: 0.9687, AUC macro: 0.9534, AUC micro: 0.9984, FNR: 0.4690 (25268/26085 正确)
+Client 3: Acc: 0.9757, AUC macro: 0.9197, AUC micro: 0.9996, FNR: 0.0590 (78724/80685 正确)
+Client 4: Acc: 0.9903, AUC macro: 0.8635, AUC micro: 0.9997, FNR: 0.6554 (119303/120476 正确)
+Client 5: Acc: 0.9094, AUC macro: 0.8767, AUC micro: 0.9880, FNR: 0.0000 (1255/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8979, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9047, AUC macro: 0.9087, AUC micro: 0.9905, FNR: 0.0768 (5091/5627 正确)
+Client 8: Acc: 0.9438, AUC macro: 0.9850, AUC micro: 0.9972, FNR: 0.0203 (17662/18714 正确)
+Client 9: Acc: 0.9857, AUC macro: 0.9391, AUC micro: 0.9997, FNR: 0.0415 (120204/121950 正确)
+Averaged Test Accurancy: 0.9851
+Averaged Test AUC Macro: 0.9080
+Averaged Test AUC Micro: 0.9994
+Averaged Test FNR: 0.2322
+Std Test Accurancy: 0.0600
+Std Test AUC Macro: 0.0702
+Std Test AUC Micro: 0.0065
+Std Test FNR: 0.3349
+
+------------- Local Epoch: 26 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7124, AUC micro: 0.9844, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.8234, AUC macro: 0.8874, AUC micro: 0.9845, FNR: 0.0000 (2290/2781 正确)
+Client 2: Acc: 0.9689, AUC macro: 0.9547, AUC micro: 0.9984, FNR: 0.4530 (25274/26085 正确)
+Client 3: Acc: 0.9758, AUC macro: 0.9170, AUC micro: 0.9996, FNR: 0.0590 (78729/80685 正确)
+Client 4: Acc: 0.9931, AUC macro: 0.8741, AUC micro: 0.9998, FNR: 0.4583 (119647/120476 正确)
+Client 5: Acc: 0.9094, AUC macro: 0.8763, AUC micro: 0.9882, FNR: 0.0000 (1255/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8986, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9024, AUC macro: 0.9113, AUC micro: 0.9905, FNR: 0.0753 (5078/5627 正确)
+Client 8: Acc: 0.9447, AUC macro: 0.9856, AUC micro: 0.9973, FNR: 0.0205 (17680/18714 正确)
+Client 9: Acc: 0.9859, AUC macro: 0.9382, AUC micro: 0.9997, FNR: 0.0425 (120234/121950 正确)
+Averaged Test Accurancy: 0.9859
+Averaged Test AUC Macro: 0.9101
+Averaged Test AUC Micro: 0.9994
+Averaged Test FNR: 0.2109
+Std Test Accurancy: 0.0566
+Std Test AUC Macro: 0.0697
+Std Test AUC Micro: 0.0062
+Std Test FNR: 0.3134
+
+------------- Local Epoch: 27 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7125, AUC micro: 0.9846, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.8522, AUC macro: 0.8914, AUC micro: 0.9862, FNR: 0.0000 (2370/2781 正确)
+Client 2: Acc: 0.9690, AUC macro: 0.9559, AUC micro: 0.9985, FNR: 0.4485 (25277/26085 正确)
+Client 3: Acc: 0.9758, AUC macro: 0.9146, AUC micro: 0.9996, FNR: 0.0590 (78732/80685 正确)
+Client 4: Acc: 0.9951, AUC macro: 0.8779, AUC micro: 0.9998, FNR: 0.3255 (119883/120476 正确)
+Client 5: Acc: 0.9094, AUC macro: 0.8788, AUC micro: 0.9884, FNR: 0.0000 (1255/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8991, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9079, AUC macro: 0.9109, AUC micro: 0.9912, FNR: 0.0784 (5109/5627 正确)
+Client 8: Acc: 0.9441, AUC macro: 0.9864, AUC micro: 0.9974, FNR: 0.0198 (17668/18714 正确)
+Client 9: Acc: 0.9861, AUC macro: 0.9469, AUC micro: 0.9997, FNR: 0.0407 (120256/121950 正确)
+Averaged Test Accurancy: 0.9865
+Averaged Test AUC Macro: 0.9127
+Averaged Test AUC Micro: 0.9994
+Averaged Test FNR: 0.1972
+Std Test Accurancy: 0.0512
+Std Test AUC Macro: 0.0702
+Std Test AUC Micro: 0.0059
+Std Test FNR: 0.3050
+
+------------- Local Epoch: 28 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7144, AUC micro: 0.9850, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.8626, AUC macro: 0.8931, AUC micro: 0.9885, FNR: 0.0000 (2399/2781 正确)
+Client 2: Acc: 0.9698, AUC macro: 0.9567, AUC micro: 0.9985, FNR: 0.4498 (25296/26085 正确)
+Client 3: Acc: 0.9759, AUC macro: 0.9147, AUC micro: 0.9996, FNR: 0.0591 (78737/80685 正确)
+Client 4: Acc: 0.9953, AUC macro: 0.8805, AUC micro: 0.9998, FNR: 0.3102 (119910/120476 正确)
+Client 5: Acc: 0.9094, AUC macro: 0.8838, AUC micro: 0.9887, FNR: 0.0000 (1255/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8995, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9092, AUC macro: 0.9118, AUC micro: 0.9914, FNR: 0.0789 (5116/5627 正确)
+Client 8: Acc: 0.9452, AUC macro: 0.9870, AUC micro: 0.9975, FNR: 0.0201 (17688/18714 正确)
+Client 9: Acc: 0.9884, AUC macro: 0.9426, AUC micro: 0.9997, FNR: 0.0314 (120540/121950 正确)
+Averaged Test Accurancy: 0.9872
+Averaged Test AUC Macro: 0.9126
+Averaged Test AUC Micro: 0.9995
+Averaged Test FNR: 0.1949
+Std Test Accurancy: 0.0496
+Std Test AUC Macro: 0.0693
+Std Test AUC Micro: 0.0055
+Std Test FNR: 0.3049
+
+------------- Local Epoch: 29 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7154, AUC micro: 0.9851, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.8634, AUC macro: 0.8940, AUC micro: 0.9889, FNR: 0.0000 (2401/2781 正确)
+Client 2: Acc: 0.9875, AUC macro: 0.9583, AUC micro: 0.9986, FNR: 0.1376 (25759/26085 正确)
+Client 3: Acc: 0.9757, AUC macro: 0.9156, AUC micro: 0.9996, FNR: 0.0588 (78723/80685 正确)
+Client 4: Acc: 0.9923, AUC macro: 0.8839, AUC micro: 0.9998, FNR: 0.5130 (119551/120476 正确)
+Client 5: Acc: 0.9094, AUC macro: 0.8910, AUC micro: 0.9888, FNR: 0.0000 (1255/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8999, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9056, AUC macro: 0.9144, AUC micro: 0.9915, FNR: 0.0763 (5096/5627 正确)
+Client 8: Acc: 0.9457, AUC macro: 0.9883, AUC micro: 0.9975, FNR: 0.0202 (17697/18714 正确)
+Client 9: Acc: 0.9894, AUC macro: 0.9450, AUC micro: 0.9997, FNR: 0.0285 (120662/121950 正确)
+Averaged Test Accurancy: 0.9876
+Averaged Test AUC Macro: 0.9143
+Averaged Test AUC Micro: 0.9995
+Averaged Test FNR: 0.1834
+Std Test Accurancy: 0.0508
+Std Test AUC Macro: 0.0694
+Std Test AUC Micro: 0.0054
+Std Test FNR: 0.3092
+
+------------- Local Epoch: 30 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7174, AUC micro: 0.9854, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.8752, AUC macro: 0.9004, AUC micro: 0.9913, FNR: 0.0000 (2434/2781 正确)
+Client 2: Acc: 0.9880, AUC macro: 0.9594, AUC micro: 0.9986, FNR: 0.1344 (25771/26085 正确)
+Client 3: Acc: 0.9759, AUC macro: 0.9151, AUC micro: 0.9996, FNR: 0.0590 (78740/80685 正确)
+Client 4: Acc: 0.9950, AUC macro: 0.8875, AUC micro: 0.9998, FNR: 0.3283 (119879/120476 正确)
+Client 5: Acc: 0.9101, AUC macro: 0.8923, AUC micro: 0.9888, FNR: 0.0000 (1256/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9003, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9305, AUC macro: 0.9133, AUC micro: 0.9920, FNR: 0.0901 (5236/5627 正确)
+Client 8: Acc: 0.9445, AUC macro: 0.9888, AUC micro: 0.9976, FNR: 0.0200 (17676/18714 正确)
+Client 9: Acc: 0.9895, AUC macro: 0.9481, AUC micro: 0.9997, FNR: 0.0280 (120666/121950 正确)
+Averaged Test Accurancy: 0.9885
+Averaged Test AUC Macro: 0.9159
+Averaged Test AUC Micro: 0.9995
+Averaged Test FNR: 0.1660
+Std Test Accurancy: 0.0479
+Std Test AUC Macro: 0.0690
+Std Test AUC Micro: 0.0051
+Std Test FNR: 0.2938
+
+------------- Local Epoch: 31 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7174, AUC micro: 0.9854, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.8777, AUC macro: 0.9028, AUC micro: 0.9925, FNR: 0.0000 (2441/2781 正确)
+Client 2: Acc: 0.9849, AUC macro: 0.9613, AUC micro: 0.9987, FNR: 0.1260 (25692/26085 正确)
+Client 3: Acc: 0.9758, AUC macro: 0.9163, AUC micro: 0.9996, FNR: 0.0589 (78732/80685 正确)
+Client 4: Acc: 0.9939, AUC macro: 0.8937, AUC micro: 0.9998, FNR: 0.4082 (119738/120476 正确)
+Client 5: Acc: 0.9101, AUC macro: 0.8941, AUC micro: 0.9889, FNR: 0.0000 (1256/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9008, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9060, AUC macro: 0.9175, AUC micro: 0.9920, FNR: 0.0743 (5098/5627 正确)
+Client 8: Acc: 0.9457, AUC macro: 0.9892, AUC micro: 0.9978, FNR: 0.0201 (17698/18714 正确)
+Client 9: Acc: 0.9880, AUC macro: 0.9509, AUC micro: 0.9997, FNR: 0.0329 (120484/121950 正确)
+Averaged Test Accurancy: 0.9876
+Averaged Test AUC Macro: 0.9183
+Averaged Test AUC Micro: 0.9995
+Averaged Test FNR: 0.1720
+Std Test Accurancy: 0.0485
+Std Test AUC Macro: 0.0694
+Std Test AUC Micro: 0.0050
+Std Test FNR: 0.2995
+
+------------- Local Epoch: 32 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7206, AUC micro: 0.9859, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.8810, AUC macro: 0.9043, AUC micro: 0.9929, FNR: 0.0000 (2450/2781 正确)
+Client 2: Acc: 0.9803, AUC macro: 0.9625, AUC micro: 0.9987, FNR: 0.1254 (25571/26085 正确)
+Client 3: Acc: 0.9757, AUC macro: 0.9166, AUC micro: 0.9996, FNR: 0.0588 (78725/80685 正确)
+Client 4: Acc: 0.9954, AUC macro: 0.8984, AUC micro: 0.9998, FNR: 0.3018 (119926/120476 正确)
+Client 5: Acc: 0.9101, AUC macro: 0.8941, AUC micro: 0.9891, FNR: 0.0000 (1256/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9012, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9344, AUC macro: 0.9124, AUC micro: 0.9923, FNR: 0.0941 (5258/5627 正确)
+Client 8: Acc: 0.9457, AUC macro: 0.9895, AUC micro: 0.9978, FNR: 0.0201 (17697/18714 正确)
+Client 9: Acc: 0.9896, AUC macro: 0.9463, AUC micro: 0.9998, FNR: 0.0263 (120676/121950 正确)
+Averaged Test Accurancy: 0.9883
+Averaged Test AUC Macro: 0.9185
+Averaged Test AUC Micro: 0.9995
+Averaged Test FNR: 0.1627
+Std Test Accurancy: 0.0464
+Std Test AUC Macro: 0.0682
+Std Test AUC Micro: 0.0049
+Std Test FNR: 0.2925
+
+------------- Local Epoch: 33 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7244, AUC micro: 0.9865, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9209, AUC macro: 0.9057, AUC micro: 0.9938, FNR: 0.0000 (2561/2781 正确)
+Client 2: Acc: 0.9826, AUC macro: 0.9630, AUC micro: 0.9987, FNR: 0.1196 (25630/26085 正确)
+Client 3: Acc: 0.9759, AUC macro: 0.9174, AUC micro: 0.9996, FNR: 0.0588 (78739/80685 正确)
+Client 4: Acc: 0.9954, AUC macro: 0.9055, AUC micro: 0.9998, FNR: 0.3052 (119921/120476 正确)
+Client 5: Acc: 0.9101, AUC macro: 0.8960, AUC micro: 0.9894, FNR: 0.0000 (1256/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9015, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9106, AUC macro: 0.9182, AUC micro: 0.9925, FNR: 0.0728 (5124/5627 正确)
+Client 8: Acc: 0.9459, AUC macro: 0.9897, AUC micro: 0.9978, FNR: 0.0200 (17701/18714 正确)
+Client 9: Acc: 0.9874, AUC macro: 0.9511, AUC micro: 0.9997, FNR: 0.0385 (120417/121950 正确)
+Averaged Test Accurancy: 0.9879
+Averaged Test AUC Macro: 0.9214
+Averaged Test AUC Micro: 0.9995
+Averaged Test FNR: 0.1615
+Std Test Accurancy: 0.0435
+Std Test AUC Macro: 0.0676
+Std Test AUC Micro: 0.0047
+Std Test FNR: 0.2928
+
+------------- Local Epoch: 34 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7275, AUC micro: 0.9870, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9331, AUC macro: 0.9070, AUC micro: 0.9945, FNR: 0.0000 (2595/2781 正确)
+Client 2: Acc: 0.9748, AUC macro: 0.9641, AUC micro: 0.9987, FNR: 0.3423 (25428/26085 正确)
+Client 3: Acc: 0.9757, AUC macro: 0.9188, AUC micro: 0.9996, FNR: 0.0588 (78723/80685 正确)
+Client 4: Acc: 0.9954, AUC macro: 0.9105, AUC micro: 0.9998, FNR: 0.3018 (119926/120476 正确)
+Client 5: Acc: 0.9101, AUC macro: 0.8958, AUC micro: 0.9897, FNR: 0.0000 (1256/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9018, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9117, AUC macro: 0.9175, AUC micro: 0.9927, FNR: 0.0728 (5130/5627 正确)
+Client 8: Acc: 0.9459, AUC macro: 0.9905, AUC micro: 0.9979, FNR: 0.0200 (17702/18714 正确)
+Client 9: Acc: 0.9883, AUC macro: 0.9481, AUC micro: 0.9997, FNR: 0.0349 (120522/121950 正确)
+Averaged Test Accurancy: 0.9878
+Averaged Test AUC Macro: 0.9222
+Averaged Test AUC Micro: 0.9995
+Averaged Test FNR: 0.1831
+Std Test Accurancy: 0.0423
+Std Test AUC Macro: 0.0667
+Std Test AUC Micro: 0.0045
+Std Test FNR: 0.2972
+
+------------- Local Epoch: 35 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7305, AUC micro: 0.9874, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9349, AUC macro: 0.9079, AUC micro: 0.9949, FNR: 0.0000 (2600/2781 正确)
+Client 2: Acc: 0.9839, AUC macro: 0.9655, AUC micro: 0.9988, FNR: 0.1209 (25664/26085 正确)
+Client 3: Acc: 0.9759, AUC macro: 0.9190, AUC micro: 0.9996, FNR: 0.0588 (78739/80685 正确)
+Client 4: Acc: 0.9954, AUC macro: 0.9153, AUC micro: 0.9998, FNR: 0.3035 (119923/120476 正确)
+Client 5: Acc: 0.9109, AUC macro: 0.8972, AUC micro: 0.9898, FNR: 0.0000 (1257/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9021, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9127, AUC macro: 0.9176, AUC micro: 0.9928, FNR: 0.0728 (5136/5627 正确)
+Client 8: Acc: 0.9464, AUC macro: 0.9905, AUC micro: 0.9980, FNR: 0.0201 (17710/18714 正确)
+Client 9: Acc: 0.9896, AUC macro: 0.9538, AUC micro: 0.9998, FNR: 0.0293 (120682/121950 正确)
+Averaged Test Accurancy: 0.9886
+Averaged Test AUC Macro: 0.9247
+Averaged Test AUC Micro: 0.9996
+Averaged Test FNR: 0.1605
+Std Test Accurancy: 0.0429
+Std Test AUC Macro: 0.0664
+Std Test AUC Micro: 0.0044
+Std Test FNR: 0.2931
+
+------------- Local Epoch: 36 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7307, AUC micro: 0.9875, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9353, AUC macro: 0.9093, AUC micro: 0.9952, FNR: 0.0000 (2601/2781 正确)
+Client 2: Acc: 0.9761, AUC macro: 0.9661, AUC micro: 0.9988, FNR: 0.3417 (25461/26085 正确)
+Client 3: Acc: 0.9760, AUC macro: 0.9185, AUC micro: 0.9996, FNR: 0.0588 (78746/80685 正确)
+Client 4: Acc: 0.9954, AUC macro: 0.9190, AUC micro: 0.9998, FNR: 0.3041 (119922/120476 正确)
+Client 5: Acc: 0.9109, AUC macro: 0.8973, AUC micro: 0.9900, FNR: 0.0000 (1257/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9024, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9129, AUC macro: 0.9194, AUC micro: 0.9930, FNR: 0.0728 (5137/5627 正确)
+Client 8: Acc: 0.9457, AUC macro: 0.9908, AUC micro: 0.9980, FNR: 0.0198 (17698/18714 正确)
+Client 9: Acc: 0.9900, AUC macro: 0.9528, AUC micro: 0.9998, FNR: 0.0266 (120734/121950 正确)
+Averaged Test Accurancy: 0.9883
+Averaged Test AUC Macro: 0.9254
+Averaged Test AUC Micro: 0.9996
+Averaged Test FNR: 0.1824
+Std Test Accurancy: 0.0423
+Std Test AUC Macro: 0.0664
+Std Test AUC Micro: 0.0043
+Std Test FNR: 0.2977
+
+------------- Local Epoch: 37 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7316, AUC micro: 0.9875, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9353, AUC macro: 0.9095, AUC micro: 0.9953, FNR: 0.0000 (2601/2781 正确)
+Client 2: Acc: 0.9881, AUC macro: 0.9672, AUC micro: 0.9989, FNR: 0.1209 (25774/26085 正确)
+Client 3: Acc: 0.9760, AUC macro: 0.9173, AUC micro: 0.9996, FNR: 0.0588 (78746/80685 正确)
+Client 4: Acc: 0.9954, AUC macro: 0.9232, AUC micro: 0.9999, FNR: 0.3001 (119926/120476 正确)
+Client 5: Acc: 0.9109, AUC macro: 0.8977, AUC micro: 0.9901, FNR: 0.0000 (1257/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9027, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9215, AUC macro: 0.9179, AUC micro: 0.9932, FNR: 0.0743 (5185/5627 正确)
+Client 8: Acc: 0.9463, AUC macro: 0.9908, AUC micro: 0.9981, FNR: 0.0200 (17709/18714 正确)
+Client 9: Acc: 0.9901, AUC macro: 0.9635, AUC micro: 0.9998, FNR: 0.0243 (120744/121950 正确)
+Averaged Test Accurancy: 0.9890
+Averaged Test AUC Macro: 0.9286
+Averaged Test AUC Micro: 0.9996
+Averaged Test FNR: 0.1598
+Std Test Accurancy: 0.0425
+Std Test AUC Macro: 0.0670
+Std Test AUC Micro: 0.0043
+Std Test FNR: 0.2931
+
+------------- Local Epoch: 38 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7345, AUC micro: 0.9876, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9353, AUC macro: 0.9086, AUC micro: 0.9955, FNR: 0.0000 (2601/2781 正确)
+Client 2: Acc: 0.9877, AUC macro: 0.9685, AUC micro: 0.9989, FNR: 0.1228 (25763/26085 正确)
+Client 3: Acc: 0.9760, AUC macro: 0.9177, AUC micro: 0.9997, FNR: 0.0588 (78746/80685 正确)
+Client 4: Acc: 0.9954, AUC macro: 0.9238, AUC micro: 0.9999, FNR: 0.3041 (119920/120476 正确)
+Client 5: Acc: 0.9109, AUC macro: 0.8973, AUC micro: 0.9903, FNR: 0.0000 (1257/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9030, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9374, AUC macro: 0.9181, AUC micro: 0.9934, FNR: 0.0748 (5275/5627 正确)
+Client 8: Acc: 0.9462, AUC macro: 0.9909, AUC micro: 0.9981, FNR: 0.0199 (17708/18714 正确)
+Client 9: Acc: 0.9888, AUC macro: 0.9605, AUC micro: 0.9998, FNR: 0.0331 (120583/121950 正确)
+Averaged Test Accurancy: 0.9888
+Averaged Test AUC Macro: 0.9282
+Averaged Test AUC Micro: 0.9996
+Averaged Test FNR: 0.1614
+Std Test Accurancy: 0.0415
+Std Test AUC Macro: 0.0662
+Std Test AUC Micro: 0.0042
+Std Test FNR: 0.2929
+
+------------- Local Epoch: 39 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7358, AUC micro: 0.9878, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9356, AUC macro: 0.9097, AUC micro: 0.9957, FNR: 0.0000 (2602/2781 正确)
+Client 2: Acc: 0.9881, AUC macro: 0.9689, AUC micro: 0.9989, FNR: 0.1190 (25774/26085 正确)
+Client 3: Acc: 0.9760, AUC macro: 0.9168, AUC micro: 0.9997, FNR: 0.0588 (78747/80685 正确)
+Client 4: Acc: 0.9954, AUC macro: 0.9247, AUC micro: 0.9999, FNR: 0.3046 (119922/120476 正确)
+Client 5: Acc: 0.9109, AUC macro: 0.8992, AUC micro: 0.9904, FNR: 0.0000 (1257/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9034, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9165, AUC macro: 0.9217, AUC micro: 0.9935, FNR: 0.0723 (5157/5627 正确)
+Client 8: Acc: 0.9503, AUC macro: 0.9910, AUC micro: 0.9981, FNR: 0.0104 (17783/18714 正确)
+Client 9: Acc: 0.9881, AUC macro: 0.9573, AUC micro: 0.9997, FNR: 0.0367 (120502/121950 正确)
+Averaged Test Accurancy: 0.9886
+Averaged Test AUC Macro: 0.9278
+Averaged Test AUC Micro: 0.9996
+Averaged Test FNR: 0.1602
+Std Test Accurancy: 0.0427
+Std Test AUC Macro: 0.0657
+Std Test AUC Micro: 0.0042
+Std Test FNR: 0.2933
+
+------------- Local Epoch: 40 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7393, AUC micro: 0.9883, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9364, AUC macro: 0.9093, AUC micro: 0.9959, FNR: 0.0000 (2604/2781 正确)
+Client 2: Acc: 0.9875, AUC macro: 0.9702, AUC micro: 0.9990, FNR: 0.1209 (25760/26085 正确)
+Client 3: Acc: 0.9760, AUC macro: 0.9173, AUC micro: 0.9997, FNR: 0.0584 (78752/80685 正确)
+Client 4: Acc: 0.9950, AUC macro: 0.9212, AUC micro: 0.9999, FNR: 0.1301 (119876/120476 正确)
+Client 5: Acc: 0.9116, AUC macro: 0.8995, AUC micro: 0.9906, FNR: 0.0000 (1258/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9038, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9199, AUC macro: 0.9216, AUC micro: 0.9936, FNR: 0.0723 (5176/5627 正确)
+Client 8: Acc: 0.9506, AUC macro: 0.9911, AUC micro: 0.9982, FNR: 0.0118 (17790/18714 正确)
+Client 9: Acc: 0.9899, AUC macro: 0.9640, AUC micro: 0.9998, FNR: 0.0278 (120724/121950 正确)
+Averaged Test Accurancy: 0.9890
+Averaged Test AUC Macro: 0.9288
+Averaged Test AUC Micro: 0.9996
+Averaged Test FNR: 0.1421
+Std Test Accurancy: 0.0424
+Std Test AUC Macro: 0.0652
+Std Test AUC Micro: 0.0040
+Std Test FNR: 0.2897
+
+------------- Local Epoch: 41 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7417, AUC micro: 0.9886, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9364, AUC macro: 0.9092, AUC micro: 0.9960, FNR: 0.0000 (2604/2781 正确)
+Client 2: Acc: 0.9872, AUC macro: 0.9706, AUC micro: 0.9990, FNR: 0.1177 (25750/26085 正确)
+Client 3: Acc: 0.9760, AUC macro: 0.9158, AUC micro: 0.9997, FNR: 0.0590 (78750/80685 正确)
+Client 4: Acc: 0.9954, AUC macro: 0.9215, AUC micro: 0.9999, FNR: 0.3063 (119919/120476 正确)
+Client 5: Acc: 0.9116, AUC macro: 0.8986, AUC micro: 0.9908, FNR: 0.0000 (1258/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9043, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9216, AUC macro: 0.9229, AUC micro: 0.9938, FNR: 0.0718 (5186/5627 正确)
+Client 8: Acc: 0.9505, AUC macro: 0.9912, AUC micro: 0.9982, FNR: 0.0086 (17788/18714 正确)
+Client 9: Acc: 0.9874, AUC macro: 0.9581, AUC micro: 0.9997, FNR: 0.0399 (120414/121950 正确)
+Averaged Test Accurancy: 0.9885
+Averaged Test AUC Macro: 0.9275
+Averaged Test AUC Micro: 0.9996
+Averaged Test FNR: 0.1603
+Std Test Accurancy: 0.0420
+Std Test AUC Macro: 0.0643
+Std Test AUC Micro: 0.0039
+Std Test FNR: 0.2934
+
+------------- Local Epoch: 42 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7417, AUC micro: 0.9886, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9378, AUC macro: 0.9090, AUC micro: 0.9961, FNR: 0.0000 (2608/2781 正确)
+Client 2: Acc: 0.9885, AUC macro: 0.9713, AUC micro: 0.9990, FNR: 0.1209 (25784/26085 正确)
+Client 3: Acc: 0.9762, AUC macro: 0.9162, AUC micro: 0.9996, FNR: 0.0586 (78765/80685 正确)
+Client 4: Acc: 0.9954, AUC macro: 0.9218, AUC micro: 0.9999, FNR: 0.3041 (119922/120476 正确)
+Client 5: Acc: 0.9116, AUC macro: 0.8998, AUC micro: 0.9909, FNR: 0.0000 (1258/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9046, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9469, AUC macro: 0.9235, AUC micro: 0.9941, FNR: 0.0850 (5328/5627 正确)
+Client 8: Acc: 0.9512, AUC macro: 0.9913, AUC micro: 0.9983, FNR: 0.0144 (17800/18714 正确)
+Client 9: Acc: 0.9901, AUC macro: 0.9687, AUC micro: 0.9998, FNR: 0.0270 (120742/121950 正确)
+Averaged Test Accurancy: 0.9895
+Averaged Test AUC Macro: 0.9301
+Averaged Test AUC Micro: 0.9996
+Averaged Test FNR: 0.1610
+Std Test Accurancy: 0.0411
+Std Test AUC Macro: 0.0651
+Std Test AUC Micro: 0.0039
+Std Test FNR: 0.2932
+
+------------- Local Epoch: 43 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7433, AUC micro: 0.9886, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9399, AUC macro: 0.9072, AUC micro: 0.9963, FNR: 0.0000 (2614/2781 正确)
+Client 2: Acc: 0.9849, AUC macro: 0.9719, AUC micro: 0.9990, FNR: 0.1184 (25692/26085 正确)
+Client 3: Acc: 0.9762, AUC macro: 0.9146, AUC micro: 0.9996, FNR: 0.0586 (78762/80685 正确)
+Client 4: Acc: 0.9974, AUC macro: 0.9207, AUC micro: 0.9999, FNR: 0.1295 (120157/120476 正确)
+Client 5: Acc: 0.9116, AUC macro: 0.9010, AUC micro: 0.9910, FNR: 0.0000 (1258/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9049, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9463, AUC macro: 0.9241, AUC micro: 0.9942, FNR: 0.0926 (5325/5627 正确)
+Client 8: Acc: 0.9508, AUC macro: 0.9914, AUC micro: 0.9983, FNR: 0.0087 (17794/18714 正确)
+Client 9: Acc: 0.9889, AUC macro: 0.9696, AUC micro: 0.9998, FNR: 0.0316 (120598/121950 正确)
+Averaged Test Accurancy: 0.9895
+Averaged Test AUC Macro: 0.9300
+Averaged Test AUC Micro: 0.9996
+Averaged Test FNR: 0.1439
+Std Test Accurancy: 0.0409
+Std Test AUC Macro: 0.0648
+Std Test AUC Micro: 0.0039
+Std Test FNR: 0.2893
+
+------------- Local Epoch: 44 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7433, AUC micro: 0.9886, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9364, AUC macro: 0.9129, AUC micro: 0.9962, FNR: 0.0000 (2604/2781 正确)
+Client 2: Acc: 0.9826, AUC macro: 0.9729, AUC micro: 0.9991, FNR: 0.1171 (25630/26085 正确)
+Client 3: Acc: 0.9761, AUC macro: 0.9154, AUC micro: 0.9997, FNR: 0.0587 (78760/80685 正确)
+Client 4: Acc: 0.9954, AUC macro: 0.9221, AUC micro: 0.9999, FNR: 0.3001 (119922/120476 正确)
+Client 5: Acc: 0.9116, AUC macro: 0.9008, AUC micro: 0.9912, FNR: 0.0000 (1258/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9053, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9403, AUC macro: 0.9247, AUC micro: 0.9943, FNR: 0.1150 (5291/5627 正确)
+Client 8: Acc: 0.9510, AUC macro: 0.9914, AUC micro: 0.9983, FNR: 0.0143 (17797/18714 正确)
+Client 9: Acc: 0.9901, AUC macro: 0.9694, AUC micro: 0.9998, FNR: 0.0265 (120738/121950 正确)
+Averaged Test Accurancy: 0.9891
+Averaged Test AUC Macro: 0.9305
+Averaged Test AUC Micro: 0.9996
+Averaged Test FNR: 0.1632
+Std Test Accurancy: 0.0409
+Std Test AUC Macro: 0.0649
+Std Test AUC Micro: 0.0039
+Std Test FNR: 0.2924
+
+------------- Local Epoch: 45 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7433, AUC micro: 0.9886, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9385, AUC macro: 0.9138, AUC micro: 0.9964, FNR: 0.0000 (2610/2781 正确)
+Client 2: Acc: 0.9854, AUC macro: 0.9740, AUC micro: 0.9991, FNR: 0.1177 (25703/26085 正确)
+Client 3: Acc: 0.9762, AUC macro: 0.9151, AUC micro: 0.9997, FNR: 0.0585 (78764/80685 正确)
+Client 4: Acc: 0.9954, AUC macro: 0.9226, AUC micro: 0.9999, FNR: 0.3012 (119924/120476 正确)
+Client 5: Acc: 0.9116, AUC macro: 0.9013, AUC micro: 0.9913, FNR: 0.0000 (1258/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9057, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9307, AUC macro: 0.9267, AUC micro: 0.9945, FNR: 0.0728 (5237/5627 正确)
+Client 8: Acc: 0.9515, AUC macro: 0.9916, AUC micro: 0.9984, FNR: 0.0143 (17806/18714 正确)
+Client 9: Acc: 0.9892, AUC macro: 0.9677, AUC micro: 0.9998, FNR: 0.0316 (120634/121950 正确)
+Averaged Test Accurancy: 0.9890
+Averaged Test AUC Macro: 0.9305
+Averaged Test AUC Micro: 0.9996
+Averaged Test FNR: 0.1596
+Std Test Accurancy: 0.0414
+Std Test AUC Macro: 0.0649
+Std Test AUC Micro: 0.0038
+Std Test FNR: 0.2932
+
+------------- Local Epoch: 46 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7433, AUC micro: 0.9886, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9385, AUC macro: 0.9149, AUC micro: 0.9964, FNR: 0.0000 (2610/2781 正确)
+Client 2: Acc: 0.9771, AUC macro: 0.9748, AUC micro: 0.9990, FNR: 0.3596 (25488/26085 正确)
+Client 3: Acc: 0.9761, AUC macro: 0.9184, AUC micro: 0.9997, FNR: 0.0584 (78759/80685 正确)
+Client 4: Acc: 0.9954, AUC macro: 0.9233, AUC micro: 0.9999, FNR: 0.3018 (119920/120476 正确)
+Client 5: Acc: 0.9116, AUC macro: 0.9038, AUC micro: 0.9914, FNR: 0.0000 (1258/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9062, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9454, AUC macro: 0.9272, AUC micro: 0.9947, FNR: 0.0997 (5320/5627 正确)
+Client 8: Acc: 0.9515, AUC macro: 0.9915, AUC micro: 0.9984, FNR: 0.0143 (17806/18714 正确)
+Client 9: Acc: 0.9891, AUC macro: 0.9667, AUC micro: 0.9998, FNR: 0.0318 (120625/121950 正确)
+Averaged Test Accurancy: 0.9887
+Averaged Test AUC Macro: 0.9311
+Averaged Test AUC Micro: 0.9996
+Averaged Test FNR: 0.1866
+Std Test Accurancy: 0.0402
+Std Test AUC Macro: 0.0648
+Std Test AUC Micro: 0.0038
+Std Test FNR: 0.2978
+
+------------- Local Epoch: 47 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7439, AUC micro: 0.9886, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9385, AUC macro: 0.9150, AUC micro: 0.9965, FNR: 0.0000 (2610/2781 正确)
+Client 2: Acc: 0.9767, AUC macro: 0.9764, AUC micro: 0.9991, FNR: 0.3448 (25477/26085 正确)
+Client 3: Acc: 0.9761, AUC macro: 0.9156, AUC micro: 0.9997, FNR: 0.0585 (78759/80685 正确)
+Client 4: Acc: 0.9954, AUC macro: 0.9231, AUC micro: 0.9999, FNR: 0.3029 (119916/120476 正确)
+Client 5: Acc: 0.9116, AUC macro: 0.9230, AUC micro: 0.9915, FNR: 0.0000 (1258/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9068, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9446, AUC macro: 0.9274, AUC micro: 0.9948, FNR: 0.1064 (5315/5627 正确)
+Client 8: Acc: 0.9515, AUC macro: 0.9916, AUC micro: 0.9984, FNR: 0.0142 (17806/18714 正确)
+Client 9: Acc: 0.9902, AUC macro: 0.9670, AUC micro: 0.9998, FNR: 0.0274 (120751/121950 正确)
+Averaged Test Accurancy: 0.9889
+Averaged Test AUC Macro: 0.9310
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1854
+Std Test Accurancy: 0.0403
+Std Test AUC Macro: 0.0646
+Std Test AUC Micro: 0.0038
+Std Test FNR: 0.2971
+
+------------- Local Epoch: 48 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7446, AUC micro: 0.9886, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9417, AUC macro: 0.9140, AUC micro: 0.9966, FNR: 0.0000 (2619/2781 正确)
+Client 2: Acc: 0.9817, AUC macro: 0.9798, AUC micro: 0.9992, FNR: 0.1171 (25608/26085 正确)
+Client 3: Acc: 0.9762, AUC macro: 0.9160, AUC micro: 0.9997, FNR: 0.0584 (78766/80685 正确)
+Client 4: Acc: 0.9954, AUC macro: 0.9219, AUC micro: 0.9999, FNR: 0.3029 (119924/120476 正确)
+Client 5: Acc: 0.9116, AUC macro: 0.9231, AUC micro: 0.9917, FNR: 0.0000 (1258/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9072, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9510, AUC macro: 0.9292, AUC micro: 0.9950, FNR: 0.0830 (5351/5627 正确)
+Client 8: Acc: 0.9523, AUC macro: 0.9917, AUC micro: 0.9985, FNR: 0.0132 (17822/18714 正确)
+Client 9: Acc: 0.9899, AUC macro: 0.9674, AUC micro: 0.9998, FNR: 0.0299 (120722/121950 正确)
+Averaged Test Accurancy: 0.9892
+Averaged Test AUC Macro: 0.9312
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1605
+Std Test Accurancy: 0.0404
+Std Test AUC Macro: 0.0648
+Std Test AUC Micro: 0.0038
+Std Test FNR: 0.2932
+
+------------- Local Epoch: 49 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7446, AUC micro: 0.9886, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9407, AUC macro: 0.9149, AUC micro: 0.9967, FNR: 0.0000 (2616/2781 正确)
+Client 2: Acc: 0.9890, AUC macro: 0.9782, AUC micro: 0.9992, FNR: 0.1196 (25798/26085 正确)
+Client 3: Acc: 0.9762, AUC macro: 0.9182, AUC micro: 0.9997, FNR: 0.0581 (78766/80685 正确)
+Client 4: Acc: 0.9975, AUC macro: 0.9214, AUC micro: 0.9999, FNR: 0.1312 (120175/120476 正确)
+Client 5: Acc: 0.9116, AUC macro: 0.9276, AUC micro: 0.9918, FNR: 0.0000 (1258/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9078, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9469, AUC macro: 0.9291, AUC micro: 0.9951, FNR: 0.0997 (5328/5627 正确)
+Client 8: Acc: 0.9546, AUC macro: 0.9917, AUC micro: 0.9985, FNR: 0.0142 (17864/18714 正确)
+Client 9: Acc: 0.9896, AUC macro: 0.9682, AUC micro: 0.9998, FNR: 0.0294 (120682/121950 正确)
+Averaged Test Accurancy: 0.9900
+Averaged Test AUC Macro: 0.9318
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1452
+Std Test Accurancy: 0.0412
+Std Test AUC Macro: 0.0648
+Std Test AUC Micro: 0.0038
+Std Test FNR: 0.2890
+
+------------- Local Epoch: 50 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7478, AUC micro: 0.9886, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9396, AUC macro: 0.9181, AUC micro: 0.9966, FNR: 0.0000 (2613/2781 正确)
+Client 2: Acc: 0.9762, AUC macro: 0.9807, AUC micro: 0.9992, FNR: 0.3365 (25463/26085 正确)
+Client 3: Acc: 0.9761, AUC macro: 0.9180, AUC micro: 0.9997, FNR: 0.0584 (78755/80685 正确)
+Client 4: Acc: 0.9973, AUC macro: 0.9236, AUC micro: 0.9999, FNR: 0.1289 (120145/120476 正确)
+Client 5: Acc: 0.9116, AUC macro: 0.9306, AUC micro: 0.9919, FNR: 0.0000 (1258/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9081, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9495, AUC macro: 0.9299, AUC micro: 0.9952, FNR: 0.0941 (5343/5627 正确)
+Client 8: Acc: 0.9519, AUC macro: 0.9918, AUC micro: 0.9985, FNR: 0.0144 (17813/18714 正确)
+Client 9: Acc: 0.9900, AUC macro: 0.9694, AUC micro: 0.9998, FNR: 0.0281 (120732/121950 正确)
+Averaged Test Accurancy: 0.9893
+Averaged Test AUC Macro: 0.9327
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1661
+Std Test Accurancy: 0.0403
+Std Test AUC Macro: 0.0642
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2945
+
+------------- Local Epoch: 51 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7475, AUC micro: 0.9885, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9410, AUC macro: 0.9170, AUC micro: 0.9967, FNR: 0.0000 (2617/2781 正确)
+Client 2: Acc: 0.9766, AUC macro: 0.9809, AUC micro: 0.9992, FNR: 0.3314 (25474/26085 正确)
+Client 3: Acc: 0.9763, AUC macro: 0.9125, AUC micro: 0.9996, FNR: 0.0585 (78771/80685 正确)
+Client 4: Acc: 0.9954, AUC macro: 0.9206, AUC micro: 0.9999, FNR: 0.3018 (119922/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9306, AUC micro: 0.9919, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9085, AUC micro: 0.9999, FNR: 1.0000 (179959/180304 正确)
+Client 7: Acc: 0.9410, AUC macro: 0.9319, AUC micro: 0.9953, FNR: 0.0707 (5295/5627 正确)
+Client 8: Acc: 0.9515, AUC macro: 0.9918, AUC micro: 0.9985, FNR: 0.0142 (17806/18714 正确)
+Client 9: Acc: 0.9894, AUC macro: 0.9703, AUC micro: 0.9998, FNR: 0.0317 (120652/121950 正确)
+Averaged Test Accurancy: 0.9887
+Averaged Test AUC Macro: 0.9316
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1808
+Std Test Accurancy: 0.0402
+Std Test AUC Macro: 0.0645
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2972
+
+------------- Local Epoch: 52 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7474, AUC micro: 0.9885, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9432, AUC macro: 0.9157, AUC micro: 0.9969, FNR: 0.0000 (2623/2781 正确)
+Client 2: Acc: 0.9883, AUC macro: 0.9830, AUC micro: 0.9993, FNR: 0.1126 (25780/26085 正确)
+Client 3: Acc: 0.9762, AUC macro: 0.9176, AUC micro: 0.9997, FNR: 0.0584 (78767/80685 正确)
+Client 4: Acc: 0.9954, AUC macro: 0.9212, AUC micro: 0.9999, FNR: 0.3035 (119922/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9304, AUC micro: 0.9921, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9086, AUC micro: 0.9999, FNR: 0.9971 (179960/180304 正确)
+Client 7: Acc: 0.9485, AUC macro: 0.9313, AUC micro: 0.9954, FNR: 0.1018 (5337/5627 正确)
+Client 8: Acc: 0.9534, AUC macro: 0.9920, AUC micro: 0.9985, FNR: 0.0130 (17842/18714 正确)
+Client 9: Acc: 0.9895, AUC macro: 0.9697, AUC micro: 0.9998, FNR: 0.0307 (120671/121950 正确)
+Averaged Test Accurancy: 0.9895
+Averaged Test AUC Macro: 0.9325
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1617
+Std Test Accurancy: 0.0407
+Std Test AUC Macro: 0.0646
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2920
+
+------------- Local Epoch: 53 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7474, AUC micro: 0.9885, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9414, AUC macro: 0.9225, AUC micro: 0.9968, FNR: 0.0000 (2618/2781 正确)
+Client 2: Acc: 0.9888, AUC macro: 0.9826, AUC micro: 0.9993, FNR: 0.1184 (25794/26085 正确)
+Client 3: Acc: 0.9763, AUC macro: 0.9176, AUC micro: 0.9997, FNR: 0.0581 (78773/80685 正确)
+Client 4: Acc: 0.9954, AUC macro: 0.9217, AUC micro: 0.9999, FNR: 0.3046 (119922/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9313, AUC micro: 0.9922, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9089, AUC micro: 0.9999, FNR: 0.9884 (179963/180304 正确)
+Client 7: Acc: 0.9517, AUC macro: 0.9331, AUC micro: 0.9955, FNR: 0.0916 (5355/5627 正确)
+Client 8: Acc: 0.9562, AUC macro: 0.9921, AUC micro: 0.9985, FNR: 0.0142 (17895/18714 正确)
+Client 9: Acc: 0.9904, AUC macro: 0.9716, AUC micro: 0.9998, FNR: 0.0255 (120781/121950 正确)
+Averaged Test Accurancy: 0.9898
+Averaged Test AUC Macro: 0.9331
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1601
+Std Test Accurancy: 0.0408
+Std Test AUC Macro: 0.0647
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2898
+
+------------- Local Epoch: 54 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7495, AUC micro: 0.9885, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9385, AUC macro: 0.9272, AUC micro: 0.9968, FNR: 0.0000 (2610/2781 正确)
+Client 2: Acc: 0.9865, AUC macro: 0.9827, AUC micro: 0.9993, FNR: 0.1126 (25734/26085 正确)
+Client 3: Acc: 0.9762, AUC macro: 0.9198, AUC micro: 0.9997, FNR: 0.0581 (78763/80685 正确)
+Client 4: Acc: 0.9977, AUC macro: 0.9199, AUC micro: 0.9999, FNR: 0.1312 (120194/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9309, AUC micro: 0.9922, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9088, AUC micro: 0.9999, FNR: 0.9884 (179963/180304 正确)
+Client 7: Acc: 0.9511, AUC macro: 0.9312, AUC micro: 0.9956, FNR: 0.0947 (5352/5627 正确)
+Client 8: Acc: 0.9571, AUC macro: 0.9921, AUC micro: 0.9986, FNR: 0.0132 (17912/18714 正确)
+Client 9: Acc: 0.9892, AUC macro: 0.9694, AUC micro: 0.9998, FNR: 0.0327 (120634/121950 正确)
+Averaged Test Accurancy: 0.9899
+Averaged Test AUC Macro: 0.9326
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1431
+Std Test Accurancy: 0.0409
+Std Test AUC Macro: 0.0640
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2856
+
+------------- Local Epoch: 55 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7489, AUC micro: 0.9884, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9435, AUC macro: 0.9248, AUC micro: 0.9970, FNR: 0.0000 (2624/2781 正确)
+Client 2: Acc: 0.9880, AUC macro: 0.9844, AUC micro: 0.9993, FNR: 0.1139 (25772/26085 正确)
+Client 3: Acc: 0.9763, AUC macro: 0.9178, AUC micro: 0.9997, FNR: 0.0583 (78770/80685 正确)
+Client 4: Acc: 0.9973, AUC macro: 0.9187, AUC micro: 0.9999, FNR: 0.1678 (120155/120476 正确)
+Client 5: Acc: 0.9116, AUC macro: 0.9309, AUC micro: 0.9924, FNR: 0.0000 (1258/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9088, AUC micro: 0.9999, FNR: 0.9739 (179968/180304 正确)
+Client 7: Acc: 0.9422, AUC macro: 0.9335, AUC micro: 0.9956, FNR: 0.1216 (5302/5627 正确)
+Client 8: Acc: 0.9551, AUC macro: 0.9921, AUC micro: 0.9986, FNR: 0.0147 (17873/18714 正确)
+Client 9: Acc: 0.9899, AUC macro: 0.9694, AUC micro: 0.9998, FNR: 0.0294 (120717/121950 正确)
+Averaged Test Accurancy: 0.9900
+Averaged Test AUC Macro: 0.9321
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1480
+Std Test Accurancy: 0.0411
+Std Test AUC Macro: 0.0644
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2811
+
+------------- Local Epoch: 56 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7488, AUC micro: 0.9884, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9432, AUC macro: 0.9252, AUC micro: 0.9970, FNR: 0.0000 (2623/2781 正确)
+Client 2: Acc: 0.9890, AUC macro: 0.9847, AUC micro: 0.9993, FNR: 0.1171 (25798/26085 正确)
+Client 3: Acc: 0.9763, AUC macro: 0.9210, AUC micro: 0.9997, FNR: 0.0581 (78769/80685 正确)
+Client 4: Acc: 0.9954, AUC macro: 0.9177, AUC micro: 0.9999, FNR: 0.3007 (119927/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9321, AUC micro: 0.9924, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.9078, AUC micro: 0.9999, FNR: 0.9739 (179968/180304 正确)
+Client 7: Acc: 0.9517, AUC macro: 0.9315, AUC micro: 0.9958, FNR: 0.0916 (5355/5627 正确)
+Client 8: Acc: 0.9598, AUC macro: 0.9924, AUC micro: 0.9986, FNR: 0.0131 (17962/18714 正确)
+Client 9: Acc: 0.9892, AUC macro: 0.9710, AUC micro: 0.9998, FNR: 0.0328 (120631/121950 正确)
+Averaged Test Accurancy: 0.9897
+Averaged Test AUC Macro: 0.9324
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1587
+Std Test Accurancy: 0.0407
+Std Test AUC Macro: 0.0646
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2853
+
+------------- Local Epoch: 57 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7486, AUC micro: 0.9883, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9414, AUC macro: 0.9278, AUC micro: 0.9970, FNR: 0.0000 (2618/2781 正确)
+Client 2: Acc: 0.9836, AUC macro: 0.9852, AUC micro: 0.9993, FNR: 0.1120 (25658/26085 正确)
+Client 3: Acc: 0.9763, AUC macro: 0.9186, AUC micro: 0.9997, FNR: 0.0581 (78775/80685 正确)
+Client 4: Acc: 0.9973, AUC macro: 0.9140, AUC micro: 0.9999, FNR: 0.1306 (120152/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9323, AUC micro: 0.9923, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9981, AUC macro: 0.8970, AUC micro: 0.9999, FNR: 0.9739 (179968/180304 正确)
+Client 7: Acc: 0.9543, AUC macro: 0.9323, AUC micro: 0.9959, FNR: 0.0860 (5370/5627 正确)
+Client 8: Acc: 0.9578, AUC macro: 0.9927, AUC micro: 0.9986, FNR: 0.0073 (17925/18714 正确)
+Client 9: Acc: 0.9905, AUC macro: 0.9726, AUC micro: 0.9998, FNR: 0.0264 (120796/121950 正确)
+Averaged Test Accurancy: 0.9901
+Averaged Test AUC Macro: 0.9281
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1394
+Std Test Accurancy: 0.0406
+Std Test AUC Macro: 0.0652
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2820
+
+------------- Local Epoch: 58 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7484, AUC micro: 0.9883, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9435, AUC macro: 0.9270, AUC micro: 0.9970, FNR: 0.0000 (2624/2781 正确)
+Client 2: Acc: 0.9806, AUC macro: 0.9858, AUC micro: 0.9994, FNR: 0.1075 (25580/26085 正确)
+Client 3: Acc: 0.9762, AUC macro: 0.9212, AUC micro: 0.9997, FNR: 0.0581 (78765/80685 正确)
+Client 4: Acc: 0.9975, AUC macro: 0.9176, AUC micro: 0.9999, FNR: 0.1306 (120173/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9322, AUC micro: 0.9925, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8940, AUC micro: 0.9999, FNR: 0.9652 (179971/180304 正确)
+Client 7: Acc: 0.9533, AUC macro: 0.9327, AUC micro: 0.9959, FNR: 0.0921 (5364/5627 正确)
+Client 8: Acc: 0.9616, AUC macro: 0.9923, AUC micro: 0.9987, FNR: 0.0132 (17995/18714 正确)
+Client 9: Acc: 0.9909, AUC macro: 0.9714, AUC micro: 0.9998, FNR: 0.0248 (120840/121950 正确)
+Averaged Test Accurancy: 0.9902
+Averaged Test AUC Macro: 0.9281
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1391
+Std Test Accurancy: 0.0404
+Std Test AUC Macro: 0.0653
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2792
+
+------------- Local Epoch: 59 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7483, AUC micro: 0.9883, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9421, AUC macro: 0.9252, AUC micro: 0.9971, FNR: 0.0000 (2620/2781 正确)
+Client 2: Acc: 0.9832, AUC macro: 0.9859, AUC micro: 0.9994, FNR: 0.1062 (25648/26085 正确)
+Client 3: Acc: 0.9763, AUC macro: 0.9207, AUC micro: 0.9997, FNR: 0.0581 (78775/80685 正确)
+Client 4: Acc: 0.9975, AUC macro: 0.9178, AUC micro: 0.9999, FNR: 0.1312 (120180/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9341, AUC micro: 0.9926, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8814, AUC micro: 0.9999, FNR: 0.9652 (179971/180304 正确)
+Client 7: Acc: 0.9364, AUC macro: 0.9332, AUC micro: 0.9959, FNR: 0.0707 (5269/5627 正确)
+Client 8: Acc: 0.9591, AUC macro: 0.9928, AUC micro: 0.9986, FNR: 0.0130 (17948/18714 正确)
+Client 9: Acc: 0.9903, AUC macro: 0.9752, AUC micro: 0.9998, FNR: 0.0260 (120773/121950 正确)
+Averaged Test Accurancy: 0.9900
+Averaged Test AUC Macro: 0.9248
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1370
+Std Test Accurancy: 0.0411
+Std Test AUC Macro: 0.0664
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2796
+
+------------- Local Epoch: 60 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7481, AUC micro: 0.9883, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9410, AUC macro: 0.9306, AUC micro: 0.9970, FNR: 0.0000 (2617/2781 正确)
+Client 2: Acc: 0.9831, AUC macro: 0.9865, AUC micro: 0.9994, FNR: 0.1120 (25644/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9209, AUC micro: 0.9997, FNR: 0.0580 (78779/80685 正确)
+Client 4: Acc: 0.9975, AUC macro: 0.9172, AUC micro: 0.9999, FNR: 0.1306 (120176/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9347, AUC micro: 0.9926, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8797, AUC micro: 0.9999, FNR: 0.9652 (179971/180304 正确)
+Client 7: Acc: 0.9513, AUC macro: 0.9338, AUC micro: 0.9961, FNR: 0.0987 (5353/5627 正确)
+Client 8: Acc: 0.9633, AUC macro: 0.9927, AUC micro: 0.9987, FNR: 0.0131 (18028/18714 正确)
+Client 9: Acc: 0.9897, AUC macro: 0.9696, AUC micro: 0.9998, FNR: 0.0316 (120698/121950 正确)
+Averaged Test Accurancy: 0.9901
+Averaged Test AUC Macro: 0.9230
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1409
+Std Test Accurancy: 0.0406
+Std Test AUC Macro: 0.0662
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2787
+
+------------- Local Epoch: 61 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7476, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9446, AUC macro: 0.9243, AUC micro: 0.9972, FNR: 0.0000 (2627/2781 正确)
+Client 2: Acc: 0.9888, AUC macro: 0.9870, AUC micro: 0.9994, FNR: 0.1139 (25792/26085 正确)
+Client 3: Acc: 0.9763, AUC macro: 0.9228, AUC micro: 0.9997, FNR: 0.0580 (78775/80685 正确)
+Client 4: Acc: 0.9975, AUC macro: 0.9241, AUC micro: 0.9999, FNR: 0.1306 (120175/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9350, AUC micro: 0.9927, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8788, AUC micro: 0.9999, FNR: 0.9652 (179971/180304 正确)
+Client 7: Acc: 0.9556, AUC macro: 0.9404, AUC micro: 0.9962, FNR: 0.0850 (5377/5627 正确)
+Client 8: Acc: 0.9609, AUC macro: 0.9929, AUC micro: 0.9987, FNR: 0.0130 (17982/18714 正确)
+Client 9: Acc: 0.9640, AUC macro: 0.9778, AUC micro: 0.9996, FNR: 0.0079 (117556/121950 正确)
+Averaged Test Accurancy: 0.9847
+Averaged Test AUC Macro: 0.9264
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1374
+Std Test Accurancy: 0.0395
+Std Test AUC Macro: 0.0672
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2800
+
+------------- Local Epoch: 62 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7474, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9435, AUC macro: 0.9256, AUC micro: 0.9972, FNR: 0.0000 (2624/2781 正确)
+Client 2: Acc: 0.9896, AUC macro: 0.9871, AUC micro: 0.9994, FNR: 0.1132 (25814/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9219, AUC micro: 0.9997, FNR: 0.0580 (78778/80685 正确)
+Client 4: Acc: 0.9975, AUC macro: 0.9233, AUC micro: 0.9999, FNR: 0.1301 (120178/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9338, AUC micro: 0.9928, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8778, AUC micro: 0.9999, FNR: 0.9652 (179971/180304 正确)
+Client 7: Acc: 0.9428, AUC macro: 0.9336, AUC micro: 0.9960, FNR: 0.1272 (5305/5627 正确)
+Client 8: Acc: 0.9649, AUC macro: 0.9929, AUC micro: 0.9987, FNR: 0.0073 (18057/18714 正确)
+Client 9: Acc: 0.9898, AUC macro: 0.9715, AUC micro: 0.9998, FNR: 0.0311 (120701/121950 正确)
+Averaged Test Accurancy: 0.9904
+Averaged Test AUC Macro: 0.9243
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1432
+Std Test Accurancy: 0.0412
+Std Test AUC Macro: 0.0667
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2787
+
+------------- Local Epoch: 63 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7473, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9425, AUC macro: 0.9279, AUC micro: 0.9971, FNR: 0.0000 (2621/2781 正确)
+Client 2: Acc: 0.9773, AUC macro: 0.9863, AUC micro: 0.9994, FNR: 0.3519 (25493/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9212, AUC micro: 0.9997, FNR: 0.0583 (78778/80685 正确)
+Client 4: Acc: 0.9979, AUC macro: 0.9171, AUC micro: 0.9999, FNR: 0.1318 (120226/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9354, AUC micro: 0.9928, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8775, AUC micro: 0.9999, FNR: 0.9652 (179971/180304 正确)
+Client 7: Acc: 0.9508, AUC macro: 0.9409, AUC micro: 0.9963, FNR: 0.0992 (5350/5627 正确)
+Client 8: Acc: 0.9622, AUC macro: 0.9929, AUC micro: 0.9987, FNR: 0.0124 (18007/18714 正确)
+Client 9: Acc: 0.9908, AUC macro: 0.9737, AUC micro: 0.9998, FNR: 0.0249 (120829/121950 正确)
+Averaged Test Accurancy: 0.9901
+Averaged Test AUC Macro: 0.9233
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1644
+Std Test Accurancy: 0.0404
+Std Test AUC Macro: 0.0670
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2858
+
+------------- Local Epoch: 64 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7473, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9432, AUC macro: 0.9283, AUC micro: 0.9971, FNR: 0.0000 (2623/2781 正确)
+Client 2: Acc: 0.9768, AUC macro: 0.9875, AUC micro: 0.9994, FNR: 0.3333 (25481/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9226, AUC micro: 0.9997, FNR: 0.0580 (78782/80685 正确)
+Client 4: Acc: 0.9979, AUC macro: 0.9174, AUC micro: 0.9999, FNR: 0.1312 (120227/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9339, AUC micro: 0.9929, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8780, AUC micro: 0.9999, FNR: 0.9507 (179976/180304 正确)
+Client 7: Acc: 0.9588, AUC macro: 0.9424, AUC micro: 0.9965, FNR: 0.0733 (5395/5627 正确)
+Client 8: Acc: 0.9613, AUC macro: 0.9925, AUC micro: 0.9987, FNR: 0.0137 (17989/18714 正确)
+Client 9: Acc: 0.9906, AUC macro: 0.9772, AUC micro: 0.9998, FNR: 0.0252 (120803/121950 正确)
+Averaged Test Accurancy: 0.9901
+Averaged Test AUC Macro: 0.9245
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1585
+Std Test Accurancy: 0.0402
+Std Test AUC Macro: 0.0674
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2811
+
+------------- Local Epoch: 65 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7472, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9428, AUC macro: 0.9276, AUC micro: 0.9972, FNR: 0.0000 (2622/2781 正确)
+Client 2: Acc: 0.9826, AUC macro: 0.9879, AUC micro: 0.9995, FNR: 0.1075 (25632/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9224, AUC micro: 0.9997, FNR: 0.0580 (78783/80685 正确)
+Client 4: Acc: 0.9979, AUC macro: 0.9161, AUC micro: 0.9999, FNR: 0.1306 (120218/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9357, AUC micro: 0.9928, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8768, AUC micro: 0.9999, FNR: 0.9652 (179971/180304 正确)
+Client 7: Acc: 0.9582, AUC macro: 0.9423, AUC micro: 0.9965, FNR: 0.0794 (5392/5627 正确)
+Client 8: Acc: 0.9671, AUC macro: 0.9932, AUC micro: 0.9988, FNR: 0.0071 (18099/18714 正确)
+Client 9: Acc: 0.9907, AUC macro: 0.9760, AUC micro: 0.9998, FNR: 0.0248 (120816/121950 正确)
+Averaged Test Accurancy: 0.9906
+Averaged Test AUC Macro: 0.9236
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1373
+Std Test Accurancy: 0.0406
+Std Test AUC Macro: 0.0675
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2797
+
+------------- Local Epoch: 66 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7472, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9435, AUC macro: 0.9286, AUC micro: 0.9972, FNR: 0.0000 (2624/2781 正确)
+Client 2: Acc: 0.9889, AUC macro: 0.9880, AUC micro: 0.9995, FNR: 0.1049 (25795/26085 正确)
+Client 3: Acc: 0.9763, AUC macro: 0.9232, AUC micro: 0.9997, FNR: 0.0584 (78771/80685 正确)
+Client 4: Acc: 0.9975, AUC macro: 0.9255, AUC micro: 0.9999, FNR: 0.1301 (120176/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9359, AUC micro: 0.9928, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8774, AUC micro: 0.9999, FNR: 0.9478 (179976/180304 正确)
+Client 7: Acc: 0.9415, AUC macro: 0.9429, AUC micro: 0.9964, FNR: 0.0606 (5298/5627 正确)
+Client 8: Acc: 0.9678, AUC macro: 0.9933, AUC micro: 0.9989, FNR: 0.0067 (18111/18714 正确)
+Client 9: Acc: 0.9896, AUC macro: 0.9765, AUC micro: 0.9998, FNR: 0.0321 (120677/121950 正确)
+Averaged Test Accurancy: 0.9904
+Averaged Test AUC Macro: 0.9261
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1341
+Std Test Accurancy: 0.0413
+Std Test AUC Macro: 0.0675
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2747
+
+------------- Local Epoch: 67 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7471, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9435, AUC macro: 0.9274, AUC micro: 0.9973, FNR: 0.0000 (2624/2781 正确)
+Client 2: Acc: 0.9841, AUC macro: 0.9887, AUC micro: 0.9995, FNR: 0.1030 (25671/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9237, AUC micro: 0.9997, FNR: 0.0581 (78778/80685 正确)
+Client 4: Acc: 0.9975, AUC macro: 0.9174, AUC micro: 0.9999, FNR: 0.1278 (120176/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9359, AUC micro: 0.9929, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8778, AUC micro: 0.9999, FNR: 0.9507 (179976/180304 正确)
+Client 7: Acc: 0.9529, AUC macro: 0.9434, AUC micro: 0.9965, FNR: 0.0957 (5362/5627 正确)
+Client 8: Acc: 0.9647, AUC macro: 0.9926, AUC micro: 0.9989, FNR: 0.0137 (18054/18714 正确)
+Client 9: Acc: 0.9898, AUC macro: 0.9756, AUC micro: 0.9998, FNR: 0.0316 (120707/121950 正确)
+Averaged Test Accurancy: 0.9903
+Averaged Test AUC Macro: 0.9244
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1381
+Std Test Accurancy: 0.0406
+Std Test AUC Macro: 0.0675
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2746
+
+------------- Local Epoch: 68 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7471, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9432, AUC macro: 0.9287, AUC micro: 0.9974, FNR: 0.0000 (2623/2781 正确)
+Client 2: Acc: 0.9901, AUC macro: 0.9888, AUC micro: 0.9995, FNR: 0.1145 (25828/26085 正确)
+Client 3: Acc: 0.9703, AUC macro: 0.9254, AUC micro: 0.9997, FNR: 0.0085 (78289/80685 正确)
+Client 4: Acc: 0.9955, AUC macro: 0.9182, AUC micro: 0.9999, FNR: 0.2979 (119931/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9345, AUC micro: 0.9930, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8788, AUC micro: 0.9999, FNR: 0.9507 (179976/180304 正确)
+Client 7: Acc: 0.9575, AUC macro: 0.9439, AUC micro: 0.9967, FNR: 0.0784 (5388/5627 正确)
+Client 8: Acc: 0.9631, AUC macro: 0.9931, AUC micro: 0.9988, FNR: 0.0134 (18024/18714 正确)
+Client 9: Acc: 0.9908, AUC macro: 0.9762, AUC micro: 0.9998, FNR: 0.0249 (120823/121950 正确)
+Averaged Test Accurancy: 0.9894
+Averaged Test AUC Macro: 0.9252
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1488
+Std Test Accurancy: 0.0406
+Std Test AUC Macro: 0.0675
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2813
+
+------------- Local Epoch: 69 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7471, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9432, AUC macro: 0.9309, AUC micro: 0.9973, FNR: 0.0000 (2623/2781 正确)
+Client 2: Acc: 0.9809, AUC macro: 0.9884, AUC micro: 0.9995, FNR: 0.1004 (25586/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9245, AUC micro: 0.9997, FNR: 0.0580 (78784/80685 正确)
+Client 4: Acc: 0.9976, AUC macro: 0.9186, AUC micro: 0.9999, FNR: 0.1267 (120187/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9361, AUC micro: 0.9929, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8800, AUC micro: 0.9999, FNR: 0.9507 (179976/180304 正确)
+Client 7: Acc: 0.9531, AUC macro: 0.9444, AUC micro: 0.9966, FNR: 0.0936 (5363/5627 正确)
+Client 8: Acc: 0.9633, AUC macro: 0.9933, AUC micro: 0.9988, FNR: 0.0132 (18028/18714 正确)
+Client 9: Acc: 0.9911, AUC macro: 0.9737, AUC micro: 0.9998, FNR: 0.0252 (120859/121950 正确)
+Averaged Test Accurancy: 0.9904
+Averaged Test AUC Macro: 0.9250
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1368
+Std Test Accurancy: 0.0405
+Std Test AUC Macro: 0.0673
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2749
+
+------------- Local Epoch: 70 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7470, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9547, AUC macro: 0.9298, AUC micro: 0.9974, FNR: 0.0000 (2655/2781 正确)
+Client 2: Acc: 0.9872, AUC macro: 0.9896, AUC micro: 0.9995, FNR: 0.1113 (25752/26085 正确)
+Client 3: Acc: 0.9766, AUC macro: 0.9226, AUC micro: 0.9997, FNR: 0.0586 (78797/80685 正确)
+Client 4: Acc: 0.9976, AUC macro: 0.9188, AUC micro: 0.9999, FNR: 0.1267 (120183/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9350, AUC micro: 0.9930, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8791, AUC micro: 0.9999, FNR: 0.9478 (179976/180304 正确)
+Client 7: Acc: 0.9568, AUC macro: 0.9445, AUC micro: 0.9967, FNR: 0.0824 (5384/5627 正确)
+Client 8: Acc: 0.9679, AUC macro: 0.9936, AUC micro: 0.9989, FNR: 0.0072 (18113/18714 正确)
+Client 9: Acc: 0.9899, AUC macro: 0.9769, AUC micro: 0.9998, FNR: 0.0312 (120721/121950 正确)
+Averaged Test Accurancy: 0.9907
+Averaged Test AUC Macro: 0.9253
+Averaged Test AUC Micro: 0.9997
+Averaged Test FNR: 0.1365
+Std Test Accurancy: 0.0405
+Std Test AUC Macro: 0.0677
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2742
+
+------------- Local Epoch: 71 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7469, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9435, AUC macro: 0.9310, AUC micro: 0.9974, FNR: 0.0000 (2624/2781 正确)
+Client 2: Acc: 0.9860, AUC macro: 0.9895, AUC micro: 0.9995, FNR: 0.1100 (25719/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9246, AUC micro: 0.9997, FNR: 0.0580 (78780/80685 正确)
+Client 4: Acc: 0.9955, AUC macro: 0.9195, AUC micro: 0.9999, FNR: 0.2950 (119935/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9365, AUC micro: 0.9930, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8800, AUC micro: 0.9999, FNR: 0.9507 (179976/180304 正确)
+Client 7: Acc: 0.9586, AUC macro: 0.9455, AUC micro: 0.9968, FNR: 0.0768 (5394/5627 正确)
+Client 8: Acc: 0.9637, AUC macro: 0.9936, AUC micro: 0.9989, FNR: 0.0133 (18035/18714 正确)
+Client 9: Acc: 0.9905, AUC macro: 0.9791, AUC micro: 0.9999, FNR: 0.0277 (120792/121950 正确)
+Averaged Test Accurancy: 0.9901
+Averaged Test AUC Macro: 0.9265
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1532
+Std Test Accurancy: 0.0405
+Std Test AUC Macro: 0.0679
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2790
+
+------------- Local Epoch: 72 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7469, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9543, AUC macro: 0.9309, AUC micro: 0.9974, FNR: 0.0000 (2654/2781 正确)
+Client 2: Acc: 0.9833, AUC macro: 0.9896, AUC micro: 0.9995, FNR: 0.1056 (25650/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9250, AUC micro: 0.9997, FNR: 0.0580 (78783/80685 正确)
+Client 4: Acc: 0.9980, AUC macro: 0.9199, AUC micro: 0.9999, FNR: 0.1239 (120239/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9381, AUC micro: 0.9932, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8805, AUC micro: 0.9999, FNR: 0.9478 (179976/180304 正确)
+Client 7: Acc: 0.9602, AUC macro: 0.9459, AUC micro: 0.9969, FNR: 0.0702 (5403/5627 正确)
+Client 8: Acc: 0.9667, AUC macro: 0.9936, AUC micro: 0.9988, FNR: 0.0066 (18090/18714 正确)
+Client 9: Acc: 0.9913, AUC macro: 0.9791, AUC micro: 0.9998, FNR: 0.0187 (120893/121950 正确)
+Averaged Test Accurancy: 0.9909
+Averaged Test AUC Macro: 0.9268
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1331
+Std Test Accurancy: 0.0404
+Std Test AUC Macro: 0.0680
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2750
+
+------------- Local Epoch: 73 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7468, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9547, AUC macro: 0.9305, AUC micro: 0.9975, FNR: 0.0000 (2655/2781 正确)
+Client 2: Acc: 0.9871, AUC macro: 0.9898, AUC micro: 0.9995, FNR: 0.0992 (25748/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9259, AUC micro: 0.9997, FNR: 0.0580 (78781/80685 正确)
+Client 4: Acc: 0.9980, AUC macro: 0.9191, AUC micro: 0.9999, FNR: 0.1239 (120240/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9391, AUC micro: 0.9931, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8816, AUC micro: 0.9999, FNR: 0.9478 (179976/180304 正确)
+Client 7: Acc: 0.9600, AUC macro: 0.9465, AUC micro: 0.9970, FNR: 0.0707 (5402/5627 正确)
+Client 8: Acc: 0.9671, AUC macro: 0.9938, AUC micro: 0.9989, FNR: 0.0063 (18098/18714 正确)
+Client 9: Acc: 0.9911, AUC macro: 0.9767, AUC micro: 0.9999, FNR: 0.0256 (120862/121950 正确)
+Averaged Test Accurancy: 0.9910
+Averaged Test AUC Macro: 0.9267
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1332
+Std Test Accurancy: 0.0406
+Std Test AUC Macro: 0.0678
+Std Test AUC Micro: 0.0037
+Std Test FNR: 0.2748
+
+------------- Local Epoch: 74 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7468, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9543, AUC macro: 0.9308, AUC micro: 0.9974, FNR: 0.0000 (2654/2781 正确)
+Client 2: Acc: 0.9834, AUC macro: 0.9904, AUC micro: 0.9995, FNR: 0.1081 (25652/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9263, AUC micro: 0.9997, FNR: 0.0580 (78782/80685 正确)
+Client 4: Acc: 0.9978, AUC macro: 0.9268, AUC micro: 0.9999, FNR: 0.1244 (120211/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9396, AUC micro: 0.9934, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8818, AUC micro: 0.9999, FNR: 0.9478 (179976/180304 正确)
+Client 7: Acc: 0.9575, AUC macro: 0.9461, AUC micro: 0.9969, FNR: 0.0814 (5388/5627 正确)
+Client 8: Acc: 0.9676, AUC macro: 0.9939, AUC micro: 0.9989, FNR: 0.0074 (18108/18714 正确)
+Client 9: Acc: 0.9903, AUC macro: 0.9769, AUC micro: 0.9999, FNR: 0.0300 (120769/121950 正确)
+Averaged Test Accurancy: 0.9906
+Averaged Test AUC Macro: 0.9285
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1357
+Std Test Accurancy: 0.0403
+Std Test AUC Macro: 0.0678
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2743
+
+------------- Local Epoch: 75 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7468, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9536, AUC macro: 0.9325, AUC micro: 0.9974, FNR: 0.0000 (2652/2781 正确)
+Client 2: Acc: 0.9775, AUC macro: 0.9901, AUC micro: 0.9995, FNR: 0.3442 (25498/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9266, AUC micro: 0.9997, FNR: 0.0580 (78778/80685 正确)
+Client 4: Acc: 0.9976, AUC macro: 0.9206, AUC micro: 0.9999, FNR: 0.1250 (120191/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9393, AUC micro: 0.9933, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8829, AUC micro: 0.9999, FNR: 0.9391 (179979/180304 正确)
+Client 7: Acc: 0.9584, AUC macro: 0.9468, AUC micro: 0.9970, FNR: 0.0774 (5393/5627 正确)
+Client 8: Acc: 0.9679, AUC macro: 0.9940, AUC micro: 0.9989, FNR: 0.0074 (18113/18714 正确)
+Client 9: Acc: 0.9908, AUC macro: 0.9793, AUC micro: 0.9998, FNR: 0.0137 (120826/121950 正确)
+Averaged Test Accurancy: 0.9904
+Averaged Test AUC Macro: 0.9281
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1565
+Std Test Accurancy: 0.0401
+Std Test AUC Macro: 0.0680
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2794
+
+------------- Local Epoch: 76 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7468, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9569, AUC macro: 0.9313, AUC micro: 0.9975, FNR: 0.0000 (2661/2781 正确)
+Client 2: Acc: 0.9834, AUC macro: 0.9902, AUC micro: 0.9995, FNR: 0.1017 (25653/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9269, AUC micro: 0.9997, FNR: 0.0580 (78779/80685 正确)
+Client 4: Acc: 0.9968, AUC macro: 0.9272, AUC micro: 0.9999, FNR: 0.1222 (120092/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9393, AUC micro: 0.9933, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8839, AUC micro: 0.9999, FNR: 0.9478 (179976/180304 正确)
+Client 7: Acc: 0.9554, AUC macro: 0.9468, AUC micro: 0.9970, FNR: 0.0875 (5376/5627 正确)
+Client 8: Acc: 0.9683, AUC macro: 0.9941, AUC micro: 0.9990, FNR: 0.0074 (18121/18714 正确)
+Client 9: Acc: 0.9902, AUC macro: 0.9787, AUC micro: 0.9999, FNR: 0.0310 (120753/121950 正确)
+Averaged Test Accurancy: 0.9904
+Averaged Test AUC Macro: 0.9297
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1356
+Std Test Accurancy: 0.0403
+Std Test AUC Macro: 0.0679
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2742
+
+------------- Local Epoch: 77 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7468, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9569, AUC macro: 0.9313, AUC micro: 0.9975, FNR: 0.0000 (2661/2781 正确)
+Client 2: Acc: 0.9825, AUC macro: 0.9902, AUC micro: 0.9995, FNR: 0.1030 (25628/26085 正确)
+Client 3: Acc: 0.9765, AUC macro: 0.9274, AUC micro: 0.9997, FNR: 0.0580 (78787/80685 正确)
+Client 4: Acc: 0.9978, AUC macro: 0.9214, AUC micro: 0.9999, FNR: 0.1222 (120215/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9400, AUC micro: 0.9934, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8858, AUC micro: 0.9999, FNR: 0.9478 (179976/180304 正确)
+Client 7: Acc: 0.9579, AUC macro: 0.9472, AUC micro: 0.9970, FNR: 0.0799 (5390/5627 正确)
+Client 8: Acc: 0.9678, AUC macro: 0.9941, AUC micro: 0.9990, FNR: 0.0068 (18111/18714 正确)
+Client 9: Acc: 0.9909, AUC macro: 0.9772, AUC micro: 0.9999, FNR: 0.0284 (120835/121950 正确)
+Averaged Test Accurancy: 0.9907
+Averaged Test AUC Macro: 0.9289
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1346
+Std Test Accurancy: 0.0403
+Std Test AUC Macro: 0.0677
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2745
+
+------------- Local Epoch: 78 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7467, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9569, AUC macro: 0.9296, AUC micro: 0.9976, FNR: 0.0000 (2661/2781 正确)
+Client 2: Acc: 0.9841, AUC macro: 0.9901, AUC micro: 0.9995, FNR: 0.0985 (25670/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9283, AUC micro: 0.9997, FNR: 0.0580 (78780/80685 正确)
+Client 4: Acc: 0.9978, AUC macro: 0.9238, AUC micro: 0.9999, FNR: 0.1199 (120214/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9369, AUC micro: 0.9933, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8873, AUC micro: 0.9999, FNR: 0.9391 (179979/180304 正确)
+Client 7: Acc: 0.9572, AUC macro: 0.9476, AUC micro: 0.9971, FNR: 0.0814 (5386/5627 正确)
+Client 8: Acc: 0.9718, AUC macro: 0.9941, AUC micro: 0.9990, FNR: 0.0075 (18187/18714 正确)
+Client 9: Acc: 0.9915, AUC macro: 0.9791, AUC micro: 0.9999, FNR: 0.0199 (120908/121950 正确)
+Averaged Test Accurancy: 0.9910
+Averaged Test AUC Macro: 0.9304
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1324
+Std Test Accurancy: 0.0405
+Std Test AUC Macro: 0.0677
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2722
+
+------------- Local Epoch: 79 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7466, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9597, AUC macro: 0.9281, AUC micro: 0.9976, FNR: 0.0000 (2669/2781 正确)
+Client 2: Acc: 0.9820, AUC macro: 0.9907, AUC micro: 0.9996, FNR: 0.1004 (25615/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9282, AUC micro: 0.9997, FNR: 0.0580 (78779/80685 正确)
+Client 4: Acc: 0.9978, AUC macro: 0.9257, AUC micro: 0.9999, FNR: 0.1182 (120209/120476 正确)
+Client 5: Acc: 0.9130, AUC macro: 0.9374, AUC micro: 0.9934, FNR: 0.0000 (1260/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8884, AUC micro: 0.9999, FNR: 0.9478 (179976/180304 正确)
+Client 7: Acc: 0.9575, AUC macro: 0.9472, AUC micro: 0.9971, FNR: 0.0809 (5388/5627 正确)
+Client 8: Acc: 0.9706, AUC macro: 0.9941, AUC micro: 0.9989, FNR: 0.0070 (18164/18714 正确)
+Client 9: Acc: 0.9905, AUC macro: 0.9787, AUC micro: 0.9999, FNR: 0.0295 (120789/121950 正确)
+Averaged Test Accurancy: 0.9907
+Averaged Test AUC Macro: 0.9311
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1342
+Std Test Accurancy: 0.0402
+Std Test AUC Macro: 0.0677
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2744
+
+------------- Local Epoch: 80 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7465, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9597, AUC macro: 0.9289, AUC micro: 0.9977, FNR: 0.0000 (2669/2781 正确)
+Client 2: Acc: 0.9904, AUC macro: 0.9905, AUC micro: 0.9996, FNR: 0.1241 (25835/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9291, AUC micro: 0.9997, FNR: 0.0580 (78781/80685 正确)
+Client 4: Acc: 0.9980, AUC macro: 0.9188, AUC micro: 0.9999, FNR: 0.1216 (120238/120476 正确)
+Client 5: Acc: 0.9123, AUC macro: 0.9382, AUC micro: 0.9935, FNR: 0.0000 (1259/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8901, AUC micro: 0.9999, FNR: 0.9391 (179979/180304 正确)
+Client 7: Acc: 0.9568, AUC macro: 0.9478, AUC micro: 0.9972, FNR: 0.0799 (5384/5627 正确)
+Client 8: Acc: 0.9709, AUC macro: 0.9942, AUC micro: 0.9990, FNR: 0.0072 (18170/18714 正确)
+Client 9: Acc: 0.9914, AUC macro: 0.9761, AUC micro: 0.9999, FNR: 0.0253 (120901/121950 正确)
+Averaged Test Accurancy: 0.9914
+Averaged Test AUC Macro: 0.9297
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1355
+Std Test Accurancy: 0.0409
+Std Test AUC Macro: 0.0675
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2718
+
+------------- Local Epoch: 81 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7465, AUC micro: 0.9882, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9572, AUC macro: 0.9317, AUC micro: 0.9976, FNR: 0.0000 (2662/2781 正确)
+Client 2: Acc: 0.9872, AUC macro: 0.9910, AUC micro: 0.9996, FNR: 0.1241 (25751/26085 正确)
+Client 3: Acc: 0.9700, AUC macro: 0.9312, AUC micro: 0.9997, FNR: 0.0084 (78261/80685 正确)
+Client 4: Acc: 0.9967, AUC macro: 0.9273, AUC micro: 0.9999, FNR: 0.1154 (120081/120476 正确)
+Client 5: Acc: 0.9130, AUC macro: 0.9389, AUC micro: 0.9934, FNR: 0.0000 (1260/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8905, AUC micro: 0.9999, FNR: 0.9217 (179985/180304 正确)
+Client 7: Acc: 0.9433, AUC macro: 0.9480, AUC micro: 0.9971, FNR: 0.0580 (5308/5627 正确)
+Client 8: Acc: 0.9718, AUC macro: 0.9943, AUC micro: 0.9990, FNR: 0.0070 (18186/18714 正确)
+Client 9: Acc: 0.9900, AUC macro: 0.9755, AUC micro: 0.9998, FNR: 0.0320 (120725/121950 正确)
+Averaged Test Accurancy: 0.9896
+Averaged Test AUC Macro: 0.9319
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1267
+Std Test Accurancy: 0.0406
+Std Test AUC Macro: 0.0674
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2688
+
+------------- Local Epoch: 82 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7463, AUC micro: 0.9881, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9569, AUC macro: 0.9312, AUC micro: 0.9977, FNR: 0.0000 (2661/2781 正确)
+Client 2: Acc: 0.9823, AUC macro: 0.9912, AUC micro: 0.9996, FNR: 0.1241 (25624/26085 正确)
+Client 3: Acc: 0.9765, AUC macro: 0.9291, AUC micro: 0.9997, FNR: 0.0580 (78785/80685 正确)
+Client 4: Acc: 0.9977, AUC macro: 0.9280, AUC micro: 0.9999, FNR: 0.1182 (120200/120476 正确)
+Client 5: Acc: 0.9138, AUC macro: 0.9383, AUC micro: 0.9935, FNR: 0.0000 (1261/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8923, AUC micro: 0.9999, FNR: 0.9391 (179979/180304 正确)
+Client 7: Acc: 0.9584, AUC macro: 0.9472, AUC micro: 0.9972, FNR: 0.0784 (5393/5627 正确)
+Client 8: Acc: 0.9714, AUC macro: 0.9943, AUC micro: 0.9990, FNR: 0.0070 (18178/18714 正确)
+Client 9: Acc: 0.9911, AUC macro: 0.9756, AUC micro: 0.9999, FNR: 0.0284 (120865/121950 正确)
+Averaged Test Accurancy: 0.9909
+Averaged Test AUC Macro: 0.9323
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1353
+Std Test Accurancy: 0.0402
+Std Test AUC Macro: 0.0674
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2718
+
+------------- Local Epoch: 83 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7455, AUC micro: 0.9881, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9594, AUC macro: 0.9305, AUC micro: 0.9977, FNR: 0.0000 (2668/2781 正确)
+Client 2: Acc: 0.9875, AUC macro: 0.9908, AUC micro: 0.9996, FNR: 0.1062 (25759/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9314, AUC micro: 0.9997, FNR: 0.0580 (78780/80685 正确)
+Client 4: Acc: 0.9973, AUC macro: 0.9258, AUC micro: 0.9999, FNR: 0.1171 (120153/120476 正确)
+Client 5: Acc: 0.9138, AUC macro: 0.9387, AUC micro: 0.9935, FNR: 0.0000 (1261/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8929, AUC micro: 0.9999, FNR: 0.9217 (179985/180304 正确)
+Client 7: Acc: 0.9579, AUC macro: 0.9472, AUC micro: 0.9972, FNR: 0.0789 (5390/5627 正确)
+Client 8: Acc: 0.9714, AUC macro: 0.9943, AUC micro: 0.9990, FNR: 0.0069 (18179/18714 正确)
+Client 9: Acc: 0.9912, AUC macro: 0.9797, AUC micro: 0.9999, FNR: 0.0259 (120876/121950 正确)
+Averaged Test Accurancy: 0.9911
+Averaged Test AUC Macro: 0.9333
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1315
+Std Test Accurancy: 0.0405
+Std Test AUC Macro: 0.0679
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2668
+
+------------- Local Epoch: 84 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7454, AUC micro: 0.9881, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9565, AUC macro: 0.9329, AUC micro: 0.9976, FNR: 0.0000 (2660/2781 正确)
+Client 2: Acc: 0.9849, AUC macro: 0.9915, AUC micro: 0.9996, FNR: 0.1177 (25691/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9306, AUC micro: 0.9997, FNR: 0.0580 (78781/80685 正确)
+Client 4: Acc: 0.9981, AUC macro: 0.9285, AUC micro: 0.9999, FNR: 0.1199 (120246/120476 正确)
+Client 5: Acc: 0.9138, AUC macro: 0.9395, AUC micro: 0.9937, FNR: 0.0000 (1261/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8934, AUC micro: 0.9999, FNR: 0.9217 (179985/180304 正确)
+Client 7: Acc: 0.9575, AUC macro: 0.9466, AUC micro: 0.9973, FNR: 0.0809 (5388/5627 正确)
+Client 8: Acc: 0.9711, AUC macro: 0.9943, AUC micro: 0.9990, FNR: 0.0067 (18174/18714 正确)
+Client 9: Acc: 0.9915, AUC macro: 0.9794, AUC micro: 0.9999, FNR: 0.0241 (120916/121950 正确)
+Averaged Test Accurancy: 0.9911
+Averaged Test AUC Macro: 0.9339
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1329
+Std Test Accurancy: 0.0404
+Std Test AUC Macro: 0.0679
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2668
+
+------------- Local Epoch: 85 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7454, AUC micro: 0.9881, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9597, AUC macro: 0.9302, AUC micro: 0.9977, FNR: 0.0000 (2669/2781 正确)
+Client 2: Acc: 0.9832, AUC macro: 0.9915, AUC micro: 0.9996, FNR: 0.1222 (25648/26085 正确)
+Client 3: Acc: 0.9765, AUC macro: 0.9310, AUC micro: 0.9997, FNR: 0.0580 (78787/80685 正确)
+Client 4: Acc: 0.9977, AUC macro: 0.9223, AUC micro: 0.9999, FNR: 0.1177 (120201/120476 正确)
+Client 5: Acc: 0.9138, AUC macro: 0.9393, AUC micro: 0.9936, FNR: 0.0000 (1261/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8947, AUC micro: 1.0000, FNR: 0.9217 (179985/180304 正确)
+Client 7: Acc: 0.9595, AUC macro: 0.9466, AUC micro: 0.9973, FNR: 0.0687 (5399/5627 正确)
+Client 8: Acc: 0.9727, AUC macro: 0.9945, AUC micro: 0.9991, FNR: 0.0067 (18203/18714 正确)
+Client 9: Acc: 0.9908, AUC macro: 0.9785, AUC micro: 0.9999, FNR: 0.0296 (120823/121950 正确)
+Averaged Test Accurancy: 0.9909
+Averaged Test AUC Macro: 0.9328
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1325
+Std Test Accurancy: 0.0403
+Std Test AUC Macro: 0.0678
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2668
+
+------------- Local Epoch: 86 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7453, AUC micro: 0.9881, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9626, AUC macro: 0.9281, AUC micro: 0.9978, FNR: 0.0000 (2677/2781 正确)
+Client 2: Acc: 0.9907, AUC macro: 0.9913, AUC micro: 0.9996, FNR: 0.1241 (25843/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9311, AUC micro: 0.9997, FNR: 0.0580 (78780/80685 正确)
+Client 4: Acc: 0.9981, AUC macro: 0.9220, AUC micro: 0.9999, FNR: 0.1171 (120244/120476 正确)
+Client 5: Acc: 0.9138, AUC macro: 0.9404, AUC micro: 0.9939, FNR: 0.0000 (1261/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8954, AUC micro: 1.0000, FNR: 0.9217 (179985/180304 正确)
+Client 7: Acc: 0.9557, AUC macro: 0.9467, AUC micro: 0.9973, FNR: 0.0860 (5378/5627 正确)
+Client 8: Acc: 0.9711, AUC macro: 0.9947, AUC micro: 0.9991, FNR: 0.0067 (18173/18714 正确)
+Client 9: Acc: 0.9907, AUC macro: 0.9789, AUC micro: 0.9999, FNR: 0.0297 (120821/121950 正确)
+Averaged Test Accurancy: 0.9913
+Averaged Test AUC Macro: 0.9331
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1343
+Std Test Accurancy: 0.0407
+Std Test AUC Macro: 0.0679
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2665
+
+------------- Local Epoch: 87 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7453, AUC micro: 0.9881, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9569, AUC macro: 0.9326, AUC micro: 0.9978, FNR: 0.0000 (2661/2781 正确)
+Client 2: Acc: 0.9783, AUC macro: 0.9907, AUC micro: 0.9995, FNR: 0.3455 (25518/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9327, AUC micro: 0.9997, FNR: 0.0580 (78782/80685 正确)
+Client 4: Acc: 0.9981, AUC macro: 0.9289, AUC micro: 0.9999, FNR: 0.1227 (120243/120476 正确)
+Client 5: Acc: 0.9138, AUC macro: 0.9399, AUC micro: 0.9937, FNR: 0.0000 (1261/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8958, AUC micro: 1.0000, FNR: 0.9188 (179985/180304 正确)
+Client 7: Acc: 0.9538, AUC macro: 0.9462, AUC micro: 0.9973, FNR: 0.0957 (5367/5627 正确)
+Client 8: Acc: 0.9712, AUC macro: 0.9947, AUC micro: 0.9991, FNR: 0.0065 (18175/18714 正确)
+Client 9: Acc: 0.9899, AUC macro: 0.9767, AUC micro: 0.9998, FNR: 0.0340 (120723/121950 正确)
+Averaged Test Accurancy: 0.9905
+Averaged Test AUC Macro: 0.9344
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1581
+Std Test Accurancy: 0.0400
+Std Test AUC Macro: 0.0676
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2725
+
+------------- Local Epoch: 88 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7452, AUC micro: 0.9881, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9626, AUC macro: 0.9296, AUC micro: 0.9979, FNR: 0.0000 (2677/2781 正确)
+Client 2: Acc: 0.9907, AUC macro: 0.9911, AUC micro: 0.9996, FNR: 0.1241 (25843/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9345, AUC micro: 0.9997, FNR: 0.0580 (78784/80685 正确)
+Client 4: Acc: 0.9977, AUC macro: 0.9290, AUC micro: 0.9999, FNR: 0.1177 (120202/120476 正确)
+Client 5: Acc: 0.9138, AUC macro: 0.9413, AUC micro: 0.9940, FNR: 0.0000 (1261/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8964, AUC micro: 1.0000, FNR: 0.9217 (179985/180304 正确)
+Client 7: Acc: 0.9597, AUC macro: 0.9468, AUC micro: 0.9974, FNR: 0.0707 (5400/5627 正确)
+Client 8: Acc: 0.9715, AUC macro: 0.9951, AUC micro: 0.9991, FNR: 0.0067 (18181/18714 正确)
+Client 9: Acc: 0.9912, AUC macro: 0.9804, AUC micro: 0.9999, FNR: 0.0246 (120875/121950 正确)
+Averaged Test Accurancy: 0.9913
+Averaged Test AUC Macro: 0.9357
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1324
+Std Test Accurancy: 0.0407
+Std Test AUC Macro: 0.0680
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2670
+
+------------- Local Epoch: 89 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7452, AUC micro: 0.9881, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9569, AUC macro: 0.9333, AUC micro: 0.9978, FNR: 0.0000 (2661/2781 正确)
+Client 2: Acc: 0.9908, AUC macro: 0.9911, AUC micro: 0.9996, FNR: 0.1254 (25845/26085 正确)
+Client 3: Acc: 0.9765, AUC macro: 0.9316, AUC micro: 0.9998, FNR: 0.0580 (78786/80685 正确)
+Client 4: Acc: 0.9981, AUC macro: 0.9287, AUC micro: 0.9999, FNR: 0.1199 (120247/120476 正确)
+Client 5: Acc: 0.9471, AUC macro: 0.9406, AUC micro: 0.9939, FNR: 0.0000 (1307/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8963, AUC micro: 1.0000, FNR: 0.9217 (179985/180304 正确)
+Client 7: Acc: 0.9557, AUC macro: 0.9469, AUC micro: 0.9973, FNR: 0.0896 (5378/5627 正确)
+Client 8: Acc: 0.9733, AUC macro: 0.9949, AUC micro: 0.9991, FNR: 0.0067 (18215/18714 正确)
+Client 9: Acc: 0.9905, AUC macro: 0.9793, AUC micro: 0.9999, FNR: 0.0306 (120793/121950 正确)
+Averaged Test Accurancy: 0.9914
+Averaged Test AUC Macro: 0.9350
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1352
+Std Test Accurancy: 0.0380
+Std Test AUC Macro: 0.0679
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2663
+
+------------- Local Epoch: 90 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7452, AUC micro: 0.9881, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9615, AUC macro: 0.9305, AUC micro: 0.9979, FNR: 0.0000 (2674/2781 正确)
+Client 2: Acc: 0.9779, AUC macro: 0.9916, AUC micro: 0.9996, FNR: 0.3301 (25508/26085 正确)
+Client 3: Acc: 0.9755, AUC macro: 0.9360, AUC micro: 0.9997, FNR: 0.0580 (78706/80685 正确)
+Client 4: Acc: 0.9981, AUC macro: 0.9285, AUC micro: 0.9999, FNR: 0.1177 (120247/120476 正确)
+Client 5: Acc: 0.9471, AUC macro: 0.9407, AUC micro: 0.9940, FNR: 0.0000 (1307/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8964, AUC micro: 1.0000, FNR: 0.9188 (179985/180304 正确)
+Client 7: Acc: 0.9588, AUC macro: 0.9476, AUC micro: 0.9974, FNR: 0.0753 (5395/5627 正确)
+Client 8: Acc: 0.9716, AUC macro: 0.9949, AUC micro: 0.9991, FNR: 0.0067 (18183/18714 正确)
+Client 9: Acc: 0.9915, AUC macro: 0.9779, AUC micro: 0.9999, FNR: 0.0265 (120918/121950 正确)
+Averaged Test Accurancy: 0.9908
+Averaged Test AUC Macro: 0.9353
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1533
+Std Test Accurancy: 0.0372
+Std Test AUC Macro: 0.0678
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2724
+
+------------- Local Epoch: 91 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7444, AUC micro: 0.9881, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9597, AUC macro: 0.9331, AUC micro: 0.9978, FNR: 0.0000 (2669/2781 正确)
+Client 2: Acc: 0.9879, AUC macro: 0.9913, AUC micro: 0.9996, FNR: 0.1196 (25770/26085 正确)
+Client 3: Acc: 0.9765, AUC macro: 0.9345, AUC micro: 0.9997, FNR: 0.0581 (78790/80685 正确)
+Client 4: Acc: 0.9977, AUC macro: 0.9290, AUC micro: 0.9999, FNR: 0.1182 (120197/120476 正确)
+Client 5: Acc: 0.9138, AUC macro: 0.9428, AUC micro: 0.9942, FNR: 0.0000 (1261/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8967, AUC micro: 1.0000, FNR: 0.9188 (179985/180304 正确)
+Client 7: Acc: 0.9584, AUC macro: 0.9474, AUC micro: 0.9974, FNR: 0.0789 (5393/5627 正确)
+Client 8: Acc: 0.9725, AUC macro: 0.9956, AUC micro: 0.9991, FNR: 0.0063 (18200/18714 正确)
+Client 9: Acc: 0.9903, AUC macro: 0.9812, AUC micro: 0.9998, FNR: 0.0319 (120765/121950 正确)
+Averaged Test Accurancy: 0.9910
+Averaged Test AUC Macro: 0.9361
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1332
+Std Test Accurancy: 0.0405
+Std Test AUC Macro: 0.0684
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2657
+
+------------- Local Epoch: 92 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7444, AUC micro: 0.9881, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9597, AUC macro: 0.9321, AUC micro: 0.9979, FNR: 0.0000 (2669/2781 正确)
+Client 2: Acc: 0.9900, AUC macro: 0.9923, AUC micro: 0.9996, FNR: 0.1248 (25823/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9387, AUC micro: 0.9997, FNR: 0.0580 (78782/80685 正确)
+Client 4: Acc: 0.9981, AUC macro: 0.9306, AUC micro: 0.9999, FNR: 0.1188 (120248/120476 正确)
+Client 5: Acc: 0.9471, AUC macro: 0.9427, AUC micro: 0.9942, FNR: 0.0000 (1307/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8967, AUC micro: 1.0000, FNR: 0.9188 (179985/180304 正确)
+Client 7: Acc: 0.9588, AUC macro: 0.9469, AUC micro: 0.9975, FNR: 0.0794 (5395/5627 正确)
+Client 8: Acc: 0.9705, AUC macro: 0.9959, AUC micro: 0.9991, FNR: 0.0063 (18162/18714 正确)
+Client 9: Acc: 0.9912, AUC macro: 0.9784, AUC micro: 0.9999, FNR: 0.0271 (120876/121950 正确)
+Averaged Test Accurancy: 0.9914
+Averaged Test AUC Macro: 0.9364
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1333
+Std Test Accurancy: 0.0379
+Std Test AUC Macro: 0.0683
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2658
+
+------------- Local Epoch: 93 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7427, AUC micro: 0.9881, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9565, AUC macro: 0.9348, AUC micro: 0.9979, FNR: 0.0000 (2660/2781 正确)
+Client 2: Acc: 0.9783, AUC macro: 0.9917, AUC micro: 0.9996, FNR: 0.3365 (25518/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9432, AUC micro: 0.9997, FNR: 0.0580 (78783/80685 正确)
+Client 4: Acc: 0.9981, AUC macro: 0.9236, AUC micro: 0.9999, FNR: 0.1182 (120249/120476 正确)
+Client 5: Acc: 0.9471, AUC macro: 0.9408, AUC micro: 0.9941, FNR: 0.0000 (1307/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8970, AUC micro: 1.0000, FNR: 0.9217 (179985/180304 正确)
+Client 7: Acc: 0.9557, AUC macro: 0.9461, AUC micro: 0.9975, FNR: 0.0885 (5378/5627 正确)
+Client 8: Acc: 0.9741, AUC macro: 0.9950, AUC micro: 0.9992, FNR: 0.0070 (18230/18714 正确)
+Client 9: Acc: 0.9916, AUC macro: 0.9807, AUC micro: 0.9999, FNR: 0.0251 (120929/121950 正确)
+Averaged Test Accurancy: 0.9910
+Averaged Test AUC Macro: 0.9361
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1555
+Std Test Accurancy: 0.0375
+Std Test AUC Macro: 0.0688
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2733
+
+------------- Local Epoch: 94 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7427, AUC micro: 0.9881, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9597, AUC macro: 0.9350, AUC micro: 0.9979, FNR: 0.0000 (2669/2781 正确)
+Client 2: Acc: 0.9838, AUC macro: 0.9921, AUC micro: 0.9996, FNR: 0.1164 (25663/26085 正确)
+Client 3: Acc: 0.9765, AUC macro: 0.9372, AUC micro: 0.9997, FNR: 0.0581 (78786/80685 正确)
+Client 4: Acc: 0.9981, AUC macro: 0.9292, AUC micro: 0.9999, FNR: 0.1182 (120249/120476 正确)
+Client 5: Acc: 0.9471, AUC macro: 0.9414, AUC micro: 0.9941, FNR: 0.0000 (1307/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8970, AUC micro: 1.0000, FNR: 0.9188 (179985/180304 正确)
+Client 7: Acc: 0.9575, AUC macro: 0.9455, AUC micro: 0.9974, FNR: 0.0860 (5388/5627 正确)
+Client 8: Acc: 0.9745, AUC macro: 0.9947, AUC micro: 0.9992, FNR: 0.0076 (18236/18714 正确)
+Client 9: Acc: 0.9906, AUC macro: 0.9763, AUC micro: 0.9998, FNR: 0.0311 (120805/121950 正确)
+Averaged Test Accurancy: 0.9911
+Averaged Test AUC Macro: 0.9355
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1336
+Std Test Accurancy: 0.0376
+Std Test AUC Macro: 0.0684
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2655
+
+------------- Local Epoch: 95 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7427, AUC micro: 0.9881, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9597, AUC macro: 0.9327, AUC micro: 0.9980, FNR: 0.0000 (2669/2781 正确)
+Client 2: Acc: 0.9783, AUC macro: 0.9919, AUC micro: 0.9996, FNR: 0.3365 (25518/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9413, AUC micro: 0.9997, FNR: 0.0580 (78782/80685 正确)
+Client 4: Acc: 0.9977, AUC macro: 0.9302, AUC micro: 0.9999, FNR: 0.1171 (120204/120476 正确)
+Client 5: Acc: 0.9471, AUC macro: 0.9432, AUC micro: 0.9942, FNR: 0.0000 (1307/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8973, AUC micro: 1.0000, FNR: 0.9188 (179985/180304 正确)
+Client 7: Acc: 0.9547, AUC macro: 0.9451, AUC micro: 0.9974, FNR: 0.0926 (5372/5627 正确)
+Client 8: Acc: 0.9727, AUC macro: 0.9950, AUC micro: 0.9992, FNR: 0.0067 (18203/18714 正确)
+Client 9: Acc: 0.9913, AUC macro: 0.9817, AUC micro: 0.9999, FNR: 0.0275 (120891/121950 正确)
+Averaged Test Accurancy: 0.9908
+Averaged Test AUC Macro: 0.9376
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1557
+Std Test Accurancy: 0.0374
+Std Test AUC Macro: 0.0689
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2723
+
+------------- Local Epoch: 96 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7427, AUC micro: 0.9881, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9622, AUC macro: 0.9310, AUC micro: 0.9981, FNR: 0.0000 (2676/2781 正确)
+Client 2: Acc: 0.9837, AUC macro: 0.9922, AUC micro: 0.9996, FNR: 0.1164 (25659/26085 正确)
+Client 3: Acc: 0.9765, AUC macro: 0.9351, AUC micro: 0.9997, FNR: 0.0584 (78792/80685 正确)
+Client 4: Acc: 0.9981, AUC macro: 0.9297, AUC micro: 0.9999, FNR: 0.1171 (120247/120476 正确)
+Client 5: Acc: 0.9471, AUC macro: 0.9427, AUC micro: 0.9941, FNR: 0.0000 (1307/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8970, AUC micro: 1.0000, FNR: 0.9188 (179985/180304 正确)
+Client 7: Acc: 0.9588, AUC macro: 0.9457, AUC micro: 0.9975, FNR: 0.0819 (5395/5627 正确)
+Client 8: Acc: 0.9735, AUC macro: 0.9953, AUC micro: 0.9992, FNR: 0.0067 (18218/18714 正确)
+Client 9: Acc: 0.9918, AUC macro: 0.9743, AUC micro: 0.9999, FNR: 0.0239 (120945/121950 正确)
+Averaged Test Accurancy: 0.9914
+Averaged Test AUC Macro: 0.9349
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1323
+Std Test Accurancy: 0.0376
+Std Test AUC Macro: 0.0683
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2659
+
+------------- Local Epoch: 97 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7427, AUC micro: 0.9881, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9619, AUC macro: 0.9333, AUC micro: 0.9980, FNR: 0.0000 (2675/2781 正确)
+Client 2: Acc: 0.9883, AUC macro: 0.9917, AUC micro: 0.9996, FNR: 0.1190 (25781/26085 正确)
+Client 3: Acc: 0.9765, AUC macro: 0.9414, AUC micro: 0.9997, FNR: 0.0581 (78787/80685 正确)
+Client 4: Acc: 0.9981, AUC macro: 0.9297, AUC micro: 0.9999, FNR: 0.1171 (120250/120476 正确)
+Client 5: Acc: 0.9471, AUC macro: 0.9426, AUC micro: 0.9941, FNR: 0.0000 (1307/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8970, AUC micro: 1.0000, FNR: 0.9188 (179985/180304 正确)
+Client 7: Acc: 0.9586, AUC macro: 0.9466, AUC micro: 0.9975, FNR: 0.0789 (5394/5627 正确)
+Client 8: Acc: 0.9740, AUC macro: 0.9945, AUC micro: 0.9991, FNR: 0.0068 (18228/18714 正确)
+Client 9: Acc: 0.9916, AUC macro: 0.9740, AUC micro: 0.9999, FNR: 0.0134 (120924/121950 正确)
+Averaged Test Accurancy: 0.9916
+Averaged Test AUC Macro: 0.9357
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1312
+Std Test Accurancy: 0.0378
+Std Test AUC Macro: 0.0683
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2664
+
+------------- Local Epoch: 98 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7426, AUC micro: 0.9881, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9604, AUC macro: 0.9348, AUC micro: 0.9980, FNR: 0.0000 (2671/2781 正确)
+Client 2: Acc: 0.9909, AUC macro: 0.9921, AUC micro: 0.9996, FNR: 0.1228 (25848/26085 正确)
+Client 3: Acc: 0.9764, AUC macro: 0.9434, AUC micro: 0.9997, FNR: 0.0580 (78781/80685 正确)
+Client 4: Acc: 0.9981, AUC macro: 0.9236, AUC micro: 0.9999, FNR: 0.1182 (120249/120476 正确)
+Client 5: Acc: 0.9471, AUC macro: 0.9444, AUC micro: 0.9942, FNR: 0.0000 (1307/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8968, AUC micro: 1.0000, FNR: 0.9159 (179985/180304 正确)
+Client 7: Acc: 0.9598, AUC macro: 0.9458, AUC micro: 0.9976, FNR: 0.0768 (5401/5627 正确)
+Client 8: Acc: 0.9734, AUC macro: 0.9953, AUC micro: 0.9992, FNR: 0.0068 (18216/18714 正确)
+Client 9: Acc: 0.9918, AUC macro: 0.9735, AUC micro: 0.9999, FNR: 0.0226 (120945/121950 正确)
+Averaged Test Accurancy: 0.9917
+Averaged Test AUC Macro: 0.9346
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1321
+Std Test Accurancy: 0.0380
+Std Test AUC Macro: 0.0685
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2652
+
+------------- Local Epoch: 99 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7427, AUC micro: 0.9881, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9658, AUC macro: 0.9387, AUC micro: 0.9980, FNR: 0.0000 (2686/2781 正确)
+Client 2: Acc: 0.9825, AUC macro: 0.9928, AUC micro: 0.9996, FNR: 0.0979 (25629/26085 正确)
+Client 3: Acc: 0.9781, AUC macro: 0.9494, AUC micro: 0.9997, FNR: 0.0087 (78921/80685 正确)
+Client 4: Acc: 0.9981, AUC macro: 0.9274, AUC micro: 0.9999, FNR: 0.1177 (120250/120476 正确)
+Client 5: Acc: 0.9478, AUC macro: 0.9439, AUC micro: 0.9941, FNR: 0.0000 (1308/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8967, AUC micro: 1.0000, FNR: 0.9159 (179985/180304 正确)
+Client 7: Acc: 0.9554, AUC macro: 0.9463, AUC micro: 0.9975, FNR: 0.0896 (5376/5627 正确)
+Client 8: Acc: 0.9718, AUC macro: 0.9954, AUC micro: 0.9992, FNR: 0.0065 (18187/18714 正确)
+Client 9: Acc: 0.9904, AUC macro: 0.9779, AUC micro: 0.9999, FNR: 0.0313 (120785/121950 正确)
+Averaged Test Accurancy: 0.9912
+Averaged Test AUC Macro: 0.9372
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1268
+Std Test Accurancy: 0.0375
+Std Test AUC Macro: 0.0690
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2666
+
+------------- Local Epoch: 100 -------------
+Client 0: Acc: 0.8636, AUC macro: 0.7426, AUC micro: 0.9880, FNR: 0.0000 (266/308 正确)
+Client 1: Acc: 0.9691, AUC macro: 0.9344, AUC micro: 0.9981, FNR: 0.0000 (2695/2781 正确)
+Client 2: Acc: 0.9781, AUC macro: 0.9920, AUC micro: 0.9996, FNR: 0.3417 (25514/26085 正确)
+Client 3: Acc: 0.9765, AUC macro: 0.9451, AUC micro: 0.9998, FNR: 0.0580 (78788/80685 正确)
+Client 4: Acc: 0.9975, AUC macro: 0.9307, AUC micro: 0.9999, FNR: 0.1166 (120171/120476 正确)
+Client 5: Acc: 0.9471, AUC macro: 0.9434, AUC micro: 0.9941, FNR: 0.0000 (1307/1380 正确)
+Client 6: Acc: 0.9982, AUC macro: 0.8966, AUC micro: 1.0000, FNR: 0.9159 (179985/180304 正确)
+Client 7: Acc: 0.9577, AUC macro: 0.9459, AUC micro: 0.9976, FNR: 0.0855 (5389/5627 正确)
+Client 8: Acc: 0.9722, AUC macro: 0.9946, AUC micro: 0.9991, FNR: 0.0067 (18193/18714 正确)
+Client 9: Acc: 0.9916, AUC macro: 0.9725, AUC micro: 0.9999, FNR: 0.0242 (120922/121950 正确)
+Averaged Test Accurancy: 0.9909
+Averaged Test AUC Macro: 0.9360
+Averaged Test AUC Micro: 0.9998
+Averaged Test FNR: 0.1549
+Std Test Accurancy: 0.0373
+Std Test AUC Macro: 0.0684
+Std Test AUC Micro: 0.0036
+Std Test FNR: 0.2722
+Local baseline 总耗时: 7913.32 秒
+File path: ../results/IoT_Local_test_0.h5
+Deleted.
+
+Average time cost: 7943.84s.
+Length:  101
+std for best accurancy: 0.0
+mean for best accurancy: 0.9916874138023679
+std for best auc macro: 0.0
+mean for best auc macro: 0.9375626971838795
+std for best auc micro: 0.0
+mean for best auc micro: 0.9998057772744416
+All done!
