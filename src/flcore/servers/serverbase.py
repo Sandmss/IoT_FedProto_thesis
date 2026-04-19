@@ -32,6 +32,7 @@ class Server(object):
         self.time_threthold = args.time_threthold
         self.top_cnt = 100
         self.auto_break = args.auto_break
+        self.evals_since_improve = 0
         self.role = 'Server'
         if args.save_folder_name == 'temp':
             args.save_folder_name_full = f'{args.save_folder_name}/{args.dataset}/{args.algorithm}/{time.time()}/'
@@ -247,6 +248,34 @@ class Server(object):
         print("Average Test Accurancy: {:.4f}".format(test_acc))
         print("Average Test AUC: {:.4f}".format(test_auc))
         print("Average Train Loss: {:.4f}".format(train_loss))
+
+    def patience_should_stop_after_eval(self):
+        """
+        Call once immediately after evaluate() appends a new global averaged test accuracy.
+
+        Stops when there have been top_cnt consecutive evaluations where the new accuracy
+        is not strictly greater than the best seen in all prior evaluations. This matches
+        “best之后连续 N 次评估没有更高” semantics; the old check_done(top_cnt) logic did
+        not work when the running argmax stayed at the last list index (e.g. monotonic acc).
+        """
+        if not self.auto_break:
+            return False
+        acc_ls = self.rs_test_acc
+        if len(acc_ls) < 2:
+            return False
+        current = acc_ls[-1]
+        past_best = max(acc_ls[:-1])
+        if current > past_best:
+            self.evals_since_improve = 0
+        else:
+            self.evals_since_improve += 1
+        if self.evals_since_improve >= self.top_cnt:
+            print(
+                "Early stop: averaged test accuracy did not exceed historical best for "
+                f"{self.top_cnt} consecutive evaluations."
+            )
+            return True
+        return False
 
     def check_done(self, acc_lss, top_cnt=None, div_value=None):
         for acc_ls in acc_lss:

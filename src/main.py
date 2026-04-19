@@ -33,6 +33,17 @@ warnings.simplefilter("ignore")
 torch.manual_seed(0)
 
 
+def str2bool(value):
+    if isinstance(value, bool):
+        return value
+    value = value.lower()
+    if value in {"true", "1", "yes", "y", "on"}:
+        return True
+    if value in {"false", "0", "no", "n", "off"}:
+        return False
+    raise argparse.ArgumentTypeError(f"Boolean value expected, got '{value}'.")
+
+
 def run(args):
     """
     主运行函数，负责执行整个联邦学习的流程。
@@ -123,7 +134,7 @@ if __name__ == "__main__":
     parser.add_argument('-lbs', "--batch_size", type=int, default=10)
     parser.add_argument('-nw', "--num_workers", type=int, default=4,
                         help="DataLoader worker processes per client")
-    parser.add_argument('-pm', "--pin_memory", type=bool, default=True,
+    parser.add_argument('-pm', "--pin_memory", type=str2bool, nargs='?', const=True, default=True,
                         help="Whether to use pinned memory for DataLoader")
     parser.add_argument('-lr', "--local_learning_rate", type=float, default=0.005,
                         help="Local learning rate")
@@ -133,7 +144,7 @@ if __name__ == "__main__":
     parser.add_argument('-algo', "--algorithm", type=str, default="FedAvg")
     parser.add_argument('-jr', "--join_ratio", type=float, default=1.0,
                         help="Fraction of clients joining each round")
-    parser.add_argument('-rjr', "--random_join_ratio", type=bool, default=False,
+    parser.add_argument('-rjr', "--random_join_ratio", type=str2bool, nargs='?', const=True, default=False,
                         help="Whether to randomize the client join ratio")
     parser.add_argument('-nc', "--num_clients", type=int, default=10,
                         help="Total number of clients")
@@ -147,8 +158,8 @@ if __name__ == "__main__":
                         help="Skip t-SNE / prototype figure generation at end (saves CPU time)")
     parser.add_argument('-sfn', "--save_folder_name", type=str, default='temp',
                         help="Directory name for intermediate outputs")
-    parser.add_argument('-ab', "--auto_break", type=bool, default=False,
-                        help="Reserved flag, currently disabled")
+    parser.add_argument('-ab', "--auto_break", type=str2bool, nargs='?', const=True, default=False,
+                        help="Early stop after 100 consecutive evaluations without strictly higher averaged test accuracy")
     parser.add_argument('-fd', "--feature_dim", type=int, default=64,
                         help="Prototype / representation dimension")
     # practical: 联邦学习环境参数
@@ -158,7 +169,7 @@ if __name__ == "__main__":
                         help="Fraction of slow clients during local training")
     parser.add_argument('-ssr', "--send_slow_rate", type=float, default=0.0,
                         help="Fraction of slow clients during model upload")
-    parser.add_argument('-ts', "--time_select", type=bool, default=False,
+    parser.add_argument('-ts', "--time_select", type=str2bool, nargs='?', const=True, default=False,
                         help="Whether to select clients based on time cost")
     parser.add_argument('-tth', "--time_threthold", type=float, default=10000,
                         help="Time threshold for filtering slow clients")

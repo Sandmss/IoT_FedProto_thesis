@@ -49,11 +49,12 @@ class FedProto(Server):
         """
         print(f"\n------------- 全局轮次: 0 (初始状态) -------------")
         self.set_global_protos_to_clients()
-        self.evaluate()
+        if self.global_protos is not None: self.evaluate()
         print("--------------------------------------------------")
 
         for i in range(1, self.global_rounds + 1):
             s_t = time.time()
+            stop_training = False
             print(f"\n------------- 全局轮次: {i} -------------")
 
             # 1. 选择客户端
@@ -98,6 +99,9 @@ class FedProto(Server):
                     print(f"检测到新最佳准确率，正在保存最佳模型检查点 (Round {i})...")
                     self.save_best_checkpoint()
 
+                if self.auto_break and self.patience_should_stop_after_eval():
+                    stop_training = True
+
                 # ### 新增代码 START ###
                 # 每 100 轮打印一次最佳结果
             if i % 50 == 0 and i > 0:
@@ -108,6 +112,9 @@ class FedProto(Server):
 
             self.Budget.append(time.time() - s_t)
             print(f"本轮耗时: {self.Budget[-1]:.2f} 秒")
+
+            if stop_training:
+                break
 
         print("\n实验完成。最佳准确率:")
         # 打印最终结果的逻辑保持不变

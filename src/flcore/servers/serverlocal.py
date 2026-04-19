@@ -15,6 +15,7 @@ class Local(Server):
 
         self.set_slow_clients()
         self.set_clients(clientLocal)
+        self.best_test_acc = (0, 0)
 
         print(f"\nLocal baseline / 客户端总数: {self.num_clients}")
         print("Local 模式创建完成：仅执行客户端本地训练，不做服务器聚合。")
@@ -36,11 +37,13 @@ class Local(Server):
 
             self.evaluate()
 
-            if self.rs_test_acc:
-                best_acc = max(self.rs_test_acc)
-                if self.rs_test_acc[-1] >= best_acc:
-                    for client in self.clients:
-                        client.save_best_model()
+            if self.auto_break and self.patience_should_stop_after_eval():
+                break
+
+            if self.rs_test_acc and self.rs_test_acc[-1] > self.best_test_acc[0]:
+                self.best_test_acc = (self.rs_test_acc[-1], epoch)
+                for client in self.clients:
+                    client.save_best_model()
 
         elapsed = time.time() - start_time
         print(f"Local baseline 总耗时: {elapsed:.2f} 秒")

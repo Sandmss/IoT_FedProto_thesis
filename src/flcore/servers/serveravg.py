@@ -56,6 +56,7 @@ class FedAvg(Server):
 
         for i in range(1, self.global_rounds + 1):
             s_t = time.time()
+            stop_training = False
 
             # 1. 选择客户端
             self.selected_clients = self.select_clients()
@@ -82,8 +83,14 @@ class FedAvg(Server):
                     print(f"检测到新最佳准确率，正在保存最佳模型检查点 (Round {i})...")
                     self.save_best_checkpoint()
 
+                if self.auto_break and self.patience_should_stop_after_eval():
+                    stop_training = True
+
             self.Budget.append(time.time() - s_t)
             print('-' * 50, self.Budget[-1])
+
+            if stop_training:
+                break
 
         print("\n实验完成。最佳准确率:")
         if len(self.rs_test_acc) > 0:
@@ -105,13 +112,9 @@ class FedAvg(Server):
         for param in global_model.parameters():
             param.data.zero_()
 
-        total_train_samples = 0
-        for client in self.selected_clients:
-            total_train_samples += client.train_samples
-
         for client in self.selected_clients:
             client_model = client.model
-            weight = client.train_samples / total_train_samples
+            weight = 1.0 / len(self.selected_clients)
             for gl_param, cl_param in zip(global_model.parameters(), client_model.parameters()):
                 gl_param.data += cl_param.data * weight
 

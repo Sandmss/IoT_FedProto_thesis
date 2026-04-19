@@ -77,6 +77,100 @@ def encode_labels_and_extract_features(df):
     return X, y_encoded.astype(np.int64), label_encoder
 
 
+def balanced_subsample(X, y, target_total, seed=42):
+    """
+    在「尽可能均衡」的前提下，从 (X, y) 中无放回抽取 target_total 条样本。
+
+    做法：先为每个类别分配配额 floor/ceil(target_total / C)；若某类样本不足则少抽，
+    再从其余尚未入选的样本中随机补足，直到达到 target_total 或样本池耗尽。
+    """
+    rng = np.random.default_rng(seed)
+    y = np.asarray(y, dtype=np.int64)
+    X = np.asarray(X)
+    n = int(y.shape[0])
+    if target_total >= n:
+        if target_total > n:
+            print(
+                f"提示: target_total={target_total} 大于可用样本数 {n}，将使用全部样本。"
+            )
+        return X, y
+
+    classes = np.sort(np.unique(y))
+    c_count = int(classes.size)
+    if c_count == 0:
+        raise ValueError("No class labels found in y.")
+
+    base = target_total // c_count
+    rem = target_total % c_count
+    quota = {}
+    for i, c in enumerate(classes):
+        quota[int(c)] = base + (1 if i < rem else 0)
+
+    selected_parts = []
+    for c in classes:
+        c = int(c)
+        idx = np.where(y == c)[0]
+        rng.shuffle(idx)
+        q = quota[c]
+        take = min(int(idx.size), q)
+        if take > 0:
+            selected_parts.append(idx[:take])
+
+    selected = (
+        np.concatenate(selected_parts).astype(np.int64, copy=False)
+        if selected_parts
+        else np.array([], dtype=np.int64)
+    )
+
+    need = int(target_total - selected.size)
+    if need > 0:
+        used = np.zeros(n, dtype=bool)
+        used[selected] = True
+        pool = np.where(~used)[0]
+        rng.shuffle(pool)
+        take_extra = min(need, int(pool.size))
+        if take_extra > 0:
+            selected = np.concatenate(
+                [selected, pool[:take_extra].astype(np.int64, copy=False)]
+            )
+        if selected.size < target_total:
+            print(
+                f"警告: 仅能抽取 {selected.size} 条样本（目标 {target_total}），"
+                "可能因少数类在清洗后样本过少。"
+            )
+
+    if selected.size > target_total:
+        selected = rng.choice(selected, size=target_total, replace=False)
+
+    rng.shuffle(selected)
+    return X[selected], y[selected]
+
+
+def iid_distribute_by_class(y, num_clients=10, seed=42):
+    """
+    将样本随机打乱后近似均分到 num_clients 个客户端（IID 划分）。
+    返回结构与 dirichlet_distribute_by_class 相同，便于复用后续 train/test 划分逻辑。
+    """
+    rng = np.random.default_rng(seed)
+    y = np.asarray(y, dtype=np.int64)
+    n = int(y.shape[0])
+    indices = np.arange(n, dtype=np.int64)
+    rng.shuffle(indices)
+    chunks = np.array_split(indices, num_clients)
+
+    categories = np.unique(y)
+    client_class_indices = {
+        client_id: {int(class_id): [] for class_id in categories}
+        for client_id in range(num_clients)
+    }
+
+    for client_id, chunk in enumerate(chunks):
+        for idx in chunk:
+            client_class_indices[client_id][int(y[int(idx)])].append(int(idx))
+
+    return client_class_indices
+
+
 def dirichlet_distribute_by_class(y, num_clients=10, alpha=0.1, seed=42):
     """
     仿照 datalabelgen-noniid.py：
@@ -240,6 +334,8 @@ def save_metadata(
         "num_clients": int(args.num_clients),
         "train_ratio": float(args.train_ratio),
         "dirichlet_alpha": float(args.alpha),
+        "client_split": str(getattr(args, "client_split", "dirichlet")),
+        "target_total": getattr(args, "target_total", None),
         "seed": int(args.seed),
         "total_samples": int(total_samples),
         "feature_dim": int(feature_dim),
@@ -310,6 +406,26 @@ def parse_args():
         default=0.1,
         help="Dirichlet alpha. Smaller values produce stronger non-IID partitions.",
     )
+    parser.add_argument(
+        "--target-total",
+        type=int,
+        default=None,
+        help=(
+            "If set, first subsample the cleaned dataset down to this many rows "
+            "with per-class balanced quotas (then optional fill from remaining pool)."
+        ),
+    )
+    parser.add_argument(
+        "--client-split",
+        type=str,
+        choices=("dirichlet", "iid"),
+        default="dirichlet",
+        help=(
+            "How to assign samples to clients after (optional) subsampling: "
+            "'dirichlet' = class-wise Dirichlet non-IID (uses --alpha); "
+            "'iid' = shuffle and split roughly evenly across clients."
+        ),
+    )
     parser.add_argument("--seed", type=int, default=42, help="Random seed.")
     return parser.parse_args()
 
@@ -321,19 +437,31 @@ def main():
         raise ValueError("--num-clients must be > 0")
     if not (0.0 < args.train_ratio <= 1.0):
         raise ValueError("--train-ratio must be in the range (0, 1]")
-    if args.alpha <= 0:
-        raise ValueError("--alpha must be > 0")
+    if args.client_split == "dirichlet" and args.alpha <= 0:
+        raise ValueError("--alpha must be > 0 when --client-split is dirichlet")
 
     merged_df = load_and_merge_csv(args.data_dir)
     cleaned_df = clean_dataframe(merged_df)
     X, y, label_encoder = encode_labels_and_extract_features(cleaned_df)
 
-    client_class_indices = dirichlet_distribute_by_class(
-        y,
-        num_clients=args.num_clients,
-        alpha=args.alpha,
-        seed=args.seed,
-    )
+    if args.target_total is not None:
+        if args.target_total <= 0:
+            raise ValueError("--target-total must be > 0 when provided")
+        X, y = balanced_subsample(X, y, args.target_total, seed=args.seed)
+
+    if args.client_split == "iid":
+        client_class_indices = iid_distribute_by_class(
+            y,
+            num_clients=args.num_clients,
+            seed=args.seed,
+        )
+    else:
+        client_class_indices = dirichlet_distribute_by_class(
+            y,
+            num_clients=args.num_clients,
+            alpha=args.alpha,
+            seed=args.seed,
+        )
     split_indices, stats_summary = split_client_data_train_test(
         client_class_indices,
         train_ratio=args.train_ratio,
