@@ -189,6 +189,7 @@ class Client(object):
         y_prob = []  # 存储模型输出的概率
         y_true = []  # 存储真实的标签
         y_pred = []  # 存储预测标签
+        inference_time = 0.0
 
         # 禁用梯度计算以加速评估
         with torch.no_grad():
@@ -200,7 +201,13 @@ class Client(object):
                     x = x.to(self.device)
                 y = y.to(self.device)
                 # 前向传播
+                if self.device == "cuda":
+                    torch.cuda.synchronize()
+                start_time = time.perf_counter()
                 output = model(x)
+                if self.device == "cuda":
+                    torch.cuda.synchronize()
+                inference_time += time.perf_counter() - start_time
                 pred = torch.argmax(output, dim=1)
 
                 # 计算正确预测的数量
@@ -218,9 +225,16 @@ class Client(object):
         y_pred = np.concatenate(y_pred, axis=0)
 
         auc_macro, auc_micro = self.compute_multiclass_auc(y_true, y_prob)
+        precision, recall, f1, fpr = self.compute_classification_metrics(y_true, y_pred)
         fnr = self.compute_false_negative_rate(y_true, y_pred)
+        confusion_matrix = metrics.confusion_matrix(
+            y_true,
+            y_pred,
+            labels=list(range(self.num_classes)),
+        )
+        latency_ms = 1000.0 * inference_time / max(test_num, 1)
 
-        return test_acc, test_num, auc_macro, auc_micro, fnr
+        return test_acc, test_num, auc_macro, auc_micro, fnr, precision, recall, f1, fpr, confusion_matrix, latency_ms
 
     def compute_multiclass_auc(self, y_true, y_prob):
         """
@@ -303,6 +317,33 @@ class Client(object):
         false_negatives = int(np.sum(np.logical_and(positive_mask, y_pred == self.normal_class)))
         return float(false_negatives / positive_count)
 
+    def compute_classification_metrics(self, y_true, y_pred):
+        """
+        Return macro Precision/Recall/F1 and binary false positive rate.
+
+        FPR treats normal_class as benign traffic and any non-normal label as
+        attack traffic, measuring benign samples incorrectly flagged as attacks.
+        """
+        if len(y_true) == 0:
+            return 0.0, 0.0, 0.0, 0.0
+
+        y_true = np.asarray(y_true, dtype=np.int64)
+        y_pred = np.asarray(y_pred, dtype=np.int64)
+
+        precision = metrics.precision_score(y_true, y_pred, average="macro", zero_division=0)
+        recall = metrics.recall_score(y_true, y_pred, average="macro", zero_division=0)
+        f1 = metrics.f1_score(y_true, y_pred, average="macro", zero_division=0)
+
+        normal_mask = y_true == self.normal_class
+        normal_count = int(np.sum(normal_mask))
+        if normal_count == 0:
+            fpr = 0.0
+        else:
+            false_positives = int(np.sum(np.logical_and(normal_mask, y_pred != self.normal_class)))
+            fpr = false_positives / normal_count
+
+        return float(precision), float(recall), float(f1), float(fpr)
+
 
 # ---- 全局工具函数 ----
 
@@ -335,6 +376,4 @@ def load_item(role, item_name, item_path=None):
     except FileNotFoundError:
         print(f"文件未找到: {role}_{item_name}.pt")
         return None
-
-
 

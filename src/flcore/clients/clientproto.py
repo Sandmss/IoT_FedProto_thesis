@@ -8,6 +8,7 @@ import time
 import os
 from flcore.clients.clientbase import Client, save_item, debug_log
 from collections import defaultdict
+from sklearn import metrics
 
 class clientproto(Client):
     """
@@ -156,6 +157,7 @@ class clientproto(Client):
         y_prob = []
         y_true = []
         y_pred = []
+        inference_time = 0.0
 
         if global_protos is not None:
             with torch.no_grad():
@@ -165,6 +167,9 @@ class clientproto(Client):
                     else:
                         x = x.to(self.device)
                     y = y.to(self.device)
+                    if self.device == "cuda":
+                        torch.cuda.synchronize()
+                    start_time = time.perf_counter()
                     rep = model.base(x)
 
                     output = torch.full(
@@ -192,6 +197,9 @@ class clientproto(Client):
                         output[:, class_ids] = distances
 
                     proto_pred = torch.argmin(output, dim=1)
+                    if self.device == "cuda":
+                        torch.cuda.synchronize()
+                    inference_time += time.perf_counter() - start_time
                     proto_correct = torch.sum(proto_pred == y).item()
                     test_acc += proto_correct
                     test_num += y.shape[0]
@@ -203,7 +211,14 @@ class clientproto(Client):
             y_true = np.concatenate(y_true, axis=0)
             y_pred = np.concatenate(y_pred, axis=0)
             auc_macro, auc_micro = self.compute_multiclass_auc(y_true, y_prob)
+            precision, recall, f1, fpr = self.compute_classification_metrics(y_true, y_pred)
             fnr = self.compute_false_negative_rate(y_true, y_pred)
+            confusion_matrix = metrics.confusion_matrix(
+                y_true,
+                y_pred,
+                labels=list(range(self.num_classes)),
+            )
+            latency_ms = 1000.0 * inference_time / max(test_num, 1)
             if self.id in {0, 2} and self.current_round in {1, 10, 50, 98, 100}:
                 pred_labels, pred_counts = np.unique(y_pred, return_counts=True)
                 true_labels, true_counts = np.unique(y_true, return_counts=True)
@@ -232,9 +247,9 @@ class clientproto(Client):
                     hypothesis_id="H4",
                 )
                 # endregion
-            return test_acc, test_num, auc_macro, auc_micro, fnr
+            return test_acc, test_num, auc_macro, auc_micro, fnr, precision, recall, f1, fpr, confusion_matrix, latency_ms
         else:
-            return 0, 1e-5, 0.0, 0.0, 0.0
+            return 0, 1e-5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, np.zeros((self.num_classes, self.num_classes)), 0.0
 
     # def evaluate_on_global_test_set(self, global_protos=None):
     #     """
@@ -509,5 +524,3 @@ def agg_func(protos):
         else:
             protos[label] = proto_list[0]
     return protos
-
-

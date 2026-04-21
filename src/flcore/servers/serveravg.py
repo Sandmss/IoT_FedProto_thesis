@@ -68,6 +68,7 @@ class FedAvg(Server):
 
             # 3. 服务器聚合
             self.aggregate_models()
+            self.record_round_overheads()
 
             # 4. 评估
             if i % self.eval_gap == 0:

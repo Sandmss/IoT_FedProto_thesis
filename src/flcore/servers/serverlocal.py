@@ -35,6 +35,7 @@ class Local(Server):
             for client in self.selected_clients:
                 client.train(epochs=1)
 
+            self.record_round_overheads()
             self.evaluate()
 
             if self.rs_test_acc and self.rs_test_acc[-1] > self.best_test_acc[0]:

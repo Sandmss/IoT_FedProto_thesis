@@ -54,7 +54,24 @@ class Server(object):
         self.rs_test_auc = []
         self.rs_test_auc_micro = []
         self.rs_test_fnr = []
+        self.rs_test_precision = []
+        self.rs_test_recall = []
+        self.rs_test_f1 = []
+        self.rs_test_fpr = []
+        self.rs_confusion_matrices = []
+        self.rs_inference_latency_ms = []
         self.rs_train_loss = []
+        self.rs_comm_params_per_round = []
+        self.rs_comm_params_cumulative = []
+        self.rs_model_params_mean = []
+        self.rs_model_params_min = []
+        self.rs_model_params_max = []
+        self.rs_model_size_bytes_mean = []
+        self.rs_model_size_bytes_min = []
+        self.rs_model_size_bytes_max = []
+        self.rs_model_flops_mean = []
+        self.rs_model_flops_min = []
+        self.rs_model_flops_max = []
 
         self.times = times
         self.eval_gap = args.eval_gap
@@ -160,7 +177,24 @@ class Server(object):
                 hf.create_dataset('rs_test_auc_macro', data=self.rs_test_auc)
                 hf.create_dataset('rs_test_auc_micro', data=self.rs_test_auc_micro)
                 hf.create_dataset('rs_test_fnr', data=self.rs_test_fnr)
+                hf.create_dataset('rs_test_precision', data=self.rs_test_precision)
+                hf.create_dataset('rs_test_recall', data=self.rs_test_recall)
+                hf.create_dataset('rs_test_f1', data=self.rs_test_f1)
+                hf.create_dataset('rs_test_fpr', data=self.rs_test_fpr)
+                hf.create_dataset('rs_confusion_matrices', data=self.rs_confusion_matrices)
+                hf.create_dataset('rs_inference_latency_ms', data=self.rs_inference_latency_ms)
                 hf.create_dataset('rs_train_loss', data=self.rs_train_loss)
+                hf.create_dataset('rs_comm_params_per_round', data=self.rs_comm_params_per_round)
+                hf.create_dataset('rs_comm_params_cumulative', data=self.rs_comm_params_cumulative)
+                hf.create_dataset('rs_model_params_mean', data=self.rs_model_params_mean)
+                hf.create_dataset('rs_model_params_min', data=self.rs_model_params_min)
+                hf.create_dataset('rs_model_params_max', data=self.rs_model_params_max)
+                hf.create_dataset('rs_model_size_bytes_mean', data=self.rs_model_size_bytes_mean)
+                hf.create_dataset('rs_model_size_bytes_min', data=self.rs_model_size_bytes_min)
+                hf.create_dataset('rs_model_size_bytes_max', data=self.rs_model_size_bytes_max)
+                hf.create_dataset('rs_model_flops_mean', data=self.rs_model_flops_mean)
+                hf.create_dataset('rs_model_flops_min', data=self.rs_model_flops_min)
+                hf.create_dataset('rs_model_flops_max', data=self.rs_model_flops_max)
         
         if 'temp' in self.save_folder_name:
             try:
@@ -175,23 +209,62 @@ class Server(object):
         tot_auc_macro = []
         tot_auc_micro = []
         tot_fnr = []
+        tot_precision = []
+        tot_recall = []
+        tot_f1 = []
+        tot_fpr = []
+        confusion_matrices = []
+        tot_latency_ms = []
         for c in self.clients:
-            ct, ns, auc_macro, auc_micro, fnr = c.test_metrics()
+            (
+                ct,
+                ns,
+                auc_macro,
+                auc_micro,
+                fnr,
+                precision,
+                recall,
+                f1,
+                fpr,
+                confusion_matrix,
+                latency_ms,
+            ) = c.test_metrics()
             tot_correct.append(ct*1.0)
             print(
                 f'Client {c.id}: Acc: {ct*1.0/ns:.4f}, '
                 f'AUC macro: {auc_macro:.4f}, AUC micro: {auc_micro:.4f}'
-                f', FNR: {fnr:.4f} '
+                f', Precision: {precision:.4f}, Recall: {recall:.4f}, '
+                f'F1: {f1:.4f}, FNR: {fnr:.4f}, FPR: {fpr:.4f}, '
+                f'Latency: {latency_ms:.4f} ms/sample '
                 f'({int(ct)}/{ns} 正确)'
             )
             tot_auc_macro.append(auc_macro * ns)
             tot_auc_micro.append(auc_micro * ns)
             tot_fnr.append(fnr)
+            tot_precision.append(precision * ns)
+            tot_recall.append(recall * ns)
+            tot_f1.append(f1 * ns)
+            tot_fpr.append(fpr)
+            confusion_matrices.append(confusion_matrix)
+            tot_latency_ms.append(latency_ms * ns)
             num_samples.append(ns)
 
         ids = [c.id for c in self.clients]
 
-        return ids, num_samples, tot_correct, tot_auc_macro, tot_auc_micro, tot_fnr
+        return (
+            ids,
+            num_samples,
+            tot_correct,
+            tot_auc_macro,
+            tot_auc_micro,
+            tot_fnr,
+            tot_precision,
+            tot_recall,
+            tot_f1,
+            tot_fpr,
+            confusion_matrices,
+            tot_latency_ms,
+        )
 
     def train_metrics(self):        
         num_samples = []
@@ -214,17 +287,33 @@ class Server(object):
         test_auc_macro = sum(stats[3]) * 1.0 / sum(stats[1])
         test_auc_micro = sum(stats[4]) * 1.0 / sum(stats[1])
         test_fnr = float(np.mean(stats[5])) if len(stats[5]) > 0 else 0.0
+        test_precision = sum(stats[6]) * 1.0 / sum(stats[1])
+        test_recall = sum(stats[7]) * 1.0 / sum(stats[1])
+        test_f1 = sum(stats[8]) * 1.0 / sum(stats[1])
+        test_fpr = float(np.mean(stats[9])) if len(stats[9]) > 0 else 0.0
+        test_confusion_matrix = np.sum(np.asarray(stats[10]), axis=0)
+        test_latency_ms = sum(stats[11]) * 1.0 / sum(stats[1])
         # train_loss = sum(stats_train[2])*1.0 / sum(stats_train[1])
         accs = [a / n for a, n in zip(stats[2], stats[1])]
         aucs_macro = [a / n for a, n in zip(stats[3], stats[1])]
         aucs_micro = [a / n for a, n in zip(stats[4], stats[1])]
         fnrs = stats[5]
+        precisions = [a / n for a, n in zip(stats[6], stats[1])]
+        recalls = [a / n for a, n in zip(stats[7], stats[1])]
+        f1s = [a / n for a, n in zip(stats[8], stats[1])]
+        fprs = stats[9]
         
         if acc == None:
             self.rs_test_acc.append(test_acc)
             self.rs_test_auc.append(test_auc_macro)
             self.rs_test_auc_micro.append(test_auc_micro)
             self.rs_test_fnr.append(test_fnr)
+            self.rs_test_precision.append(test_precision)
+            self.rs_test_recall.append(test_recall)
+            self.rs_test_f1.append(test_f1)
+            self.rs_test_fpr.append(test_fpr)
+            self.rs_confusion_matrices.append(test_confusion_matrix)
+            self.rs_inference_latency_ms.append(test_latency_ms)
         else:
             acc.append(test_acc)
         
@@ -237,17 +326,184 @@ class Server(object):
         print("Averaged Test Accurancy: {:.4f}".format(test_acc))
         print("Averaged Test AUC Macro: {:.4f}".format(test_auc_macro))
         print("Averaged Test AUC Micro: {:.4f}".format(test_auc_micro))
+        print("Averaged Test Precision Macro: {:.4f}".format(test_precision))
+        print("Averaged Test Recall Macro: {:.4f}".format(test_recall))
+        print("Averaged Test F1 Macro: {:.4f}".format(test_f1))
         print("Averaged Test FNR: {:.4f}".format(test_fnr))
+        print("Averaged Test FPR: {:.4f}".format(test_fpr))
+        print("Averaged Inference Latency: {:.4f} ms/sample".format(test_latency_ms))
+        print("Global Confusion Matrix:")
+        print(test_confusion_matrix)
         # self.print_(test_acc, train_acc, train_loss)
         print("Std Test Accurancy: {:.4f}".format(np.std(accs)))
         print("Std Test AUC Macro: {:.4f}".format(np.std(aucs_macro)))
         print("Std Test AUC Micro: {:.4f}".format(np.std(aucs_micro)))
+        print("Std Test Precision Macro: {:.4f}".format(np.std(precisions)))
+        print("Std Test Recall Macro: {:.4f}".format(np.std(recalls)))
+        print("Std Test F1 Macro: {:.4f}".format(np.std(f1s)))
         print("Std Test FNR: {:.4f}".format(np.std(fnrs)))
+        print("Std Test FPR: {:.4f}".format(np.std(fprs)))
 
     def print_(self, test_acc, test_auc, train_loss):
         print("Average Test Accurancy: {:.4f}".format(test_acc))
         print("Average Test AUC: {:.4f}".format(test_auc))
         print("Average Train Loss: {:.4f}".format(train_loss))
+
+    def count_model_params(self, model):
+        return sum(param.numel() for param in model.parameters())
+
+    def estimate_model_param_stats(self):
+        counts = []
+        for client in self.clients:
+            model = getattr(client, "model", None)
+            if model is not None:
+                counts.append(self.count_model_params(model))
+        if not counts:
+            return 0.0, 0.0, 0.0
+        counts = np.asarray(counts, dtype=np.float64)
+        return float(np.mean(counts)), float(np.min(counts)), float(np.max(counts))
+
+    def estimate_model_size_bytes(self, model):
+        total = 0
+        for tensor in list(model.parameters()) + list(model.buffers()):
+            total += tensor.numel() * tensor.element_size()
+        return total
+
+    def estimate_model_flops(self, model):
+        """
+        Estimate single-sample forward FLOPs for Linear and Conv1d layers.
+
+        This lightweight estimator intentionally avoids extra dependencies. It
+        covers the MLP/CNN paths exactly for Linear/Conv1d operations and gives
+        a conservative lower-bound estimate for Transformer models because
+        attention matmul internals are not exposed as simple modules.
+        """
+        was_training = model.training
+        model.eval()
+        flops = {"value": 0.0}
+        handles = []
+
+        def linear_hook(module, inputs, output):
+            x = inputs[0]
+            batch = x.shape[0] if x.dim() > 0 else 1
+            output_elements = output.numel()
+            flops["value"] += output_elements * module.in_features
+            if module.bias is not None:
+                flops["value"] += output_elements
+            # Keep batch scaling explicit for unusual broadcasting inputs.
+            if output.dim() == 1:
+                flops["value"] *= batch
+
+        def conv1d_hook(module, inputs, output):
+            out = output
+            batch = out.shape[0]
+            out_channels = out.shape[1]
+            out_length = out.shape[2]
+            kernel_ops = module.kernel_size[0] * (module.in_channels / module.groups)
+            bias_ops = 1 if module.bias is not None else 0
+            flops["value"] += batch * out_channels * out_length * (kernel_ops + bias_ops)
+
+        for module in model.modules():
+            if isinstance(module, torch.nn.Linear):
+                handles.append(module.register_forward_hook(linear_hook))
+            elif isinstance(module, torch.nn.Conv1d):
+                handles.append(module.register_forward_hook(conv1d_hook))
+
+        try:
+            input_dim = int(getattr(self.args, "input_dim", 77))
+            dummy = torch.zeros(1, input_dim, device=self.device)
+            with torch.no_grad():
+                model(dummy)
+        except Exception:
+            flops["value"] = 0.0
+        finally:
+            for handle in handles:
+                handle.remove()
+            if was_training:
+                model.train()
+
+        return float(flops["value"])
+
+    def estimate_model_efficiency_stats(self):
+        sizes = []
+        flops = []
+        for client in self.clients:
+            model = getattr(client, "model", None)
+            if model is not None:
+                sizes.append(self.estimate_model_size_bytes(model))
+                flops.append(self.estimate_model_flops(model))
+
+        if not sizes:
+            return (0.0, 0.0, 0.0), (0.0, 0.0, 0.0)
+
+        sizes = np.asarray(sizes, dtype=np.float64)
+        flops = np.asarray(flops, dtype=np.float64)
+        return (
+            (float(np.mean(sizes)), float(np.min(sizes)), float(np.max(sizes))),
+            (float(np.mean(flops)), float(np.min(flops)), float(np.max(flops))),
+        )
+
+    def estimate_round_comm_params(self):
+        """
+        Estimate per-round communication using the FedProto paper's Table 1 style.
+
+        FedAvg-style methods count uploaded model parameters from selected clients.
+        FedProto counts uploaded local class prototypes from selected clients.
+        Local has no network communication.
+        """
+        if self.algorithm == "Local":
+            return 0.0
+
+        selected_clients = self.selected_clients if self.selected_clients else self.clients
+        if self.algorithm == "FedProto":
+            comm_params = 0
+            for client in selected_clients:
+                local_protos = getattr(client, "local_protos", None) or {}
+                for proto in local_protos.values():
+                    if isinstance(proto, torch.Tensor):
+                        comm_params += proto.numel()
+            return float(comm_params)
+
+        return float(
+            sum(
+                self.count_model_params(client.model)
+                for client in selected_clients
+                if getattr(client, "model", None) is not None
+            )
+        )
+
+    def record_round_overheads(self):
+        comm_params = self.estimate_round_comm_params()
+        previous_total = self.rs_comm_params_cumulative[-1] if self.rs_comm_params_cumulative else 0.0
+        model_mean, model_min, model_max = self.estimate_model_param_stats()
+        size_stats, flops_stats = self.estimate_model_efficiency_stats()
+
+        self.rs_comm_params_per_round.append(comm_params)
+        self.rs_comm_params_cumulative.append(previous_total + comm_params)
+        self.rs_model_params_mean.append(model_mean)
+        self.rs_model_params_min.append(model_min)
+        self.rs_model_params_max.append(model_max)
+        self.rs_model_size_bytes_mean.append(size_stats[0])
+        self.rs_model_size_bytes_min.append(size_stats[1])
+        self.rs_model_size_bytes_max.append(size_stats[2])
+        self.rs_model_flops_mean.append(flops_stats[0])
+        self.rs_model_flops_min.append(flops_stats[1])
+        self.rs_model_flops_max.append(flops_stats[2])
+
+        print(f"Communication params this round (paper-style): {comm_params:.0f}")
+        print(f"Cumulative communication params: {previous_total + comm_params:.0f}")
+        print(
+            "Client model params mean/min/max: "
+            f"{model_mean:.0f}/{model_min:.0f}/{model_max:.0f}"
+        )
+        print(
+            "Client model size bytes mean/min/max: "
+            f"{size_stats[0]:.0f}/{size_stats[1]:.0f}/{size_stats[2]:.0f}"
+        )
+        print(
+            "Estimated forward FLOPs mean/min/max: "
+            f"{flops_stats[0]:.0f}/{flops_stats[1]:.0f}/{flops_stats[2]:.0f}"
+        )
 
     def patience_should_stop_after_eval(self):
         """

@@ -84,6 +84,7 @@ class FedProto(Server):
 
 
             self.aggregate_protos()
+            self.record_round_overheads()
             if i % self.eval_gap == 0:
                 print(f"--- 轮次 {i} 评估 ---")
                 for client in self.clients:
@@ -426,4 +427,3 @@ def proto_aggregation_with_weights(protos_list, weights_list):
             aggregated_protos[k] = (weighted_sum / total_weight).detach()
 
     return aggregated_protos
-
