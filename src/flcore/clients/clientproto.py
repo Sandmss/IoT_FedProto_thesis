@@ -24,6 +24,7 @@ class clientproto(Client):
         self.local_proto_weights = None
         self.best_protos = None
         self.current_round = 0
+        self.proto_eval_mode = getattr(args, "proto_eval_mode", "classifier")
 
     def train(self):
         """
@@ -143,6 +144,9 @@ class clientproto(Client):
         """
         标准测试方法：在【本地测试集】上使用【全局原型】进行分类。
         """
+        if self.proto_eval_mode == "classifier":
+            return super().test_metrics()
+
         testloader = self.load_test_data()
         model = self.model
         global_protos = self.global_protos
@@ -505,6 +509,5 @@ def agg_func(protos):
         else:
             protos[label] = proto_list[0]
     return protos
-
 
 

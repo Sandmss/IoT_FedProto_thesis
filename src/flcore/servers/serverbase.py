@@ -30,7 +30,7 @@ class Server(object):
         self.time_select = args.time_select
         self.goal = args.goal
         self.time_threthold = args.time_threthold
-        self.top_cnt = 100
+        self.top_cnt = int(getattr(args, "early_stop_patience", 100))
         self.auto_break = args.auto_break
         self.evals_since_improve = 0
         self.role = 'Server'

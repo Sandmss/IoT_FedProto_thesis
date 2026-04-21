@@ -71,10 +71,40 @@ def run(args):
             args.heads = [
                 f"nn.Linear({args.feature_dim}, {args.num_classes})",
             ]
+        elif args.model_family == 'IoT_Transformer1D':
+            args.models = [
+                (
+                    "Transformer1D_IoT("
+                    f"dim_in={args.input_dim}, dim_out={args.feature_dim}, "
+                    f"num_classes={args.num_classes}, d_model={args.transformer_d_model}, "
+                    f"num_heads={args.transformer_num_heads}, num_layers={args.transformer_num_layers}, "
+                    f"dropout={args.transformer_dropout})"
+                ),
+            ]
+            args.heads = [
+                f"nn.Linear({args.feature_dim}, {args.num_classes})",
+            ]
+        elif args.model_family == 'IoT_MIX_MLP_CNN_TRANS':
+            args.models = [
+                f"MLP_IoT(dim_in={args.input_dim}, dim_hidden=128, dim_out={args.feature_dim}, num_classes={args.num_classes})",
+                f"CNN1D_IoT(dim_in={args.input_dim}, dim_out={args.feature_dim}, num_classes={args.num_classes})",
+                (
+                    "Transformer1D_IoT("
+                    f"dim_in={args.input_dim}, dim_out={args.feature_dim}, "
+                    f"num_classes={args.num_classes}, d_model={args.transformer_d_model}, "
+                    f"num_heads={args.transformer_num_heads}, num_layers={args.transformer_num_layers}, "
+                    f"dropout={args.transformer_dropout})"
+                ),
+            ]
+            args.heads = [
+                f"nn.Linear({args.feature_dim}, {args.num_classes})",
+                f"nn.Linear({args.feature_dim}, {args.num_classes})",
+                f"nn.Linear({args.feature_dim}, {args.num_classes})",
+            ]
         else:
             raise NotImplementedError(
                 f"Unsupported model_family '{args.model_family}'. "
-                "Available options: IoT_MLP, IoT_CNN1D"
+                "Available options: IoT_MLP, IoT_CNN1D, IoT_Transformer1D, IoT_MIX_MLP_CNN_TRANS"
             )
 
         # 打印最终确定的模型列表
@@ -119,9 +149,17 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # general: 一维 IoT 任务专用参数
     parser.add_argument('-model_family', type=str, default='IoT_MLP',
-                        help='Tabular backbone to use: IoT_MLP or IoT_CNN1D')
+                        help='Backbone to use: IoT_MLP, IoT_CNN1D, IoT_Transformer1D, or IoT_MIX_MLP_CNN_TRANS')
     parser.add_argument('-dataset', type=str, default='IoT', help='Dataset name')
     parser.add_argument('--input_dim', type=int, default=77, help='Input feature dimension for each sample')
+    parser.add_argument('--transformer_d_model', type=int, default=64,
+                        help='Token embedding dimension for IoT_Transformer1D')
+    parser.add_argument('--transformer_num_heads', type=int, default=4,
+                        help='Number of attention heads for IoT_Transformer1D')
+    parser.add_argument('--transformer_num_layers', type=int, default=2,
+                        help='Number of Transformer encoder layers for IoT_Transformer1D')
+    parser.add_argument('--transformer_dropout', type=float, default=0.2,
+                        help='Dropout for IoT_Transformer1D')
 
     parser.add_argument('-go', "--goal", type=str, default="test",
                         help="Experiment goal tag")
@@ -160,6 +198,8 @@ if __name__ == "__main__":
                         help="Directory name for intermediate outputs")
     parser.add_argument('-ab', "--auto_break", type=str2bool, nargs='?', const=True, default=False,
                         help="Early stop after 100 consecutive evaluations without strictly higher averaged test accuracy")
+    parser.add_argument("--early_stop_patience", type=int, default=100,
+                        help="Number of consecutive evaluations without a new best averaged test accuracy before early stopping")
     parser.add_argument('-fd', "--feature_dim", type=int, default=64,
                         help="Prototype / representation dimension")
     # practical: 联邦学习环境参数
@@ -184,6 +224,9 @@ if __name__ == "__main__":
                         help="Server-side optimization epochs")
     parser.add_argument("--fixed_margin", type=float, default=0.5,
                         help="Fixed margin value for ablation runs")
+    parser.add_argument("--proto_eval_mode", type=str, default="classifier",
+                        choices=["classifier", "prototype"],
+                        help="FedProto evaluation mode: classifier head for the main metric, or prototype nearest-neighbor for ablation")
 
     # FedSA
     parser.add_argument('-mcl', "--margin_contrastive", type=float, default=1.0,
@@ -210,6 +253,10 @@ if __name__ == "__main__":
     print("Dataset: {}".format(args.dataset))
     print("Model family: {}".format(args.model_family))
     print("Input dimension: {}".format(args.input_dim))
+    print("Transformer d_model: {}".format(args.transformer_d_model))
+    print("Transformer heads: {}".format(args.transformer_num_heads))
+    print("Transformer layers: {}".format(args.transformer_num_layers))
+    print("Transformer dropout: {}".format(args.transformer_dropout))
     print("Number of classes: {}".format(args.num_classes))
     print("Normal class label: {}".format(args.normal_class))
     print("Number of clients: {}".format(args.num_clients))
@@ -228,8 +275,10 @@ if __name__ == "__main__":
     print("Device: {}".format(args.device))
     print("Feature dimension: {}".format(args.feature_dim))
     print("Lambda: {}".format(args.lamda))
+    print("FedProto eval mode: {}".format(args.proto_eval_mode))
     print("Packet weight: {}".format(args.packet_weight))
     print("Auto break: {}".format(args.auto_break))
+    print("Early stop patience: {}".format(args.early_stop_patience))
     print("Global rounds: {}".format(args.global_rounds))
     print("Eval gap (rounds): {}".format(args.eval_gap))
     print("Skip figures: {}".format(args.skip_figures))
@@ -248,8 +297,13 @@ if __name__ == "__main__":
             "batch_size": args.batch_size,
             "local_epochs": args.local_epochs,
             "feature_dim": args.feature_dim,
+            "transformer_d_model": args.transformer_d_model,
+            "transformer_num_heads": args.transformer_num_heads,
+            "transformer_num_layers": args.transformer_num_layers,
+            "transformer_dropout": args.transformer_dropout,
             "lamda": args.lamda,
             "global_rounds": args.global_rounds,
+            "early_stop_patience": args.early_stop_patience,
             "num_workers": args.num_workers,
         },
         run_id=f"{args.algorithm}_runtime",

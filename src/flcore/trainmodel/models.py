@@ -139,6 +139,59 @@ class CNN1D_IoT(nn.Module):
         return F.log_softmax(x, dim=1), x1
 
 
+class Transformer1D_IoT(nn.Module):
+    def __init__(
+        self,
+        dim_in=77,
+        dim_out=64,
+        num_classes=15,
+        d_model=64,
+        num_heads=4,
+        num_layers=2,
+        dropout=0.2,
+        dim_feedforward=None,
+    ):
+        super(Transformer1D_IoT, self).__init__()
+        if d_model % num_heads != 0:
+            raise ValueError("d_model must be divisible by num_heads")
+
+        self.dim_in = dim_in
+        self.token_embed = nn.Linear(1, d_model)
+        self.pos_embed = nn.Parameter(torch.zeros(1, dim_in, d_model))
+        encoder_layer = nn.TransformerEncoderLayer(
+            d_model=d_model,
+            nhead=num_heads,
+            dim_feedforward=dim_feedforward or d_model * 4,
+            dropout=dropout,
+            activation="gelu",
+            batch_first=True,
+        )
+        self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+        self.norm = nn.LayerNorm(d_model)
+        self.projector = nn.Sequential(
+            nn.Linear(d_model, dim_out),
+            nn.ReLU(inplace=True),
+            nn.Dropout(p=dropout),
+        )
+        self.classifier = nn.Linear(dim_out, num_classes)
+
+    def extract_features(self, x):
+        x = _flatten_batch(x)
+        if x.size(1) != self.dim_in:
+            raise ValueError(f"Expected input dimension {self.dim_in}, got {x.size(1)}")
+        x = x.unsqueeze(-1)
+        x = self.token_embed(x) + self.pos_embed
+        x = self.encoder(x)
+        x = self.norm(x)
+        x = x.mean(dim=1)
+        return self.projector(x)
+
+    def forward(self, x):
+        x1 = self.extract_features(x)
+        x = self.classifier(x1)
+        return F.log_softmax(x, dim=1), x1
+
+
 class FedAvgMLP(nn.Module):
     def __init__(self, in_features=77, num_classes=10, hidden_dim=200):
         super().__init__()
