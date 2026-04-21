@@ -456,11 +456,11 @@ def parse_args():
     parser.add_argument(
         "--classes-per-client",
         type=int,
-        default=5,
+        default=6,
         help=(
             "How many classes each client keeps in the sampling-style non-IID split. "
             "Paper-like FedProto settings are closer to small overlapping class subsets "
-            "(e.g. 5) rather than full 15-class coverage on every client."
+            "(e.g. 6) rather than full 15-class coverage on every client."
         ),
     )
     parser.add_argument(
