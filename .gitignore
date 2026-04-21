@@ -1,5 +1,38 @@
-_pycache_/
+# Python cache and local runtime files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local editor/system files
+.cursor/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Datasets and generated/preprocessed data
 data/
+dataset/
 *.npy
-*.png
-*.pyc
+*.npz
+
+# Training outputs, logs, and experiment results
+outputs/
+logs/
+results/
+tensorboard/
+*.log
+*.out
+
+# Checkpoints and model artifacts
+checkpoints/
+temp/
+src/temp/
+*.pt
+*.pth
+*.ckpt
+*.h5
+
+# Optional environment files
+.env
+.venv/
+venv/

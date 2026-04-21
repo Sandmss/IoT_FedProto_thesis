@@ -7,7 +7,7 @@ from flcore.servers.serverbase import Server
 class Local(Server):
     """
     Local baseline server wrapper.
-    Clients train independently on their own data once and are then evaluated locally.
+    Clients train independently on their own data and are evaluated locally.
     """
 
     def __init__(self, args, times):
@@ -37,15 +37,19 @@ class Local(Server):
 
             self.evaluate()
 
-            if self.auto_break and self.patience_should_stop_after_eval():
-                break
-
             if self.rs_test_acc and self.rs_test_acc[-1] > self.best_test_acc[0]:
                 self.best_test_acc = (self.rs_test_acc[-1], epoch)
+                print(f"检测到新最佳准确率，正在保存最佳本地模型检查点 (Epoch {epoch})...")
                 for client in self.clients:
                     client.save_best_model()
 
+            if self.auto_break and self.patience_should_stop_after_eval():
+                break
+
         elapsed = time.time() - start_time
+        print("\n实验完成。最佳准确率:")
+        if self.rs_test_acc:
+            print(f"  测试集准确率: {self.best_test_acc[0]:.4f} (在第 {self.best_test_acc[1]} 轮)")
         print(f"Local baseline 总耗时: {elapsed:.2f} 秒")
 
         self.save_results()
