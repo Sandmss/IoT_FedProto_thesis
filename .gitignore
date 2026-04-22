@@ -21,7 +21,10 @@ logs/
 results/
 tensorboard/
 *.log
+debug-*.log
+*.err
 *.out
+script_*.sh
 
 # Checkpoints and model artifacts
 checkpoints/
@@ -36,3 +39,6 @@ src/temp/
 .env
 .venv/
 venv/
+
+# Local archives
+*.zip
