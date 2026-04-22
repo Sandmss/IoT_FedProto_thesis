@@ -14,7 +14,7 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description="Report IoT model size and paper-style communication cost."
     )
-    parser.add_argument("--dataset", type=str, default="IoT_20k_c20_noniid")
+    parser.add_argument("--dataset", type=str, default="IoT")
     parser.add_argument("--model-family", type=str, default="IoT_MLP")
     parser.add_argument("--num-clients", type=int, default=None)
     parser.add_argument("--input-dim", type=int, default=77)

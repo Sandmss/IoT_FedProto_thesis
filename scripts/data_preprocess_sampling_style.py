@@ -435,7 +435,7 @@ def parse_args():
         default=(script_dir / "../data/processed_data").resolve(),
         help=(
             "Directory to save processed client npy files. "
-            "Point this to an existing processed_data directory if you want to overwrite it."
+            "Defaults to data/processed_data for the current IoT experiments."
         ),
     )
     parser.add_argument(
