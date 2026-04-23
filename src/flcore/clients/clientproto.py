@@ -41,7 +41,7 @@ class clientproto(Client):
 
         max_local_epochs = self.local_epochs
         if self.train_slow:
-            max_local_epochs = np.random.randint(1, max_local_epochs // 2)
+            max_local_epochs = max(1, np.random.randint(1, max(2, max_local_epochs // 2 + 1)))
 
         for step in range(max_local_epochs):
             for i, (x, y) in enumerate(trainloader):
@@ -63,8 +63,9 @@ class clientproto(Client):
                     proto_new = copy.deepcopy(rep.detach())
                     for i, yy in enumerate(y):
                         y_c = yy.item()
-                        if type(global_protos[y_c]) != type([]):
-                            proto_new[i, :] = global_protos[y_c].data
+                        proto = global_protos.get(y_c)
+                        if isinstance(proto, torch.Tensor):
+                            proto_new[i, :] = proto.data
                     proto_loss_tensor = self.loss_mse(proto_new, rep)
                     proto_loss_value = float(proto_loss_tensor.item())
                     loss += proto_loss_tensor * self.lamda
@@ -385,8 +386,9 @@ class clientproto(Client):
                     proto_new = copy.deepcopy(rep.detach())
                     for i, yy in enumerate(y):
                         y_c = yy.item()
-                        if type(global_protos[y_c]) != type([]):
-                            proto_new[i, :] = global_protos[y_c].data
+                        proto = global_protos.get(y_c)
+                        if isinstance(proto, torch.Tensor):
+                            proto_new[i, :] = proto.data
                     loss += self.loss_mse(proto_new, rep) * self.lamda
 
                 train_num += y.shape[0]

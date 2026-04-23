@@ -1,4 +1,6 @@
 import argparse
+import json
+import re
 import shutil
 from pathlib import Path
 
@@ -25,10 +27,44 @@ def parse_args():
     parser.add_argument(
         "--num-clients",
         type=int,
-        default=10,
-        help="Number of clients to repack.",
+        default=None,
+        help=(
+            "Number of clients to repack. Defaults to split_stats.json num_clients; "
+            "if unavailable, infers it from client_*_X.npy files."
+        ),
     )
     return parser.parse_args()
+
+
+def infer_num_clients(input_dir):
+    stats_path = input_dir / "split_stats.json"
+    if stats_path.exists():
+        with open(stats_path, "r", encoding="utf-8") as f:
+            stats = json.load(f)
+        num_clients = stats.get("num_clients")
+        if num_clients is not None:
+            return int(num_clients)
+
+    client_ids = []
+    pattern = re.compile(r"client_(\d+)_X\.npy$")
+    for path in input_dir.glob("client_*_X.npy"):
+        match = pattern.match(path.name)
+        if match:
+            client_ids.append(int(match.group(1)))
+
+    if not client_ids:
+        raise FileNotFoundError(
+            f"Cannot infer client count: no split_stats.json num_clients and no client_*_X.npy files in {input_dir}"
+        )
+
+    expected_ids = set(range(max(client_ids) + 1))
+    missing_ids = sorted(expected_ids - set(client_ids))
+    if missing_ids:
+        raise ValueError(
+            f"Cannot infer contiguous client ids from processed files. Missing client ids: {missing_ids}"
+        )
+
+    return max(client_ids) + 1
 
 
 def get_client_file_paths(input_dir, client_id):
@@ -84,6 +120,8 @@ def repack_client(client_id, client_paths, output_root):
 
 def main():
     args = parse_args()
+    if args.num_clients is None:
+        args.num_clients = infer_num_clients(args.input_dir)
 
     if args.num_clients <= 0:
         raise ValueError("--num-clients must be > 0")

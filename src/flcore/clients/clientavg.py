@@ -35,7 +35,7 @@ class clientAvg(Client):
         max_local_epochs = self.local_epochs
         # 模拟掉队/慢客户端
         if self.train_slow:
-            max_local_epochs = np.random.randint(1, max_local_epochs // 2)
+            max_local_epochs = max(1, np.random.randint(1, max(2, max_local_epochs // 2 + 1)))
 
         for step in range(max_local_epochs):
             for i, (x, y) in enumerate(trainloader):

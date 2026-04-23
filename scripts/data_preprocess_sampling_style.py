@@ -255,6 +255,89 @@ def sampling_style_distribute_by_class(
     return client_class_indices, classes_list
 
 
+def balanced_slot_distribute_all_by_class(
+    y,
+    num_clients,
+    classes_per_client,
+    seed=42,
+):
+    """
+    Assign a balanced number of class slots to clients, then distribute every
+    selected sample of each class across the clients that own that class.
+    """
+    rng = np.random.default_rng(seed)
+    y = np.asarray(y, dtype=np.int64)
+    classes = np.sort(np.unique(y)).astype(int)
+    num_classes = int(classes.size)
+
+    if classes_per_client <= 0:
+        raise ValueError("--classes-per-client must be > 0")
+    if classes_per_client > num_classes:
+        raise ValueError(
+            f"--classes-per-client={classes_per_client} exceeds num_classes={num_classes}"
+        )
+
+    total_slots = int(num_clients * classes_per_client)
+    base_slots = total_slots // num_classes
+    extra_slots = total_slots % num_classes
+    class_slot_targets = {
+        int(class_id): base_slots + (1 if i < extra_slots else 0)
+        for i, class_id in enumerate(classes)
+    }
+
+    client_classes = {client_id: [] for client_id in range(num_clients)}
+    remaining_slots = class_slot_targets.copy()
+    ordered_clients = list(range(num_clients))
+
+    for round_id in range(classes_per_client):
+        rng.shuffle(ordered_clients)
+        for client_id in ordered_clients:
+            candidates = [
+                class_id
+                for class_id, slots_left in remaining_slots.items()
+                if slots_left > 0 and class_id not in client_classes[client_id]
+            ]
+            if not candidates:
+                raise ValueError(
+                    "Unable to assign balanced class slots. Try reducing --classes-per-client."
+                )
+            weights = np.array([remaining_slots[class_id] for class_id in candidates], dtype=np.float64)
+            weights = weights / weights.sum()
+            chosen = int(rng.choice(candidates, p=weights))
+            client_classes[client_id].append(chosen)
+            remaining_slots[chosen] -= 1
+
+    class_to_clients = {int(class_id): [] for class_id in classes}
+    for client_id, class_ids in client_classes.items():
+        for class_id in class_ids:
+            class_to_clients[int(class_id)].append(client_id)
+
+    client_class_indices = {
+        client_id: {int(class_id): [] for class_id in classes}
+        for client_id in range(num_clients)
+    }
+    for class_id in classes:
+        class_id = int(class_id)
+        indices = np.where(y == class_id)[0].astype(np.int64, copy=False)
+        rng.shuffle(indices)
+        owners = class_to_clients[class_id]
+        if not owners:
+            raise ValueError(f"Class {class_id} has no assigned clients.")
+        parts = np.array_split(indices, len(owners))
+        for client_id, part in zip(owners, parts):
+            client_class_indices[client_id][class_id] = part.astype(np.int64, copy=False).tolist()
+        print(
+            f"Class {class_id}: total={len(indices)} samples, "
+            f"assigned_clients={sorted(owners)}, consumed={sum(len(part) for part in parts)}, remaining=0"
+        )
+
+    classes_list = {
+        client_id: sorted(int(class_id) for class_id in class_ids)
+        for client_id, class_ids in client_classes.items()
+    }
+    return client_class_indices, classes_list
+
+
 def split_client_data_train_test(client_class_indices, train_ratio=0.75, seed=42):
     rng = np.random.default_rng(seed)
     split_indices = {}
@@ -367,6 +450,7 @@ def save_metadata(
         "num_clients": int(args.num_clients),
         "train_ratio": float(args.train_ratio),
         "client_split": "sampling_style",
+        "consume_all_target_samples": bool(args.consume_all_target_samples),
         "classes_per_client": int(args.classes_per_client),
         "k_per_class": int(args.k_per_class),
         "target_total": int(args.target_total),
@@ -472,6 +556,14 @@ def parse_args():
             "If a class has fewer than k remaining samples, it will no longer be assigned."
         ),
     )
+    parser.add_argument(
+        "--consume-all-target-samples",
+        action="store_true",
+        help=(
+            "After balanced subsampling, distribute all selected samples across client class slots. "
+            "Use this for fixed-size experiments such as exactly 20k samples over 20 clients."
+        ),
+    )
     parser.add_argument("--seed", type=int, default=42, help="Random seed.")
     return parser.parse_args()
 
@@ -491,13 +583,21 @@ def main():
     X, y, label_encoder = encode_labels_and_extract_features(cleaned_df)
     X, y = balanced_subsample(X, y, args.target_total, seed=args.seed)
 
-    client_class_indices, classes_list = sampling_style_distribute_by_class(
-        y,
-        num_clients=args.num_clients,
-        classes_per_client=args.classes_per_client,
-        k_per_class=args.k_per_class,
-        seed=args.seed,
-    )
+    if args.consume_all_target_samples:
+        client_class_indices, classes_list = balanced_slot_distribute_all_by_class(
+            y,
+            num_clients=args.num_clients,
+            classes_per_client=args.classes_per_client,
+            seed=args.seed,
+        )
+    else:
+        client_class_indices, classes_list = sampling_style_distribute_by_class(
+            y,
+            num_clients=args.num_clients,
+            classes_per_client=args.classes_per_client,
+            k_per_class=args.k_per_class,
+            seed=args.seed,
+        )
     split_indices, stats_summary = split_client_data_train_test(
         client_class_indices,
         train_ratio=args.train_ratio,

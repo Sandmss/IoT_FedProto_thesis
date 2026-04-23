@@ -113,9 +113,15 @@ class FedAvg(Server):
         for param in global_model.parameters():
             param.data.zero_()
 
+        total_train_samples = sum(max(client.train_samples, 0) for client in self.selected_clients)
+
         for client in self.selected_clients:
             client_model = client.model
-            weight = 1.0 / len(self.selected_clients)
+            weight = (
+                client.train_samples / total_train_samples
+                if total_train_samples > 0
+                else 1.0 / len(self.selected_clients)
+            )
             for gl_param, cl_param in zip(global_model.parameters(), client_model.parameters()):
                 gl_param.data += cl_param.data * weight
 
