@@ -84,6 +84,15 @@ def run(args):
             args.heads = [
                 f"nn.Linear({args.feature_dim}, {args.num_classes})",
             ]
+        elif args.model_family == 'IoT_MIX_MLP_CNN1D':
+            args.models = [
+                f"MLP_IoT(dim_in={args.input_dim}, dim_hidden=128, dim_out={args.feature_dim}, num_classes={args.num_classes})",
+                f"CNN1D_IoT(dim_in={args.input_dim}, dim_out={args.feature_dim}, num_classes={args.num_classes})",
+            ]
+            args.heads = [
+                f"nn.Linear({args.feature_dim}, {args.num_classes})",
+                f"nn.Linear({args.feature_dim}, {args.num_classes})",
+            ]
         elif args.model_family == 'IoT_MIX_MLP_CNN_TRANS':
             args.models = [
                 f"MLP_IoT(dim_in={args.input_dim}, dim_hidden=128, dim_out={args.feature_dim}, num_classes={args.num_classes})",
@@ -104,7 +113,8 @@ def run(args):
         else:
             raise NotImplementedError(
                 f"Unsupported model_family '{args.model_family}'. "
-                "Available options: IoT_MLP, IoT_CNN1D, IoT_Transformer1D, IoT_MIX_MLP_CNN_TRANS"
+                "Available options: IoT_MLP, IoT_CNN1D, IoT_Transformer1D, "
+                "IoT_MIX_MLP_CNN1D, IoT_MIX_MLP_CNN_TRANS"
             )
 
         # 打印最终确定的模型列表
@@ -149,7 +159,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # general: 一维 IoT 任务专用参数
     parser.add_argument('-model_family', type=str, default='IoT_MLP',
-                        help='Backbone to use: IoT_MLP, IoT_CNN1D, IoT_Transformer1D, or IoT_MIX_MLP_CNN_TRANS')
+                        help='Backbone to use: IoT_MLP, IoT_CNN1D, IoT_Transformer1D, IoT_MIX_MLP_CNN1D, or IoT_MIX_MLP_CNN_TRANS')
     parser.add_argument('-dataset', type=str, default='IoT', help='Dataset name')
     parser.add_argument('--input_dim', type=int, default=77, help='Input feature dimension for each sample')
     parser.add_argument('--transformer_d_model', type=int, default=64,

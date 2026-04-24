@@ -135,13 +135,16 @@ def load_client_class_counts(dataset_name):
 
 
 def resolve_client_model_counts(model_family, num_clients, model_counts):
+    if model_family == "IoT_MIX_MLP_CNN1D":
+        order = ["IoT_MLP", "IoT_CNN1D"]
+        return [model_counts[order[cid % len(order)]] for cid in range(num_clients)]
     if model_family == "IoT_MIX_MLP_CNN_TRANS":
         order = ["IoT_MLP", "IoT_CNN1D", "IoT_Transformer1D"]
         return [model_counts[order[cid % len(order)]] for cid in range(num_clients)]
     if model_family not in model_counts:
         raise ValueError(
             "Unsupported model family. Use IoT_MLP, IoT_CNN1D, "
-            "IoT_Transformer1D, or IoT_MIX_MLP_CNN_TRANS."
+            "IoT_Transformer1D, IoT_MIX_MLP_CNN1D, or IoT_MIX_MLP_CNN_TRANS."
         )
     return [model_counts[model_family]] * num_clients
 
