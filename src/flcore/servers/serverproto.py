@@ -234,14 +234,10 @@ class FedProto(Server):
             client.save_best_model()
 
     def _get_figure_output_dir(self):
-        result_dir = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "..", "..", "..", "results", "figures")
-        )
-        os.makedirs(result_dir, exist_ok=True)
-        return result_dir
+        return super()._get_figure_output_dir()
 
     def _build_figure_prefix(self):
-        return f"{self.dataset}_{self.algorithm}_{self.goal}_{self.times}"
+        return super()._build_figure_prefix()
 
     def _load_item_if_exists(self, role, item_name):
         file_path = os.path.join(self.save_folder_name, f"{role}_{item_name}.pt")

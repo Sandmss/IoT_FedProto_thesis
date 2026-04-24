@@ -1,11 +1,17 @@
-# 读取多次实验结果，并汇总测试准确率 / AUC 的最佳值统计。
-import h5py
+﻿import h5py
 import numpy as np
 import os
+from glob import glob
 
 
-def average_data(algorithm="", dataset="", goal="", times=10):
-    results = get_all_results_for_one_algo(algorithm, dataset, goal, times)
+def average_data(algorithm="", dataset="", goal="", times=10, model_family=""):
+    results = get_all_results_for_one_algo(
+        algorithm,
+        dataset,
+        goal,
+        times,
+        model_family=model_family,
+    )
 
     best_acc = [run_result["rs_test_acc"].max() for run_result in results]
     print("std for best accurancy:", np.std(best_acc))
@@ -40,18 +46,31 @@ def average_data(algorithm="", dataset="", goal="", times=10):
             print(f"mean for {label}:", np.mean(values))
 
 
-def get_all_results_for_one_algo(algorithm="", dataset="", goal="", times=10):
+def get_all_results_for_one_algo(algorithm="", dataset="", goal="", times=10, model_family=""):
     all_results = []
     algorithms_list = [algorithm] * times
     for i in range(times):
-        file_name = dataset + "_" + algorithms_list[i] + "_" + goal + "_" + str(i)
-        all_results.append(read_data_then_delete(file_name, delete=False))
+        file_name = build_result_file_stem(
+            dataset,
+            algorithms_list[i],
+            goal,
+            i,
+            model_family=model_family,
+        )
+        all_results.append(
+            read_data_then_delete(
+                file_name,
+                delete=False,
+                model_family=model_family,
+                algorithm=algorithm,
+            )
+        )
 
     return all_results
 
 
-def read_data_then_delete(file_name, delete=False):
-    file_path = "../results/" + file_name + ".h5"
+def read_data_then_delete(file_name, delete=False, model_family="", algorithm=""):
+    file_path = locate_result_file(file_name, model_family=model_family, algorithm=algorithm)
 
     with h5py.File(file_path, 'r') as hf:
         rs_test_acc = np.array(hf.get('rs_test_acc'))
@@ -95,8 +114,48 @@ def read_data_then_delete(file_name, delete=False):
     }
 
 
+def build_result_file_stem(dataset, algorithm, goal, run_idx, model_family=""):
+    if model_family:
+        return f"{dataset}_{algorithm}_{model_family}_{goal}_{run_idx}"
+    return f"{dataset}_{algorithm}_{goal}_{run_idx}"
+
+
+def locate_result_file(file_name, model_family="", algorithm=""):
+    if model_family and algorithm:
+        candidate = os.path.join(
+            "..",
+            "results",
+            get_model_result_category(model_family),
+            algorithm,
+            "metrics",
+            f"{file_name}.h5",
+        )
+        if os.path.exists(candidate):
+            return candidate
+
+    matches = glob(os.path.join("..", "results", "**", f"{file_name}.h5"), recursive=True)
+    if matches:
+        return matches[0]
+
+    legacy_candidate = os.path.join("..", "results", f"{file_name}.h5")
+    if os.path.exists(legacy_candidate):
+        return legacy_candidate
+
+    raise FileNotFoundError(f"Result file not found for stem '{file_name}'.")
+
+
+def get_model_result_category(model_family):
+    mapping = {
+        "IoT_MLP": "MLP",
+        "IoT_CNN1D": "CNN1D",
+        "IoT_Transformer1D": "Transformer",
+    }
+    return mapping.get(model_family, "heterogeneous_models")
+
+
 def _read_optional_dataset(hf, dataset_name):
     dataset = hf.get(dataset_name)
     if dataset is None:
         return np.array([])
     return np.array(dataset)
+

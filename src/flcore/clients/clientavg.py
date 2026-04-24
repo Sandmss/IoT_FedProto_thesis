@@ -8,22 +8,14 @@ from flcore.clients.clientbase import Client, save_item
 
 class clientAvg(Client):
     """
-    FedAvg 算法的客户端实现。
+    FedAvg client implementation.
     """
 
     def __init__(self, args, id, train_samples, test_samples, **kwargs):
         super().__init__(args, id, train_samples, test_samples, **kwargs)
         torch.manual_seed(0)
-        # FedAvg 不需要 MSELoss 用于原型，只需要标准的分类 Loss (父类通常已定义 self.loss)
-        # 如果父类没定义，通常是 nn.CrossEntropyLoss()
 
     def train(self):
-        """
-        执行本地训练：
-        1. 加载全局模型参数覆盖本地模型。
-        2. 进行 SGD 训练。
-        3. 保存更新后的本地模型。
-        """
         trainloader = self.load_train_data()
         model = self.model
 
@@ -33,12 +25,11 @@ class clientAvg(Client):
         start_time = time.time()
 
         max_local_epochs = self.local_epochs
-        # 模拟掉队/慢客户端
         if self.train_slow:
             max_local_epochs = max(1, np.random.randint(1, max(2, max_local_epochs // 2 + 1)))
 
-        for step in range(max_local_epochs):
-            for i, (x, y) in enumerate(trainloader):
+        for _ in range(max_local_epochs):
+            for x, y in trainloader:
                 if type(x) == type([]):
                     x[0] = x[0].to(self.device)
                 else:
@@ -48,13 +39,11 @@ class clientAvg(Client):
                 if self.train_slow:
                     time.sleep(0.1 * np.abs(np.random.rand()))
 
-                # 前向传播
                 output = model(x)
                 loss = self.loss(output, y)
 
                 optimizer.zero_grad()
                 loss.backward()
-                # 梯度裁剪防止爆炸
                 torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=10.0)
                 optimizer.step()
 
@@ -64,16 +53,10 @@ class clientAvg(Client):
         self.train_time_cost['total_cost'] += time.time() - start_time
 
     def save_best_model(self):
-        """
-        保存最佳模型副本。
-        """
         self.best_model = copy.deepcopy(self.model)
         save_item(self.best_model, self.role, 'best_model', self.save_folder_name)
 
-    def extract_features(self):
-        """
-        加载最佳模型，提取本地测试集的特征向量和标签，用于 t-SNE 可视化。
-        """
+    def extract_features(self, max_samples=None):
         model = self.best_model if self.best_model is not None else self.model
 
         testloader = self.load_test_data()
@@ -81,6 +64,8 @@ class clientAvg(Client):
 
         features_list = []
         labels_list = []
+        collected = 0
+        rng = np.random.default_rng(0)
 
         with torch.no_grad():
             for x, y in testloader:
@@ -90,22 +75,27 @@ class clientAvg(Client):
                     x = x.to(self.device)
                 y = y.to(self.device)
 
-                # 假设 model.base 是提取特征的部分，model.head 是分类器
-                # 如果模型结构不同，这里需要调整，例如 model.features(x)
-                if hasattr(model, 'base'):
-                    rep = model.base(x)
-                else:
-                    # 如果没有显式的 base，可能需要通过 hook 或者修改模型结构来获取
-                    # 这里假设是个简单的 CNN，取倒数第二层输出
-                    # 简便起见，这里假设使用了与 FedTGP 相同的模型结构
-                    rep = model.base(x)
+                rep = model.base(x)
 
-                features_list.append(rep.detach().cpu().numpy())
-                labels_list.append(y.detach().cpu().numpy())
+                rep_np = rep.detach().cpu().numpy()
+                y_np = y.detach().cpu().numpy()
+                if max_samples is not None:
+                    remaining = max_samples - collected
+                    if remaining <= 0:
+                        break
+                    if len(rep_np) > remaining:
+                        sample_idx = rng.choice(len(rep_np), size=remaining, replace=False)
+                        rep_np = rep_np[sample_idx]
+                        y_np = y_np[sample_idx]
+
+                features_list.append(rep_np)
+                labels_list.append(y_np)
+                collected += len(rep_np)
+                if max_samples is not None and collected >= max_samples:
+                    break
 
         if len(features_list) > 0:
             features = np.concatenate(features_list, axis=0)
             labels = np.concatenate(labels_list, axis=0)
             return features, labels
-        else:
-            return np.array([]), np.array([])
+        return np.array([]), np.array([])

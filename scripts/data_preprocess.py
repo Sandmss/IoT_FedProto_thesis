@@ -39,11 +39,8 @@ def clean_dataframe(df):
     df = df.drop(columns=IDENTIFIER_COLUMNS, errors="ignore")
     df = df.replace([np.inf, -np.inf], np.nan)
 
-    if "Label" not in df.columns:
-        if df.columns[-1] == "Label":
-            pass
-        else:
-            raise KeyError("Label column not found after stripping column names.")
+    if "Label" not in df.columns and df.columns[-1] != "Label":
+        raise KeyError("Label column not found after stripping column names.")
 
     feature_columns = [column for column in df.columns if column != "Label"]
     for column in feature_columns:
@@ -79,10 +76,7 @@ def encode_labels_and_extract_features(df):
 
 def balanced_subsample(X, y, target_total, seed=42):
     """
-    在「尽可能均衡」的前提下，从 (X, y) 中无放回抽取 target_total 条样本。
-
-    做法：先为每个类别分配配额 floor/ceil(target_total / C)；若某类样本不足则少抽，
-    再从其余尚未入选的样本中随机补足，直到达到 target_total 或样本池耗尽。
+    从全体样本中尽量均衡地抽取 target_total 条，保证每一类都能被采到。
     """
     rng = np.random.default_rng(seed)
     y = np.asarray(y, dtype=np.int64)
@@ -111,8 +105,7 @@ def balanced_subsample(X, y, target_total, seed=42):
         c = int(c)
         idx = np.where(y == c)[0]
         rng.shuffle(idx)
-        q = quota[c]
-        take = min(int(idx.size), q)
+        take = min(int(idx.size), quota[c])
         if take > 0:
             selected_parts.append(idx[:take])
 
@@ -136,7 +129,7 @@ def balanced_subsample(X, y, target_total, seed=42):
         if selected.size < target_total:
             print(
                 f"警告: 仅能抽取 {selected.size} 条样本（目标 {target_total}），"
-                "可能因少数类在清洗后样本过少。"
+                "可能因清洗后可用样本过少。"
             )
 
     if selected.size > target_total:
@@ -146,84 +139,206 @@ def balanced_subsample(X, y, target_total, seed=42):
     return X[selected], y[selected]
 
 
-def iid_distribute_by_class(y, num_clients=10, seed=42):
+def sampling_style_distribute_by_class(
+    y,
+    num_clients,
+    classes_per_client,
+    k_per_class,
+    seed=42,
+):
     """
-    将样本随机打乱后近似均分到 num_clients 个客户端（IID 划分）。
-    返回结构与 dirichlet_distribute_by_class 相同，便于复用后续 train/test 划分逻辑。
-    """
-    rng = np.random.default_rng(seed)
-    y = np.asarray(y, dtype=np.int64)
-    n = int(y.shape[0])
-    indices = np.arange(n, dtype=np.int64)
-    rng.shuffle(indices)
-    chunks = np.array_split(indices, num_clients)
+    更贴近 FedProto 论文 / sampling.py 的 n-way k-shot 思路：
+    1. 先把样本按类别排序；
+    2. 每个客户端只持有若干类别（n-way）；
+    3. 每个被分配的“客户端-类别”固定取 k 条样本；
+    4. 某个类别剩余样本不足 k 时，不再继续分配该类别（与你的要求一致）。
 
-    categories = np.unique(y)
-    client_class_indices = {
-        client_id: {int(class_id): [] for class_id in categories}
-        for client_id in range(num_clients)
-    }
-
-    for client_id, chunk in enumerate(chunks):
-        for idx in chunk:
-            client_class_indices[client_id][int(y[int(idx)])].append(int(idx))
-
-    return client_class_indices
-
-
-def dirichlet_distribute_by_class(y, num_clients=10, alpha=0.1, seed=42):
-    """
-    仿照 datalabelgen-noniid.py：
-    - 逐类别采样 Dirichlet 比例；
-    - 将每个类别的样本分配到各客户端；
-    - 每个客户端内部保留该类别样本列表，供后续再切 train/test。
+    说明：由于真实数据是长尾分布，某些客户端可能拿不到满 n 个类别，这是因为
+    可用类别都已不足 k 条样本，属于论文式 k-shot 在长尾数据上的自然约束。
     """
     rng = np.random.default_rng(seed)
     y = np.asarray(y, dtype=np.int64)
-    categories = np.unique(y)
+    classes = np.sort(np.unique(y))
+    num_classes = int(classes.size)
 
+    if classes_per_client <= 0:
+        raise ValueError("--classes-per-client must be > 0")
+    if classes_per_client > num_classes:
+        raise ValueError(
+            f"--classes-per-client={classes_per_client} exceeds num_classes={num_classes}"
+        )
+    if k_per_class <= 0:
+        raise ValueError("--k-per-class must be > 0")
+
+    sorted_indices = np.argsort(y, kind="stable")
+    sorted_labels = y[sorted_indices]
+
+    class_sorted_indices = {}
+    label_begin = {}
+    for class_id in classes:
+        class_mask = sorted_labels == int(class_id)
+        class_block = sorted_indices[class_mask]
+        if class_block.size == 0:
+            continue
+        class_sorted_indices[int(class_id)] = class_block.astype(np.int64, copy=False)
+        label_begin[int(class_id)] = int(np.where(class_mask)[0][0])
+
+    class_counts = {
+        int(class_id): int(class_sorted_indices[int(class_id)].size)
+        for class_id in classes
+    }
+    class_cursor = {int(class_id): 0 for class_id in classes}
+    client_classes = {client_id: set() for client_id in range(num_clients)}
     client_class_indices = {
-        client_id: {int(class_id): [] for class_id in categories}
+        client_id: {int(class_id): [] for class_id in classes}
         for client_id in range(num_clients)
     }
+    all_classes = classes.astype(int).tolist()
+    insufficient_clients = []
 
-    for class_id in categories:
-        class_indices = np.where(y == class_id)[0]
-        class_indices = np.array(class_indices, dtype=np.int64, copy=True)
-        rng.shuffle(class_indices)
+    for client_id in range(num_clients):
+        while len(client_classes[client_id]) < classes_per_client:
+            selectable = [
+                class_id
+                for class_id in all_classes
+                if class_id not in client_classes[client_id]
+                and (class_counts[class_id] - class_cursor[class_id]) >= k_per_class
+            ]
+            if not selectable:
+                insufficient_clients.append(client_id)
+                break
 
-        proportions = rng.dirichlet(np.full(num_clients, alpha, dtype=np.float64))
-        client_counts = (proportions * len(class_indices)).astype(int)
-
-        remaining = int(len(class_indices) - np.sum(client_counts))
-        if remaining > 0:
-            extra_clients = rng.choice(num_clients, size=remaining, replace=False)
-            for client_id in extra_clients:
-                client_counts[int(client_id)] += 1
-
-        if int(np.sum(client_counts)) != len(class_indices):
-            raise RuntimeError(
-                f"Class {int(class_id)} allocation mismatch: "
-                f"{int(np.sum(client_counts))} != {len(class_indices)}"
+            weights = np.array(
+                [
+                    class_counts[class_id] - class_cursor[class_id]
+                    for class_id in selectable
+                ],
+                dtype=np.float64,
             )
+            weights = weights / weights.sum()
+            chosen = int(rng.choice(selectable, p=weights))
 
-        start = 0
-        for client_id in range(num_clients):
-            count = int(client_counts[client_id])
-            assigned = class_indices[start : start + count]
-            client_class_indices[client_id][int(class_id)] = assigned.tolist()
-            start += count
+            start = class_cursor[chosen]
+            end = start + k_per_class
+            picked = class_sorted_indices[chosen][start:end]
+            client_class_indices[client_id][chosen] = picked.astype(
+                np.int64, copy=False
+            ).tolist()
+            client_classes[client_id].add(chosen)
+            class_cursor[chosen] = end
 
-    return client_class_indices
+    class_to_clients = {int(class_id): [] for class_id in classes}
+    for client_id in range(num_clients):
+        for class_id in sorted(client_classes[client_id]):
+            class_to_clients[class_id].append(client_id)
+
+    for class_id in classes.astype(int).tolist():
+        remaining = class_counts[class_id] - class_cursor[class_id]
+        print(
+            f"Class {class_id}: total={class_counts[class_id]} samples, "
+            f"assigned_clients={sorted(class_to_clients[class_id])}, "
+            f"k={k_per_class}, consumed={class_cursor[class_id]}, remaining={remaining}, "
+            f"label_begin={label_begin[class_id]}"
+        )
+
+    if insufficient_clients:
+        uniq = sorted(set(insufficient_clients))
+        print(
+            "Warning: some clients could not reach the target n-way because all remaining "
+            f"classes had fewer than k={k_per_class} samples: {uniq}"
+        )
+
+    classes_list = {
+        client_id: sorted(int(class_id) for class_id in client_classes[client_id])
+        for client_id in range(num_clients)
+    }
+    return client_class_indices, classes_list
+
+
+def balanced_slot_distribute_all_by_class(
+    y,
+    num_clients,
+    classes_per_client,
+    seed=42,
+):
+    """
+    Assign a balanced number of class slots to clients, then distribute every
+    selected sample of each class across the clients that own that class.
+    """
+    rng = np.random.default_rng(seed)
+    y = np.asarray(y, dtype=np.int64)
+    classes = np.sort(np.unique(y)).astype(int)
+    num_classes = int(classes.size)
+
+    if classes_per_client <= 0:
+        raise ValueError("--classes-per-client must be > 0")
+    if classes_per_client > num_classes:
+        raise ValueError(
+            f"--classes-per-client={classes_per_client} exceeds num_classes={num_classes}"
+        )
+
+    total_slots = int(num_clients * classes_per_client)
+    base_slots = total_slots // num_classes
+    extra_slots = total_slots % num_classes
+    class_slot_targets = {
+        int(class_id): base_slots + (1 if i < extra_slots else 0)
+        for i, class_id in enumerate(classes)
+    }
+
+    client_classes = {client_id: [] for client_id in range(num_clients)}
+    remaining_slots = class_slot_targets.copy()
+    ordered_clients = list(range(num_clients))
+
+    for round_id in range(classes_per_client):
+        rng.shuffle(ordered_clients)
+        for client_id in ordered_clients:
+            candidates = [
+                class_id
+                for class_id, slots_left in remaining_slots.items()
+                if slots_left > 0 and class_id not in client_classes[client_id]
+            ]
+            if not candidates:
+                raise ValueError(
+                    "Unable to assign balanced class slots. Try reducing --classes-per-client."
+                )
+            weights = np.array([remaining_slots[class_id] for class_id in candidates], dtype=np.float64)
+            weights = weights / weights.sum()
+            chosen = int(rng.choice(candidates, p=weights))
+            client_classes[client_id].append(chosen)
+            remaining_slots[chosen] -= 1
+
+    class_to_clients = {int(class_id): [] for class_id in classes}
+    for client_id, class_ids in client_classes.items():
+        for class_id in class_ids:
+            class_to_clients[int(class_id)].append(client_id)
+
+    client_class_indices = {
+        client_id: {int(class_id): [] for class_id in classes}
+        for client_id in range(num_clients)
+    }
+    for class_id in classes:
+        class_id = int(class_id)
+        indices = np.where(y == class_id)[0].astype(np.int64, copy=False)
+        rng.shuffle(indices)
+        owners = class_to_clients[class_id]
+        if not owners:
+            raise ValueError(f"Class {class_id} has no assigned clients.")
+        parts = np.array_split(indices, len(owners))
+        for client_id, part in zip(owners, parts):
+            client_class_indices[client_id][class_id] = part.astype(np.int64, copy=False).tolist()
+        print(
+            f"Class {class_id}: total={len(indices)} samples, "
+            f"assigned_clients={sorted(owners)}, consumed={sum(len(part) for part in parts)}, remaining=0"
+        )
+
+    classes_list = {
+        client_id: sorted(int(class_id) for class_id in class_ids)
+        for client_id, class_ids in client_classes.items()
+    }
+    return client_class_indices, classes_list
 
 
 def split_client_data_train_test(client_class_indices, train_ratio=0.75, seed=42):
-    """
-    仿照 datalabelgen-noniid.py：
-    - 对每个客户端、每个类别内的数据再次打乱；
-    - 按 train_ratio 划分 train/test；
-    - 若该类别在该客户端仅有 1 条样本，则保底放入训练集。
-    """
     rng = np.random.default_rng(seed)
     split_indices = {}
     stats_summary = {}
@@ -311,7 +426,7 @@ def save_client_data(X, y, split_indices, output_dir, scaler):
         test_y = y[test_indices]
 
         np.save(output_dir / f"client_{client_id}_X.npy", train_X)
-        np.save(output_dir / f"client_{client_id}_y.npy", y[train_indices])
+        np.save(output_dir / f"client_{client_id}_y.npy", train_y)
         np.save(output_dir / f"client_{client_id}_X_test.npy", test_X)
         np.save(output_dir / f"client_{client_id}_y_test.npy", test_y)
 
@@ -329,13 +444,16 @@ def save_metadata(
     total_samples,
     feature_dim,
     scaler_train_samples,
+    classes_list,
 ):
     metadata = {
         "num_clients": int(args.num_clients),
         "train_ratio": float(args.train_ratio),
-        "dirichlet_alpha": float(args.alpha),
-        "client_split": str(getattr(args, "client_split", "dirichlet")),
-        "target_total": getattr(args, "target_total", None),
+        "client_split": "sampling_style",
+        "consume_all_target_samples": bool(args.consume_all_target_samples),
+        "classes_per_client": int(args.classes_per_client),
+        "k_per_class": int(args.k_per_class),
+        "target_total": int(args.target_total),
         "seed": int(args.seed),
         "total_samples": int(total_samples),
         "feature_dim": int(feature_dim),
@@ -345,6 +463,7 @@ def save_metadata(
             str(label_id): class_name
             for label_id, class_name in enumerate(label_encoder.classes_.tolist())
         },
+        "client_classes": {str(k): v for k, v in classes_list.items()},
         "client_stats": stats_summary,
     }
     metadata_path = output_dir / "split_stats.json"
@@ -353,12 +472,15 @@ def save_metadata(
     print(f"Saved split summary to: {metadata_path}")
 
 
-def print_stats_summary(stats_summary):
-    print("\n" + "=" * 80)
-    print(f"{'客户端数据分布统计 (Client Data Distribution Statistics)':^80}")
-    print("=" * 80)
-    print(f"{'Client ID':<10} | {'Total Train':<12} | {'Total Test':<12} | {'Category Breakdown (Train/Test)'}")
-    print("-" * 80)
+def print_stats_summary(stats_summary, classes_list):
+    print("\n" + "=" * 100)
+    print(f"{'客户端数据分布统计 (Sampling-Style Split)':^100}")
+    print("=" * 100)
+    print(
+        f"{'Client ID':<10} | {'Classes':<20} | {'Total Train':<12} | "
+        f"{'Total Test':<12} | {'Category Breakdown (Train/Test)'}"
+    )
+    print("-" * 100)
 
     for client_id in sorted(stats_summary):
         info = stats_summary[client_id]
@@ -366,19 +488,23 @@ def print_stats_summary(stats_summary):
         for class_id, counts in sorted(info["details"].items(), key=lambda item: int(item[0])):
             detail_parts.append(f"{class_id}:{counts['train']}/{counts['test']}")
         detail_str = ", ".join(detail_parts) if detail_parts else "No Data"
+        class_str = ",".join(str(c) for c in classes_list[client_id])
         print(
-            f"{client_id:<10} | {info['total_train']:<12} | "
+            f"{client_id:<10} | {class_str:<20} | {info['total_train']:<12} | "
             f"{info['total_test']:<12} | {detail_str}"
         )
 
-    print("=" * 80)
+    print("=" * 100)
     print("注意: 详情列格式为 '类别ID:训练集数量/测试集数量'")
-    print("=" * 80 + "\n")
+    print("=" * 100 + "\n")
 
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Preprocess CICIDS CSV files and split them with class-wise Dirichlet non-IID partition."
+        description=(
+            "Preprocess CICIDS CSV files and split them with a sampling.py-style "
+            "class-block non-IID partition."
+        )
     )
     script_dir = Path(__file__).resolve().parent
     parser.add_argument(
@@ -391,9 +517,14 @@ def parse_args():
         "--output-dir",
         type=Path,
         default=(script_dir / "../data/processed_data").resolve(),
-        help="Directory to save processed client npy files (default: data/processed_data).",
+        help=(
+            "Directory to save processed client npy files. "
+            "Defaults to data/processed_data for the current IoT experiments."
+        ),
     )
-    parser.add_argument("--num-clients", type=int, default=10, help="Number of clients.")
+    parser.add_argument(
+        "--num-clients", type=int, default=20, help="Number of clients."
+    )
     parser.add_argument(
         "--train-ratio",
         type=float,
@@ -401,29 +532,36 @@ def parse_args():
         help="Train split ratio inside each client/class partition.",
     )
     parser.add_argument(
-        "--alpha",
-        type=float,
-        default=0.1,
-        help="Dirichlet alpha. Smaller values produce stronger non-IID partitions.",
-    )
-    parser.add_argument(
         "--target-total",
         type=int,
-        default=None,
+        default=20000,
+        help="Total number of cleaned samples to keep before client partitioning.",
+    )
+    parser.add_argument(
+        "--classes-per-client",
+        type=int,
+        default=5,
         help=(
-            "If set, first subsample the cleaned dataset down to this many rows "
-            "with per-class balanced quotas (then optional fill from remaining pool)."
+            "How many classes each client keeps in the sampling-style non-IID split. "
+            "Paper-like FedProto settings are closer to small overlapping class subsets "
+            "(e.g. 5) rather than full 15-class coverage on every client."
         ),
     )
     parser.add_argument(
-        "--client-split",
-        type=str,
-        choices=("dirichlet", "iid"),
-        default="dirichlet",
+        "--k-per-class",
+        type=int,
+        default=100,
         help=(
-            "How to assign samples to clients after (optional) subsampling: "
-            "'dirichlet' = class-wise Dirichlet non-IID (uses --alpha); "
-            "'iid' = shuffle and split roughly evenly across clients."
+            "Paper-style k-shot setting: each assigned client-class pair gets exactly k samples. "
+            "If a class has fewer than k remaining samples, it will no longer be assigned."
+        ),
+    )
+    parser.add_argument(
+        "--consume-all-target-samples",
+        action="store_true",
+        help=(
+            "After balanced subsampling, distribute all selected samples across client class slots. "
+            "Use this for fixed-size experiments such as exactly 20k samples over 20 clients."
         ),
     )
     parser.add_argument("--seed", type=int, default=42, help="Random seed.")
@@ -437,29 +575,27 @@ def main():
         raise ValueError("--num-clients must be > 0")
     if not (0.0 < args.train_ratio <= 1.0):
         raise ValueError("--train-ratio must be in the range (0, 1]")
-    if args.client_split == "dirichlet" and args.alpha <= 0:
-        raise ValueError("--alpha must be > 0 when --client-split is dirichlet")
+    if args.target_total <= 0:
+        raise ValueError("--target-total must be > 0")
 
     merged_df = load_and_merge_csv(args.data_dir)
     cleaned_df = clean_dataframe(merged_df)
     X, y, label_encoder = encode_labels_and_extract_features(cleaned_df)
+    X, y = balanced_subsample(X, y, args.target_total, seed=args.seed)
 
-    if args.target_total is not None:
-        if args.target_total <= 0:
-            raise ValueError("--target-total must be > 0 when provided")
-        X, y = balanced_subsample(X, y, args.target_total, seed=args.seed)
-
-    if args.client_split == "iid":
-        client_class_indices = iid_distribute_by_class(
+    if args.consume_all_target_samples:
+        client_class_indices, classes_list = balanced_slot_distribute_all_by_class(
             y,
             num_clients=args.num_clients,
+            classes_per_client=args.classes_per_client,
             seed=args.seed,
         )
     else:
-        client_class_indices = dirichlet_distribute_by_class(
+        client_class_indices, classes_list = sampling_style_distribute_by_class(
             y,
             num_clients=args.num_clients,
-            alpha=args.alpha,
+            classes_per_client=args.classes_per_client,
+            k_per_class=args.k_per_class,
             seed=args.seed,
         )
     split_indices, stats_summary = split_client_data_train_test(
@@ -479,10 +615,11 @@ def main():
         total_samples=len(y),
         feature_dim=X.shape[1],
         scaler_train_samples=total_train,
+        classes_list=classes_list,
     )
-    print_stats_summary(stats_summary)
+    print_stats_summary(stats_summary, classes_list)
 
-    print(f"最终参与训练的特征维度: {X.shape[1]}")
+    print(f"最终参与划分的特征维度: {X.shape[1]}")
     print(f"总样本数: {len(y)} | 训练样本数: {total_train} | 测试样本数: {total_test}")
 
 

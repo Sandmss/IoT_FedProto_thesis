@@ -18,7 +18,7 @@ class Local(Server):
         self.best_test_acc = (0, 0)
 
         print(f"\nLocal baseline / 客户端总数: {self.num_clients}")
-        print("Local 模式创建完成：仅执行客户端本地训练，不做服务器聚合。")
+        print("Local 模式创建完成：仅执行客户端本地训练，不做服务端聚合。")
 
     def train(self):
         print("\n------------- Local Epoch: 0 (初始状态) -------------")
@@ -40,7 +40,7 @@ class Local(Server):
 
             if self.rs_test_acc and self.rs_test_acc[-1] > self.best_test_acc[0]:
                 self.best_test_acc = (self.rs_test_acc[-1], epoch)
-                print(f"检测到新最佳准确率，正在保存最佳本地模型检查点 (Epoch {epoch})...")
+                print(f"检测到新最优准确率，正在保存最佳本地模型检查点 (Epoch {epoch})...")
                 for client in self.clients:
                     client.save_best_model()
 
@@ -48,9 +48,13 @@ class Local(Server):
                 break
 
         elapsed = time.time() - start_time
-        print("\n实验完成。最佳准确率:")
+        print("\n实验完成。最优准确率:")
         if self.rs_test_acc:
             print(f"  测试集准确率: {self.best_test_acc[0]:.4f} (在第 {self.best_test_acc[1]} 轮)")
         print(f"Local baseline 总耗时: {elapsed:.2f} 秒")
 
+        if getattr(self.args, "skip_figures", False):
+            print("已跳过 t-SNE (--skip_figures)。")
+        else:
+            self.draw_feature_tsne(title="Local Feature t-SNE")
         self.save_results()

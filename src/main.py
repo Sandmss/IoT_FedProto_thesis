@@ -146,7 +146,13 @@ def run(args):
     print(f"\nAverage time cost: {round(np.average(time_list), 2)}s.")
 
     # 调用 average_data 函数，对所有保存的实验结果文件进行汇总和平均
-    average_data(dataset=args.dataset, algorithm=args.algorithm, goal=args.goal, times=args.times)
+    average_data(
+        dataset=args.dataset,
+        algorithm=args.algorithm,
+        goal=args.goal,
+        times=args.times,
+        model_family=args.model_family,
+    )
 
     print("All done!")  # 打印完成信息
 

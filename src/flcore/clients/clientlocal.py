@@ -47,7 +47,6 @@ class clientLocal(Client):
                 optimizer.step()
 
         if self.id == 0 and self.current_round in {1, 10, 50, 99, 100}:
-            # region agent log
             debug_log(
                 "src/flcore/clients/clientlocal.py:49",
                 "local client train model state",
@@ -66,7 +65,6 @@ class clientLocal(Client):
                 run_id="local-runtime",
                 hypothesis_id="L1",
             )
-            # endregion
 
         self.model = model
         save_item(model, self.role, 'model', self.save_folder_name)
@@ -76,3 +74,43 @@ class clientLocal(Client):
     def save_best_model(self):
         model = self.model if self.model is not None else load_item(self.role, 'model', self.save_folder_name)
         save_item(model, self.role, 'best_model', self.save_folder_name)
+
+    def extract_features(self, max_samples=None):
+        model = self.model if self.model is not None else load_item(self.role, 'model', self.save_folder_name)
+        testloader = self.load_test_data()
+        model.eval()
+
+        features_list = []
+        labels_list = []
+        collected = 0
+        rng = np.random.default_rng(0)
+
+        with torch.no_grad():
+            for x, y in testloader:
+                if type(x) == type([]):
+                    x[0] = x[0].to(self.device)
+                else:
+                    x = x.to(self.device)
+                y = y.to(self.device)
+
+                rep = model.base(x)
+                rep_np = rep.detach().cpu().numpy()
+                y_np = y.detach().cpu().numpy()
+                if max_samples is not None:
+                    remaining = max_samples - collected
+                    if remaining <= 0:
+                        break
+                    if len(rep_np) > remaining:
+                        sample_idx = rng.choice(len(rep_np), size=remaining, replace=False)
+                        rep_np = rep_np[sample_idx]
+                        y_np = y_np[sample_idx]
+
+                features_list.append(rep_np)
+                labels_list.append(y_np)
+                collected += len(rep_np)
+                if max_samples is not None and collected >= max_samples:
+                    break
+
+        if features_list:
+            return np.concatenate(features_list, axis=0), np.concatenate(labels_list, axis=0)
+        return np.array([]), np.array([])

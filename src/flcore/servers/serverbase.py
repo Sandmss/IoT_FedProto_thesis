@@ -1,4 +1,4 @@
-import torch
+﻿import torch
 import os
 import numpy as np
 import h5py
@@ -6,6 +6,8 @@ import copy
 import time
 import random
 import shutil
+import matplotlib.pyplot as plt
+from sklearn.manifold import TSNE
 from utils.data_utils import read_client_data
 from flcore.clients.clientbase import load_item, save_item
 
@@ -27,6 +29,7 @@ class Server(object):
         self.num_join_clients = int(self.num_clients * self.join_ratio)
         self.current_num_join_clients = self.num_join_clients
         self.algorithm = args.algorithm
+        self.model_family = args.model_family
         self.time_select = args.time_select
         self.goal = args.goal
         self.time_threthold = args.time_threthold
@@ -161,14 +164,11 @@ class Server(object):
         save_item(global_model, self.role, 'global_model', self.save_folder_name)
         
     def save_results(self):
-        algo = self.dataset + "_" + self.algorithm
-        result_path = "../results/"
-        if not os.path.exists(result_path):
-            os.makedirs(result_path)
+        algo = self._build_result_file_stem()
+        result_path = self._get_metrics_output_dir()
 
         if (len(self.rs_test_acc)):
-            algo = algo + "_" + self.goal + "_" + str(self.times)
-            file_path = result_path + "{}.h5".format(algo)
+            file_path = os.path.join(result_path, f"{algo}.h5")
             print("File path: " + file_path)
 
             with h5py.File(file_path, 'w') as hf:
@@ -203,6 +203,123 @@ class Server(object):
             except:
                 print('Already deleted.')
 
+    def _get_results_root_dir(self):
+        return os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "..", "..", "results")
+        )
+
+    def _get_model_result_category(self):
+        mapping = {
+            "IoT_MLP": "MLP",
+            "IoT_CNN1D": "CNN1D",
+            "IoT_Transformer1D": "Transformer",
+        }
+        return mapping.get(self.model_family, "heterogeneous_models")
+
+    def _get_algorithm_result_dir(self):
+        result_dir = os.path.join(
+            self._get_results_root_dir(),
+            self._get_model_result_category(),
+            self.algorithm,
+        )
+        os.makedirs(result_dir, exist_ok=True)
+        return result_dir
+
+    def _get_metrics_output_dir(self):
+        result_dir = os.path.join(self._get_algorithm_result_dir(), "metrics")
+        os.makedirs(result_dir, exist_ok=True)
+        return result_dir
+
+    def _get_figure_output_dir(self):
+        result_dir = os.path.join(self._get_algorithm_result_dir(), "figures")
+        os.makedirs(result_dir, exist_ok=True)
+        return result_dir
+
+    def _build_result_file_stem(self):
+        return f"{self.dataset}_{self.algorithm}_{self.model_family}_{self.goal}_{self.times}"
+
+    def _build_figure_prefix(self):
+        return self._build_result_file_stem()
+
+    def draw_feature_tsne(self, title=None):
+        max_tsne_samples = 10000
+        per_client_cap = max(1, max_tsne_samples // max(len(self.clients), 1))
+        features_list = []
+        labels_list = []
+        rng = np.random.default_rng(0)
+
+        for client in self.clients:
+            if not hasattr(client, "extract_features"):
+                continue
+            try:
+                features, labels = client.extract_features(max_samples=per_client_cap)
+            except TypeError:
+                features, labels = client.extract_features()
+                if len(features) > per_client_cap:
+                    sample_indices = rng.choice(len(features), size=per_client_cap, replace=False)
+                    features = features[sample_indices]
+                    labels = labels[sample_indices]
+            if features.size == 0 or labels.size == 0:
+                continue
+            features_list.append(features)
+            labels_list.append(labels)
+
+        if not features_list:
+            print("Skip feature t-SNE: no client features available.")
+            return
+
+        features = np.concatenate(features_list, axis=0)
+        labels = np.concatenate(labels_list, axis=0)
+
+        if len(features) > max_tsne_samples:
+            sample_indices = rng.choice(len(features), size=max_tsne_samples, replace=False)
+            features = features[sample_indices]
+            labels = labels[sample_indices]
+
+        if len(features) < 2:
+            print("Skip feature t-SNE: fewer than 2 samples.")
+            return
+
+        perplexity = min(30, len(features) - 1)
+        if perplexity < 1:
+            print("Skip feature t-SNE: invalid perplexity.")
+            return
+
+        try:
+            embedded = TSNE(
+                n_components=2,
+                random_state=0,
+                init="pca",
+                learning_rate="auto",
+                perplexity=perplexity,
+            ).fit_transform(features)
+
+            plt.figure(figsize=(8, 6))
+            scatter = plt.scatter(
+                embedded[:, 0],
+                embedded[:, 1],
+                c=labels,
+                cmap="tab20",
+                s=10,
+                alpha=0.8,
+            )
+            plt.title(title or f"{self.algorithm} Feature t-SNE")
+            plt.xlabel("t-SNE 1")
+            plt.ylabel("t-SNE 2")
+            plt.colorbar(scatter, label="Class")
+            plt.tight_layout()
+
+            output_path = os.path.join(
+                self._get_figure_output_dir(),
+                f"{self._build_figure_prefix()}_feature_tsne.png",
+            )
+            plt.savefig(output_path, dpi=200)
+            plt.close()
+            print(f"Saved feature t-SNE plot: {output_path}")
+        except Exception as exc:
+            plt.close("all")
+            print(f"Skip feature t-SNE: generation failed ({exc}).")
+
     def test_metrics(self):        
         num_samples = []
         tot_correct = []
@@ -236,7 +353,7 @@ class Server(object):
                 f', Precision: {precision:.4f}, Recall: {recall:.4f}, '
                 f'F1: {f1:.4f}, FNR: {fnr:.4f}, FPR: {fpr:.4f}, '
                 f'Latency: {latency_ms:.4f} ms/sample '
-                f'({int(ct)}/{ns} 正确)'
+                f'({int(ct)}/{ns} 姝ｇ‘)'
             )
             tot_auc_macro.append(auc_macro * ns)
             tot_auc_micro.append(auc_micro * ns)
@@ -511,7 +628,7 @@ class Server(object):
 
         Stops when there have been top_cnt consecutive evaluations where the new accuracy
         is not strictly greater than the best seen in all prior evaluations. This matches
-        “best之后连续 N 次评估没有更高” semantics; the old check_done(top_cnt) logic did
+        鈥渂est涔嬪悗杩炵画 N 娆¤瘎浼版病鏈夋洿楂樷€?semantics; the old check_done(top_cnt) logic did
         not work when the running argmax stayed at the last list index (e.g. monotonic acc).
         """
         if not self.auto_break:
@@ -557,3 +674,5 @@ class Server(object):
             else:
                 raise NotImplementedError
         return True
+
+

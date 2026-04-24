@@ -1,1 +1,0 @@
-nohup python -u main1.py -ab 1 -t 1 -lr 0.01 -jr 1 -lbs 10 -ls 1 -nc 10 -nb 8 -num_layers 4 -num_heads 4 -dataset IoT -model_family HtFE8  -fd 128 -did 1  -algo FedProto -lam 0.1 -se 100 -mart 100 > IoT.out 2>&1 &
