@@ -1,18 +1,27 @@
-﻿# 鍩轰簬杞婚噺鍖栬仈閭﹀涔犵殑鐗╄仈缃戞伓鎰忔祦閲忔娴嬬郴缁?
-## 椤圭洰绠€浠?鏈」鐩疄鐜颁簡涓€涓潰鍚?IoT 鎭舵剰娴侀噺妫€娴嬪満鏅殑杞婚噺鍖栬仈閭﹀涔犲師鍨嬬郴缁熴€? 
-绯荤粺浠?`FedProto` 涓烘牳蹇冭仈閭︽柟妗堬紝鍚屾椂淇濈暀 `Local` 鍜?`FedAvg` 浣滀负瀵圭収鏂规硶锛屾敮鎸佸绉嶈交閲忓寲鏈湴妯″瀷锛屽苟鏀寔鍚屾瀯涓庨儴鍒嗗紓鏋勫疄楠屻€?
-褰撳墠绯荤粺閲嶇偣鍖呮嫭锛?
-- 杞婚噺鍖栨伓鎰忔祦閲忔娴嬫ā鍨?- 鑱旈偊璁粌娴佺▼瀹炵幇
-- 澶氭寚鏍囩粨鏋滆瘎浼?- 缁撴灉褰掓。涓庢€荤粨鏋滆〃姹囨€?
-## 褰撳墠鏀寔鍐呭
+# 基于轻量化联邦学习的物联网恶意流量检测系统
 
-### 绠楁硶
+## 项目简介
+
+本项目实现了一个面向 IoT 恶意流量检测场景的轻量化联邦学习原型系统。
+
+系统以 `FedProto` 为核心联邦方案，同时保留 `Local` 和 `FedAvg` 作为对照方法，支持多种轻量化本地模型，并支持同构与部分异构实验。
+
+当前系统重点包括：
+
+- 轻量化恶意流量检测模型
+- 联邦训练流程实现
+- 多指标结果评估
+- 结果归档与总结果表汇总
+
+## 当前支持内容
+
+### 算法
 
 - `Local`
 - `FedAvg`
 - `FedProto`
 
-### 妯″瀷
+### 模型
 
 - `IoT_MLP`
 - `IoT_CNN1D`
@@ -20,247 +29,256 @@
 - `IoT_MIX_MLP_CNN1D`
 - `IoT_MIX_MLP_CNN_TRANS`
 
-璇存槑锛?
-- `Local / FedAvg / FedProto` 閫傜敤浜庡悓鏋勬ā鍨嬪疄楠?- 寮傛瀯妯″瀷瀹為獙褰撳墠浼樺厛寤鸿浣跨敤 `FedProto`
-- 褰撳墠瀹炵幇涓嬩笉寤鸿鐩存帴灏嗗紓鏋勬ā鍨嬬敤浜?`FedAvg`
+说明：
 
-## 椤圭洰鐩綍
+- `Local`、`FedAvg`、`FedProto` 适用于同构模型实验。
+- 异构模型实验当前优先建议使用 `FedProto`。
+- 当前实现下，不建议直接将异构模型用于 `FedAvg`。
 
-- `src`
-  鏈€缁堜富浠ｇ爜鐩綍锛屽寘鍚缁冨叆鍙ｃ€佸鎴风銆佹湇鍔＄銆佹ā鍨嬪疄鐜颁笌缁撴灉姹囨€昏剼鏈?- `dataset`
-  鑱旈偊鍒掑垎鍚庣殑瀹㈡埛绔暟鎹洰褰?- `data`
-  鍘熷鏁版嵁涓庡鐞嗕腑闂翠骇鐗?- `results`
-  瀹為獙鏃ュ織銆佹寚鏍囩粨鏋溿€佸浘鍍忚緭鍑哄拰姹囨€昏〃
-- `reference`
-  寮€棰樻姤鍛娿€佷换鍔′功銆佽鍒掓枃妗ｇ瓑鍙傝€冩潗鏂?- `sysytem`
-  鏃х増鏈垨鍙傝€冪洰褰曪紝涓嶄綔涓烘渶缁堜富鍏ュ彛
+## 项目目录
 
-## 鐜渚濊禆
+- `src`：最终主代码目录，包含训练入口、客户端、服务端、模型实现与结果汇总脚本。
+- `dataset`：联邦划分后的客户端数据目录。
+- `data`：原始数据与处理中间产物。
+- `results`：实验日志、指标结果、图像输出和汇总表。
+- `reference`：开题报告、任务书、计划文档等参考材料。
+- `scripts`：参数统计、效率分析等辅助脚本。
 
-寤鸿 Python 鐗堟湰锛?
+## 环境依赖
+
+建议 Python 版本：
+
 - `Python 3.10+`
 
-涓昏渚濊禆锛?
+主要依赖：
+
 - `torch`
 - `numpy`
 - `scikit-learn`
 - `h5py`
 - `matplotlib`
 
-瀹夎绀轰緥锛?
+安装示例：
+
 ```bash
 pip install torch numpy scikit-learn h5py matplotlib
 ```
 
-## 鏁版嵁璇存槑
+## 数据说明
 
-椤圭洰褰撳墠浣跨敤宸茬粡澶勭悊濂界殑 IoT 鎭舵剰娴侀噺鐗瑰緛鏁版嵁锛屽苟宸叉瀯寤鸿仈閭﹀涔犲鎴风鍒掑垎鐩綍銆? 
-甯哥敤鏁版嵁鐩綍鍖呮嫭锛?
+项目当前使用已经处理好的 IoT 恶意流量特征数据，并已构建联邦学习客户端划分目录。
+
+常用数据目录包括：
+
 - `dataset/IoT`
 - `dataset/IoT_20k_c20`
 - `dataset/IoT_20k_c20_noniid`
 - `dataset/IoT_k40_c20_noniid`
 
-杩愯瀹為獙鍓嶏紝闇€瑕佺‘璁?`main.py` 璇诲彇鐨勬暟鎹洰褰曚笌褰撳墠鍑嗗濂界殑鏁版嵁闆嗕竴鑷淬€?
-## 涓诲叆鍙?
-缁熶竴涓诲叆鍙ｄ负锛?
-- [src/main.py](/c:/Users/鏈变笘璞?Desktop/姣曚笟璁捐/IoT_FedProto_thesis/src/main.py:1)
+运行实验前，需要确认 `main.py` 读取的数据目录与当前准备好的数据集一致。
 
-寤鸿濮嬬粓鍦?`src` 鐩綍涓嬫墽琛屽懡浠わ紝杩欐牱鐩稿璺緞鏈€绋冲畾銆?
-## 蹇€熷紑濮?
-### 1. 杩涘叆涓讳唬鐮佺洰褰?
+## 主入口
+
+统一主入口为 [src/main.py](C:/Users/朱世豪/Desktop/毕业设计/IoT_FedProto_thesis/src/main.py:1)。
+
+建议始终在 `src` 目录下执行命令，这样相对路径最稳定。
+
+## 快速开始
+
+### 1. 进入主代码目录
+
 ```bash
 cd src
 ```
 
-### 2. 杩愯鍚屾瀯瀹為獙
+### 2. 运行同构实验
 
-褰撳墠浠撳簱涓殑涓変釜姝ｅ紡鑴氭湰涓哄悓鏋勫疄楠屽叆鍙ｏ細
+当前仓库中的三个正式脚本为同构实验入口：
 
-- [run_local.sh](/c:/Users/鏈变笘璞?Desktop/姣曚笟璁捐/IoT_FedProto_thesis/src/run_local.sh:1)
-- [run_fedavg.sh](/c:/Users/鏈变笘璞?Desktop/姣曚笟璁捐/IoT_FedProto_thesis/src/run_fedavg.sh:1)
-- [run_fedproto.sh](/c:/Users/鏈变笘璞?Desktop/姣曚笟璁捐/IoT_FedProto_thesis/src/run_fedproto.sh:1)
+- [run_local.sh](C:/Users/朱世豪/Desktop/毕业设计/IoT_FedProto_thesis/src/run_local.sh:1)
+- [run_fedavg.sh](C:/Users/朱世豪/Desktop/毕业设计/IoT_FedProto_thesis/src/run_fedavg.sh:1)
+- [run_fedproto.sh](C:/Users/朱世豪/Desktop/毕业设计/IoT_FedProto_thesis/src/run_fedproto.sh:1)
 
-杩愯绀轰緥锛?
+运行示例：
+
 ```bash
 bash run_local.sh
 bash run_fedavg.sh
 bash run_fedproto.sh
 ```
 
-### 3. 杩愯寮傛瀯瀹為獙
+### 3. 运行异构实验
 
-寮傛瀯 `MLP + CNN1D` 鐨?`FedProto` 鍏ュ彛鑴氭湰锛?
-- [run_fedproto_mix_mlp_cnn1d.sh](/c:/Users/鏈变笘璞?Desktop/姣曚笟璁捐/IoT_FedProto_thesis/src/run_fedproto_mix_mlp_cnn1d.sh:1)
+异构 `MLP + CNN1D` 的 `FedProto` 入口脚本：
 
-杩愯鏂瑰紡锛?
+- [run_fedproto_mix_mlp_cnn1d.sh](C:/Users/朱世豪/Desktop/毕业设计/IoT_FedProto_thesis/src/run_fedproto_mix_mlp_cnn1d.sh:1)
+
+运行方式：
+
 ```bash
 bash run_fedproto_mix_mlp_cnn1d.sh
 ```
 
-## 鎵嬪姩杩愯鍛戒护绀轰緥
+## 手动运行命令示例
 
-### 鍚屾瀯 MLP + FedProto
+### 同构 MLP + FedProto
 
 ```bash
 python -u main.py -t 1 -lr 0.01 -jr 1 -lbs 10 -ls 1 -gr 1000 -eg 1 -nw 4 -nc 20 -nb 15 -dataset IoT -model_family IoT_MLP --input_dim 77 -fd 512 -did 0 -algo FedProto -lam 1.0 --proto_eval_mode classifier -se 100 -mart 100 -ab True --early_stop_patience 100
 ```
 
-### 鍚屾瀯 CNN1D + FedProto
+### 同构 CNN1D + FedProto
 
 ```bash
 python -u main.py -t 1 -lr 0.01 -jr 1 -lbs 10 -ls 1 -gr 1000 -eg 1 -nw 4 -nc 20 -nb 15 -dataset IoT -model_family IoT_CNN1D --input_dim 77 -fd 512 -did 0 -algo FedProto -lam 1.0 --proto_eval_mode classifier -se 100 -mart 100 -ab True --early_stop_patience 100
 ```
 
-### 鍚屾瀯 Transformer + FedProto
+### 同构 Transformer + FedProto
 
 ```bash
 python -u main.py -t 1 -lr 0.01 -jr 1 -lbs 10 -ls 1 -gr 1000 -eg 1 -nw 4 -nc 20 -nb 15 -dataset IoT -model_family IoT_Transformer1D --input_dim 77 -fd 512 -did 0 -algo FedProto -lam 1.0 --proto_eval_mode classifier -se 100 -mart 100 -ab True --early_stop_patience 100
 ```
 
-### 寮傛瀯 MLP + CNN1D + FedProto
+### 异构 MLP + CNN1D + FedProto
 
 ```bash
 python -u main.py -t 1 -lr 0.01 -jr 1 -lbs 10 -ls 1 -gr 1000 -eg 1 -nw 4 -nc 20 -nb 15 -dataset IoT -model_family IoT_MIX_MLP_CNN1D --input_dim 77 -fd 512 -did 0 -algo FedProto -lam 1.0 --proto_eval_mode classifier -se 100 -mart 100 -ab True --early_stop_patience 100
 ```
 
-## PowerShell 杩愯鏂瑰紡
+## PowerShell 运行方式
 
 ```powershell
 cd src
 python -u main.py -t 1 -lr 0.01 -jr 1 -lbs 10 -ls 1 -gr 1000 -eg 1 -nw 4 -nc 20 -nb 15 -dataset IoT -model_family IoT_MIX_MLP_CNN1D --input_dim 77 -fd 512 -did 0 -algo FedProto -lam 1.0 --proto_eval_mode classifier -se 100 -mart 100 -ab True --early_stop_patience 100
 ```
 
-## 甯哥敤鍙傛暟璇存槑
+## 常用参数说明
 
-- `-model_family`
-  閫夋嫨妯″瀷瀹舵棌锛屼緥濡?`IoT_MLP`銆乣IoT_CNN1D`銆乣IoT_Transformer1D`
-- `-algo`
-  閫夋嫨璁粌绠楁硶锛屼緥濡?`Local`銆乣FedAvg`銆乣FedProto`
-- `-fd`
-  鐗瑰緛琛ㄧず缁村害锛屼篃浣滀负鍘熷瀷缁村害
-- `-gr`
-  鍏ㄥ眬杞暟
-- `-ls`
-  鏈湴璁粌杞暟
-- `-nc`
-  瀹㈡埛绔暟閲?- `--early_stop_patience`
-  鏃╁仠瀹瑰繊杞暟
-- `--skip_figures`
-  璺宠繃鍥剧墖鐢熸垚锛屼粎鍦ㄩ渶瑕佽妭鐪佹椂闂存椂鎵嬪姩寮€鍚?
-## 缁撴灉鐩綍璇存槑
+- `-model_family`：选择模型家族，例如 `IoT_MLP`、`IoT_CNN1D`、`IoT_Transformer1D`。
+- `-algo`：选择训练算法，例如 `Local`、`FedAvg`、`FedProto`。
+- `-fd`：特征表示维度，也作为原型维度。
+- `-gr`：全局轮数。
+- `-ls`：本地训练轮数。
+- `-nc`：客户端数量。
+- `--early_stop_patience`：早停容忍轮数。
+- `--skip_figures`：跳过图片生成，仅在需要节省时间时手动开启。
 
-褰撳墠缁撴灉鐩綍宸叉寜鈥滄ā鍨嬬被鍒?/ 绠楁硶 / 鏂囦欢绫诲瀷鈥濈粺涓€鏁寸悊銆?
-### 鏍囧噯鐩綍缁撴瀯
+## 结果目录说明
 
-- `results/MLP妯″瀷/Local/`
-- `results/MLP妯″瀷/FedAvg/`
-- `results/MLP妯″瀷/FedProto/`
-- `results/CNN1D妯″瀷/Local/`
-- `results/CNN1D妯″瀷/FedAvg/`
-- `results/CNN1D妯″瀷/FedProto/`
-- `results/transformer妯″瀷/Local/`
-- `results/transformer妯″瀷/FedAvg/`
-- `results/transformer妯″瀷/FedProto/`
-- `results/寮傛瀯妯″瀷/FedProto/`
+当前结果目录按“模型类别 / 算法 / 文件类型”统一整理。
 
-姣忎釜绠楁硶鐩綍涓嬭繘涓€姝ュ垎涓猴細
+### 标准目录结构
 
-- `logs/`
-  淇濆瓨 `.out` 鏃ュ織鏂囦欢
-- `metrics/`
-  淇濆瓨 `.h5` 鎸囨爣缁撴灉鏂囦欢
-- `figures/`
-  淇濆瓨 t-SNE 鍥俱€佸師鍨嬪垎甯冨浘绛夊浘鐗?
-### 缁撴灉鏂囦欢鍛藉悕
+- `results/MLP模型/Local/`
+- `results/MLP模型/FedAvg/`
+- `results/MLP模型/FedProto/`
+- `results/CNN1D模型/Local/`
+- `results/CNN1D模型/FedAvg/`
+- `results/CNN1D模型/FedProto/`
+- `results/transformer模型/Local/`
+- `results/transformer模型/FedAvg/`
+- `results/transformer模型/FedProto/`
+- `results/异构模型/FedProto/`
 
-鏂扮殑鏍囧噯 `.h5` 鏂囦欢鍛藉悕鏍煎紡涓猴細
+每个算法目录下进一步分为：
+
+- `logs/`：保存 `.out` 日志文件。
+- `metrics/`：保存 `.h5` 指标结果文件。
+- `figures/`：保存 t-SNE 图、原型分布图等图片。
+
+### 结果文件命名
+
+新的标准 `.h5` 文件命名格式为：
 
 ```text
 {dataset}_{algorithm}_{model_family}_{goal}_{run_idx}.h5
 ```
 
-渚嬪锛?
+例如：
+
 ```text
 IoT_FedAvg_IoT_MLP_test_0.h5
 IoT_FedProto_IoT_MLP_smoke_proto_0.h5
 ```
 
-## 鎬荤粨鏋滆〃浣跨敤鍛戒护
+## 总结果表使用命令
 
-璁粌瀹屾垚鍚庯紝鍙互杩愯缁熶竴姹囨€昏剼鏈壂鎻?`results/**/*.h5`锛岃嚜鍔ㄧ敓鎴愭€荤粨鏋滆〃銆?
-鍦ㄩ」鐩牴鐩綍杩愯锛?
+训练完成后，可以运行统一汇总脚本扫描 `results/**/*.h5`，自动生成总结果表。
+
+在项目根目录运行：
+
 ```bash
 python src/summarize_results.py
 ```
 
-鐢熸垚鏂囦欢锛?
-- [results/summary/experiment_summary.csv](/c:/Users/鏈变笘璞?Desktop/姣曚笟璁捐/IoT_FedProto_thesis/results/summary/experiment_summary.csv)
-- [results/summary/experiment_summary.md](/c:/Users/鏈变笘璞?Desktop/姣曚笟璁捐/IoT_FedProto_thesis/results/summary/experiment_summary.md)
+生成文件：
 
-璇ヨ剼鏈細锛?
-- 鍏煎鎵弿鏃х粨鏋滅洰褰曞拰鏂版爣鍑嗙洰褰?- 鎻愬彇 `Acc`銆乣AUC Macro`銆乣AUC Micro`銆乣Precision`銆乣Recall`銆乣F1`銆乣FNR`銆乣FPR`
-- 姹囨€绘帹鐞嗗欢杩熴€侀€氫俊閲忋€佸弬鏁伴噺銆佹ā鍨嬪ぇ灏忓拰 FLOPs
-- 杈撳嚭閫傚悎鍚庣画璁烘枃鏁寸悊鐨勭粺涓€缁撴灉琛?
-## 缁撴灉杈撳嚭璇存槑
+- `results/summary/experiment_summary.csv`
+- `results/summary/experiment_summary.md`
 
-璁粌缁撴潫鍚庯紝绯荤粺浼氳緭鍑猴細
+该脚本会：
 
-- `.out` 鏃ュ織鏂囦欢
-- `.h5` 缁撴灉鏂囦欢
-- `.png` 鍥剧墖鏂囦欢
-- 姹囨€诲悗鐨?`.csv` 鍜?`.md` 鎬荤粨鏋滆〃
+- 兼容扫描旧结果目录和新标准目录。
+- 提取 `Acc`、`AUC Macro`、`AUC Micro`、`Precision`、`Recall`、`F1`、`FNR`、`FPR`。
+- 汇总推理延迟、通信量、参数量、模型大小和 FLOPs。
+- 输出适合后续论文整理的统一结果表。
 
-## 杞婚噺鍖栦笌鏁堢巼鍒嗘瀽鑴氭湰
+## 结果输出说明
 
-### 妯″瀷鍙傛暟閲忕粺璁?
+训练结束后，系统会输出：
+
+- `.out` 日志文件
+- `.h5` 结果文件
+- `.png` 图片文件
+- 汇总后的 `.csv` 和 `.md` 总结果表
+
+## 轻量化与效率分析脚本
+
+### 模型参数量统计
+
 ```bash
 python scripts/report_iot_model_params.py
 ```
 
-### 鑱旈偊鏁堢巼缁熻
+### 联邦效率统计
 
 ```bash
 python scripts/report_iot_efficiency.py --model-family IoT_CNN1D
 ```
 
-寮傛瀯缁熻绀轰緥锛?
+异构统计示例：
+
 ```bash
 python scripts/report_iot_efficiency.py --model-family IoT_MIX_MLP_CNN1D
 ```
 
-## 褰撳墠绯荤粺寤鸿瀹為獙缁撴瀯
+## 当前系统建议实验结构
 
-### 涓诲疄楠?
-- 鍚屾瀯 `MLP`锛歚Local / FedAvg / FedProto`
-- 鍚屾瀯 `CNN1D`锛歚Local / FedAvg / FedProto`
-- 鍚屾瀯 `Transformer`锛歚Local / FedAvg / FedProto`
+### 主实验
 
-### 鎵╁睍瀹為獙
+- 同构 `MLP`：`Local / FedAvg / FedProto`
+- 同构 `CNN1D`：`Local / FedAvg / FedProto`
+- 同构 `Transformer`：`Local / FedAvg / FedProto`
 
-- 寮傛瀯 `MLP + CNN1D`锛歚FedProto`
+### 扩展实验
 
-## 娉ㄦ剰浜嬮」
+- 异构 `MLP + CNN1D`：`FedProto`
 
-- 寤鸿濮嬬粓鍦?`src` 鐩綍杩愯涓荤▼搴忥紝閬垮厤鐩稿璺緞闂
-- `FedAvg` 褰撳墠浠呯敤浜庡悓鏋勫疄楠?- 姝ｅ紡鑴氭湰榛樿浼氱敓鎴愬浘鐗囷紱鑻ュ彧鎯冲揩閫熼獙璇侊紝鍙墜鍔ㄥ姞 `--skip_figures`
-- 濡傛灉 GPU 涓嶅彲鐢紝绋嬪簭浼氳嚜鍔ㄥ垏鎹㈠埌 CPU
+## 注意事项
 
-## 褰撳墠绯荤粺瀹氫綅
-璇ラ」鐩綋鍓嶅凡缁忓叿澶囷細
+- 建议始终在 `src` 目录运行主程序，避免相对路径问题。
+- `FedAvg` 当前仅用于同构实验。
+- 正式脚本默认会生成图片；若只想快速验证，可手动添加 `--skip_figures`。
+- 如果 GPU 不可用，程序会自动切换到 CPU。
 
-- 杞婚噺鍖栨湰鍦版娴嬫ā鍨?- 鑱旈偊鍘熷瀷鑱氬悎璁粌妗嗘灦
-- 鍚屾瀯涓庡紓鏋勫鎴风瀹為獙鍏ュ彛
-- 澶氭寚鏍囩粨鏋滆瘎浼颁笌鏁堢巼鍒嗘瀽鑳藉姏
-- 缁熶竴缁撴灉鐩綍涓庢€荤粨鏋滆〃鐢熸垚鑳藉姏
+## 当前系统定位
 
-鍥犳锛屽畠宸茬粡鍏峰鈥滆交閲忓寲鑱旈偊瀛︿範鎭舵剰娴侀噺妫€娴嬪師鍨嬬郴缁熲€濈殑鏍稿績缁撴瀯锛屽悗缁伐浣滀富瑕佹槸缁х画鏁寸悊缁撴灉銆佽ˉ鍏呭睍绀烘潗鏂欏苟瀹屾垚鏈€缁堣鏂囦氦浠樸€?
+该项目当前已经具备：
 
+- 轻量化本地检测模型
+- 联邦原型聚合训练框架
+- 同构与异构客户端实验入口
+- 多指标结果评估与效率分析能力
+- 统一结果目录与总结果表生成能力
 
-
-
-
-
-
-
-
+因此，它已经具备“轻量化联邦学习恶意流量检测原型系统”的核心结构，后续工作主要是继续整理结果、补充展示材料并完成最终论文交付。
