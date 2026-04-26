@@ -1,0 +1,4 @@
+﻿Dataset,Setting,Model,Algorithm,ModelCategory,Goal,RunIndex,Acc,BestAccRoundIndex,AUC Macro,AUC Micro,Precision,Recall,F1,FNR,FPR,InferenceLatencyMs,CommPerRound,CommCumulative,MeanModelParams,MeanModelSizeBytes,MeanFLOPs,RecordedRounds,ResultFile
+IoT,legacy_root,IoT_MLP,FedAvg,,test,0,0.842,531,0.983916,0.982988,0.551959,0.510501,0.526224,0.0,0.0,0.035663,1828440.0,1153745640.0,91422.0,365688.0,83727.0,632,FedAvg/metrics/IoT_FedAvg_IoT_MLP_test_0.h5
+IoT,legacy_root,IoT_MLP,FedProto,,test,0,0.9396,999,0.991984,0.992461,0.943916,0.9396,0.938626,0.0,0.144,0.037613,51200.0,51200000.0,91422.0,365688.0,83727.0,1000,FedProto/metrics/IoT_FedProto_IoT_MLP_test_0.h5
+IoT,legacy_root,IoT_MLP,Local,,test,0,0.9392,786,0.991744,0.992273,0.943926,0.9392,0.938437,0.0,0.148,0.036909,0.0,0.0,91422.0,365688.0,83727.0,887,Local/metrics/IoT_Local_IoT_MLP_test_0.h5

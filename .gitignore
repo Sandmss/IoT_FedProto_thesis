@@ -40,5 +40,9 @@ src/temp/
 .venv/
 venv/
 
+# Desktop app local dependencies and build outputs
+desktop-app/node_modules/
+desktop-app/dist/
+
 # Local archives
 *.zip

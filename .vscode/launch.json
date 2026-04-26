@@ -34,7 +34,7 @@
         "-nb",
         "15",
         "-dataset",
-        "IoT_20k_c20_noniid",
+        "IoT",
         "-model_family",
         "IoT_MLP",
         "--input_dim",
@@ -53,7 +53,8 @@
         "100",
         "-ab",
         "True",
-        "--skip_figures"
+        "--early_stop_patience",
+        "100"
       ]
     },
     {
@@ -89,7 +90,7 @@
         "-nb",
         "15",
         "-dataset",
-        "IoT_20k_c20_noniid",
+        "IoT",
         "-model_family",
         "IoT_MLP",
         "--input_dim",
@@ -101,18 +102,21 @@
         "-algo",
         "FedProto",
         "-lam",
-        "0.1",
+        "1.0",
+        "--proto_eval_mode",
+        "classifier",
         "-se",
         "100",
         "-mart",
         "100",
         "-ab",
         "True",
-        "--skip_figures"
+        "--early_stop_patience",
+        "100"
       ]
     },
     {
-      "name": "IoT_20k_c20_noniid - Local (100 epochs)",
+      "name": "IoT_20k_c20_noniid - Local (100 rounds)",
       "type": "debugpy",
       "request": "launch",
       "program": "${workspaceFolder}/src/main.py",
@@ -140,7 +144,7 @@
         "-nb",
         "15",
         "-dataset",
-        "IoT_20k_c20_noniid",
+        "IoT",
         "-model_family",
         "IoT_MLP",
         "--input_dim",
@@ -160,7 +164,9 @@
         "-mart",
         "100",
         "-ab",
-        "True"
+        "True",
+        "--early_stop_patience",
+        "100"
       ]
     }
   ]

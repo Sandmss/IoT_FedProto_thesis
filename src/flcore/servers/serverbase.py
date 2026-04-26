@@ -169,7 +169,7 @@ class Server(object):
 
         if (len(self.rs_test_acc)):
             file_path = os.path.join(result_path, f"{algo}.h5")
-            print("File path: " + file_path)
+            print("Result file path: " + file_path)
 
             with h5py.File(file_path, 'w') as hf:
                 hf.create_dataset('rs_test_acc', data=self.rs_test_acc)
@@ -199,9 +199,9 @@ class Server(object):
         if 'temp' in self.save_folder_name:
             try:
                 shutil.rmtree(self.save_folder_name)
-                print('Deleted.')
+                print("Temporary save directory deleted.")
             except:
-                print('Already deleted.')
+                print("Temporary save directory was already removed.")
 
     def _get_results_root_dir(self):
         return os.path.abspath(
@@ -353,7 +353,7 @@ class Server(object):
                 f', Precision: {precision:.4f}, Recall: {recall:.4f}, '
                 f'F1: {f1:.4f}, FNR: {fnr:.4f}, FPR: {fpr:.4f}, '
                 f'Latency: {latency_ms:.4f} ms/sample '
-                f'({int(ct)}/{ns} 姝ｇ‘)'
+                f'({int(ct)}/{ns} correct)'
             )
             tot_auc_macro.append(auc_macro * ns)
             tot_auc_micro.append(auc_micro * ns)
@@ -440,7 +440,7 @@ class Server(object):
         #     loss.append(train_loss)
 
         # print("Averaged Train Loss: {:.4f}".format(train_loss))
-        print("Averaged Test Accurancy: {:.4f}".format(test_acc))
+        print("Averaged Test Accuracy: {:.4f}".format(test_acc))
         print("Averaged Test AUC Macro: {:.4f}".format(test_auc_macro))
         print("Averaged Test AUC Micro: {:.4f}".format(test_auc_micro))
         print("Averaged Test Precision Macro: {:.4f}".format(test_precision))
@@ -449,10 +449,10 @@ class Server(object):
         print("Averaged Test FNR: {:.4f}".format(test_fnr))
         print("Averaged Test FPR: {:.4f}".format(test_fpr))
         print("Averaged Inference Latency: {:.4f} ms/sample".format(test_latency_ms))
-        print("Global Confusion Matrix:")
+        print("Global confusion matrix:")
         print(test_confusion_matrix)
         # self.print_(test_acc, train_acc, train_loss)
-        print("Std Test Accurancy: {:.4f}".format(np.std(accs)))
+        print("Std Test Accuracy: {:.4f}".format(np.std(accs)))
         print("Std Test AUC Macro: {:.4f}".format(np.std(aucs_macro)))
         print("Std Test AUC Micro: {:.4f}".format(np.std(aucs_micro)))
         print("Std Test Precision Macro: {:.4f}".format(np.std(precisions)))
@@ -462,7 +462,7 @@ class Server(object):
         print("Std Test FPR: {:.4f}".format(np.std(fprs)))
 
     def print_(self, test_acc, test_auc, train_loss):
-        print("Average Test Accurancy: {:.4f}".format(test_acc))
+        print("Average Test Accuracy: {:.4f}".format(test_acc))
         print("Average Test AUC: {:.4f}".format(test_auc))
         print("Average Train Loss: {:.4f}".format(train_loss))
 

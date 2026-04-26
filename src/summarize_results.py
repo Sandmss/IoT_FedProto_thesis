@@ -10,9 +10,9 @@ import numpy as np
 
 
 RESULTS_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "results"))
-SUMMARY_DIR = os.path.join(RESULTS_ROOT, "summary")
 ALGORITHMS = {"FedAvg", "FedProto", "Local"}
 STANDARD_SUBDIRS = {"metrics", "figures", "logs"}
+IGNORED_DIRS = {"summary", "\u7ed3\u679c"}
 MODEL_CATEGORY_ALIASES = {
     "MLP": "MLP",
     "MLP_Model": "MLP_Model",
@@ -40,16 +40,24 @@ def parse_args():
     parser.add_argument(
         "--output_csv",
         type=str,
-        default=os.path.join(SUMMARY_DIR, "experiment_summary.csv"),
-        help="Output CSV path.",
+        default="",
+        help="Output CSV path. Defaults to <results_root>/summary/experiment_summary.csv.",
     )
     parser.add_argument(
         "--output_md",
         type=str,
-        default=os.path.join(SUMMARY_DIR, "experiment_summary.md"),
-        help="Output Markdown path.",
+        default="",
+        help="Output Markdown path. Defaults to <results_root>/summary/experiment_summary.md.",
     )
     return parser.parse_args()
+
+
+def resolve_output_paths(results_root, output_csv="", output_md=""):
+    summary_dir = os.path.join(results_root, "summary")
+    return (
+        output_csv or os.path.join(summary_dir, "experiment_summary.csv"),
+        output_md or os.path.join(summary_dir, "experiment_summary.md"),
+    )
 
 
 def read_optional_dataset(hf, name):
@@ -320,28 +328,32 @@ def write_markdown(rows, output_md):
 
 def main():
     args = parse_args()
-    pattern = os.path.join(args.results_root, "**", "*.h5")
+    results_root = os.path.abspath(args.results_root)
+    output_csv, output_md = resolve_output_paths(results_root, args.output_csv, args.output_md)
+    pattern = os.path.join(results_root, "**", "*.h5")
     files = sorted(glob(pattern, recursive=True))
 
     rows = []
     skipped = []
     for file_path in files:
-        if os.path.basename(os.path.dirname(file_path)) == "summary":
+        rel_path = os.path.relpath(file_path, results_root)
+        rel_parts = rel_path.split(os.sep)
+        if any(part in IGNORED_DIRS for part in rel_parts):
             continue
         try:
-            rows.append(summarize_h5_file(file_path, args.results_root))
+            rows.append(summarize_h5_file(file_path, results_root))
         except Exception as exc:
-            skipped.append((os.path.relpath(file_path, args.results_root), str(exc)))
+            skipped.append((rel_path, str(exc)))
 
     rows.sort(key=lambda row: (row["ModelCategory"], row["Model"], row["Algorithm"], row["Setting"], row["ResultFile"]))
-    write_csv(rows, args.output_csv)
-    write_markdown(rows, args.output_md)
+    write_csv(rows, output_csv)
+    write_markdown(rows, output_md)
 
     print(f"Scanned h5 files: {len(files)}")
     print(f"Summarized rows: {len(rows)}")
     print(f"Skipped files: {len(skipped)}")
-    print(f"CSV saved to: {args.output_csv}")
-    print(f"Markdown saved to: {args.output_md}")
+    print(f"CSV saved to: {output_csv}")
+    print(f"Markdown saved to: {output_md}")
 
     if skipped:
         print("Skipped details:")
