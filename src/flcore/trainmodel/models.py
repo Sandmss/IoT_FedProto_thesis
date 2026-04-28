@@ -24,7 +24,10 @@ class BaseHeadSplit(nn.Module):
     def __init__(self, args, cid):
         super().__init__()
 
-        raw_model = eval(args.models[cid % len(args.models)])
+        if hasattr(args, "model_builders"):
+            raw_model = args.model_builders[cid % len(args.model_builders)]()
+        else:
+            raw_model = eval(args.models[cid % len(args.models)])
         if not hasattr(raw_model, "extract_features"):
             raise NotImplementedError(
                 f"Unsupported tabular model for BaseHeadSplit: {raw_model.__class__.__name__}"
@@ -32,7 +35,9 @@ class BaseHeadSplit(nn.Module):
 
         self.base = _FeatureOnlyModel(raw_model)
 
-        if hasattr(args, 'heads'):
+        if hasattr(args, "head_builders"):
+            self.head = args.head_builders[cid % len(args.head_builders)]()
+        elif hasattr(args, 'heads'):
             self.head = eval(args.heads[cid % len(args.heads)])
         elif hasattr(raw_model, 'classifier'):
             self.head = raw_model.classifier

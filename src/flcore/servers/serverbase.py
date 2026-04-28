@@ -8,6 +8,7 @@ import random
 import shutil
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
+from sklearn import metrics
 from utils.data_utils import read_client_data
 from flcore.clients.clientbase import load_item, save_item
 
@@ -25,8 +26,12 @@ class Server(object):
         self.learning_rate = args.local_learning_rate
         self.num_clients = args.num_clients
         self.join_ratio = args.join_ratio
+        if self.num_clients <= 0:
+            raise ValueError("num_clients must be positive.")
+        if not (0 < self.join_ratio <= 1):
+            raise ValueError(f"join_ratio must be in (0, 1], got {self.join_ratio}.")
         self.random_join_ratio = args.random_join_ratio
-        self.num_join_clients = int(self.num_clients * self.join_ratio)
+        self.num_join_clients = max(1, int(self.num_clients * self.join_ratio))
         self.current_num_join_clients = self.num_join_clients
         self.algorithm = args.algorithm
         self.model_family = args.model_family
@@ -44,6 +49,7 @@ class Server(object):
         else:
             args.save_folder_name_full = f'{args.save_folder_name}/{args.dataset}/{args.algorithm}/'
         self.save_folder_name = args.save_folder_name_full
+        self.cleanup_save_dir = args.save_folder_name == 'temp'
 
         self.clients = []
         self.selected_clients = []
@@ -123,10 +129,11 @@ class Server(object):
     def send_parameters(self):
         assert (len(self.clients) > 0)
 
+        global_model = getattr(self, "global_model", None)
         for client in self.clients:
             start_time = time.time()
             
-            client.set_parameters()
+            client.set_parameters(global_model=global_model)
 
             client.send_time_cost['num_rounds'] += 1
             client.send_time_cost['total_cost'] += 2 * (time.time() - start_time)
@@ -151,16 +158,32 @@ class Server(object):
         assert (len(self.uploaded_ids) > 0)
 
         client = self.clients[self.uploaded_ids[0]]
-        global_model = load_item(client.role, 'model', client.save_folder_name)
+        client_model = getattr(client, "model", None)
+        if client_model is None:
+            client_model = load_item(
+                client.role,
+                'model',
+                client.save_folder_name,
+                model_template=client._build_model_template(),
+            )
+        global_model = copy.deepcopy(client_model)
         for param in global_model.parameters():
             param.data.zero_()
             
         for w, cid in zip(self.uploaded_weights, self.uploaded_ids):
             client = self.clients[cid]
-            client_model = load_item(client.role, 'model', client.save_folder_name)
+            client_model = getattr(client, "model", None)
+            if client_model is None:
+                client_model = load_item(
+                    client.role,
+                    'model',
+                    client.save_folder_name,
+                    model_template=client._build_model_template(),
+                )
             for server_param, client_param in zip(global_model.parameters(), client_model.parameters()):
                 server_param.data += client_param.data.clone() * w
 
+        self.global_model = global_model
         save_item(global_model, self.role, 'global_model', self.save_folder_name)
         
     def save_results(self):
@@ -196,7 +219,7 @@ class Server(object):
                 hf.create_dataset('rs_model_flops_min', data=self.rs_model_flops_min)
                 hf.create_dataset('rs_model_flops_max', data=self.rs_model_flops_max)
         
-        if 'temp' in self.save_folder_name:
+        if self.cleanup_save_dir:
             try:
                 shutil.rmtree(self.save_folder_name)
                 print("Temporary save directory deleted.")
@@ -320,68 +343,108 @@ class Server(object):
             plt.close("all")
             print(f"Skip feature t-SNE: generation failed ({exc}).")
 
-    def test_metrics(self):        
-        num_samples = []
-        tot_correct = []
-        tot_auc_macro = []
-        tot_auc_micro = []
-        tot_fnr = []
-        tot_precision = []
-        tot_recall = []
-        tot_f1 = []
-        tot_fpr = []
-        confusion_matrices = []
-        tot_latency_ms = []
+    def test_metrics(self):
+        client_rows = []
+        all_y_true = []
+        all_y_pred = []
+        all_y_prob = []
+        total_correct = 0
+        total_samples = 0
+        total_inference_time = 0.0
+
         for c in self.clients:
-            (
-                ct,
-                ns,
-                auc_macro,
-                auc_micro,
-                fnr,
-                precision,
-                recall,
-                f1,
-                fpr,
-                confusion_matrix,
-                latency_ms,
-            ) = c.test_metrics()
-            tot_correct.append(ct*1.0)
+            outputs = c.collect_test_outputs()
+            y_true = outputs["y_true"]
+            y_pred = outputs["y_pred"]
+            y_prob = outputs["y_prob"]
+            ct = int(outputs["test_acc"])
+            ns = int(outputs["test_num"])
+            inference_time = float(outputs["inference_time"])
+
+            if ns > 0:
+                auc_macro, auc_micro = c.compute_multiclass_auc(y_true, y_prob)
+                precision, recall, f1, fpr = c.compute_classification_metrics(y_true, y_pred)
+                fnr = c.compute_false_negative_rate(y_true, y_pred)
+                confusion_matrix = metrics.confusion_matrix(
+                    y_true,
+                    y_pred,
+                    labels=list(range(self.num_classes)),
+                )
+                latency_ms = 1000.0 * inference_time / ns
+                all_y_true.append(y_true)
+                all_y_pred.append(y_pred)
+                all_y_prob.append(y_prob)
+            else:
+                auc_macro = auc_micro = precision = recall = f1 = fpr = fnr = 0.0
+                confusion_matrix = np.zeros((self.num_classes, self.num_classes), dtype=np.int64)
+                latency_ms = 0.0
+
             print(
-                f'Client {c.id}: Acc: {ct*1.0/ns:.4f}, '
+                f'Client {c.id}: Acc: {ct / max(ns, 1):.4f}, '
                 f'AUC macro: {auc_macro:.4f}, AUC micro: {auc_micro:.4f}'
                 f', Precision: {precision:.4f}, Recall: {recall:.4f}, '
                 f'F1: {f1:.4f}, FNR: {fnr:.4f}, FPR: {fpr:.4f}, '
                 f'Latency: {latency_ms:.4f} ms/sample '
                 f'({int(ct)}/{ns} correct)'
             )
-            tot_auc_macro.append(auc_macro * ns)
-            tot_auc_micro.append(auc_micro * ns)
-            tot_fnr.append(fnr)
-            tot_precision.append(precision * ns)
-            tot_recall.append(recall * ns)
-            tot_f1.append(f1 * ns)
-            tot_fpr.append(fpr)
-            confusion_matrices.append(confusion_matrix)
-            tot_latency_ms.append(latency_ms * ns)
-            num_samples.append(ns)
 
-        ids = [c.id for c in self.clients]
+            client_rows.append(
+                {
+                    "id": c.id,
+                    "samples": ns,
+                    "correct": float(ct),
+                    "auc_macro": float(auc_macro),
+                    "auc_micro": float(auc_micro),
+                    "precision": float(precision),
+                    "recall": float(recall),
+                    "f1": float(f1),
+                    "fnr": float(fnr),
+                    "fpr": float(fpr),
+                    "confusion_matrix": confusion_matrix,
+                    "latency_ms": float(latency_ms),
+                }
+            )
+            total_correct += ct
+            total_samples += ns
+            total_inference_time += inference_time
 
-        return (
-            ids,
-            num_samples,
-            tot_correct,
-            tot_auc_macro,
-            tot_auc_micro,
-            tot_fnr,
-            tot_precision,
-            tot_recall,
-            tot_f1,
-            tot_fpr,
-            confusion_matrices,
-            tot_latency_ms,
-        )
+        if all_y_true:
+            global_y_true = np.concatenate(all_y_true, axis=0)
+            global_y_pred = np.concatenate(all_y_pred, axis=0)
+            global_y_prob = np.concatenate(all_y_prob, axis=0)
+            reference_client = self.clients[0]
+            global_auc_macro, global_auc_micro = reference_client.compute_multiclass_auc(global_y_true, global_y_prob)
+            global_precision, global_recall, global_f1, global_fpr = reference_client.compute_classification_metrics(global_y_true, global_y_pred)
+            global_fnr = reference_client.compute_false_negative_rate(global_y_true, global_y_pred)
+            global_confusion_matrix = metrics.confusion_matrix(
+                global_y_true,
+                global_y_pred,
+                labels=list(range(self.num_classes)),
+            )
+        else:
+            global_auc_macro = global_auc_micro = global_precision = global_recall = global_f1 = global_fpr = global_fnr = 0.0
+            global_confusion_matrix = np.zeros((self.num_classes, self.num_classes), dtype=np.int64)
+
+        global_accuracy = total_correct / max(total_samples, 1)
+        global_latency_ms = 1000.0 * total_inference_time / max(total_samples, 1)
+
+        return {
+            "clients": client_rows,
+            "global": {
+                "accuracy": float(global_accuracy),
+                "auc_macro": float(global_auc_macro),
+                "auc_micro": float(global_auc_micro),
+                "precision": float(global_precision),
+                "recall": float(global_recall),
+                "f1": float(global_f1),
+                "fnr": float(global_fnr),
+                "fpr": float(global_fpr),
+                "confusion_matrix": global_confusion_matrix,
+                "latency_ms": float(global_latency_ms),
+                "samples": int(total_samples),
+                "correct": float(total_correct),
+            },
+        }
 
     def train_metrics(self):        
         num_samples = []
@@ -398,27 +461,27 @@ class Server(object):
     # evaluate selected clients
     def evaluate(self, acc=None, loss=None):
         stats = self.test_metrics()
-        # stats_train = self.train_metrics()
+        global_stats = stats["global"]
+        client_stats = stats["clients"]
 
-        test_acc = sum(stats[2])*1.0 / sum(stats[1])
-        test_auc_macro = sum(stats[3]) * 1.0 / sum(stats[1])
-        test_auc_micro = sum(stats[4]) * 1.0 / sum(stats[1])
-        test_fnr = float(np.mean(stats[5])) if len(stats[5]) > 0 else 0.0
-        test_precision = sum(stats[6]) * 1.0 / sum(stats[1])
-        test_recall = sum(stats[7]) * 1.0 / sum(stats[1])
-        test_f1 = sum(stats[8]) * 1.0 / sum(stats[1])
-        test_fpr = float(np.mean(stats[9])) if len(stats[9]) > 0 else 0.0
-        test_confusion_matrix = np.sum(np.asarray(stats[10]), axis=0)
-        test_latency_ms = sum(stats[11]) * 1.0 / sum(stats[1])
-        # train_loss = sum(stats_train[2])*1.0 / sum(stats_train[1])
-        accs = [a / n for a, n in zip(stats[2], stats[1])]
-        aucs_macro = [a / n for a, n in zip(stats[3], stats[1])]
-        aucs_micro = [a / n for a, n in zip(stats[4], stats[1])]
-        fnrs = stats[5]
-        precisions = [a / n for a, n in zip(stats[6], stats[1])]
-        recalls = [a / n for a, n in zip(stats[7], stats[1])]
-        f1s = [a / n for a, n in zip(stats[8], stats[1])]
-        fprs = stats[9]
+        test_acc = global_stats["accuracy"]
+        test_auc_macro = global_stats["auc_macro"]
+        test_auc_micro = global_stats["auc_micro"]
+        test_fnr = global_stats["fnr"]
+        test_precision = global_stats["precision"]
+        test_recall = global_stats["recall"]
+        test_f1 = global_stats["f1"]
+        test_fpr = global_stats["fpr"]
+        test_confusion_matrix = global_stats["confusion_matrix"]
+        test_latency_ms = global_stats["latency_ms"]
+        accs = [row["correct"] / max(row["samples"], 1) for row in client_stats]
+        aucs_macro = [row["auc_macro"] for row in client_stats]
+        aucs_micro = [row["auc_micro"] for row in client_stats]
+        fnrs = [row["fnr"] for row in client_stats]
+        precisions = [row["precision"] for row in client_stats]
+        recalls = [row["recall"] for row in client_stats]
+        f1s = [row["f1"] for row in client_stats]
+        fprs = [row["fpr"] for row in client_stats]
         
         if acc == None:
             self.rs_test_acc.append(test_acc)

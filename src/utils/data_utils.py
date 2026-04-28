@@ -1,4 +1,5 @@
 import os
+import json
 
 import numpy as np
 import torch
@@ -6,8 +7,24 @@ import torch
 
 def get_partitioned_data_root(dataset_name):
     dataset_name = str(dataset_name).strip().strip("/\\") or "IoT"
+    dataset_base = os.environ.get("IOT_FEDPROTO_DATASET_BASE", "").strip()
+    if dataset_base:
+        return os.path.abspath(os.path.join(dataset_base, dataset_name))
     current_dir = os.path.dirname(os.path.abspath(__file__))
     return os.path.abspath(os.path.join(current_dir, "..", "..", "dataset", dataset_name))
+
+
+def get_client_id_mapping():
+    raw = os.environ.get("IOT_FEDPROTO_CLIENT_MAP_JSON", "").strip()
+    if not raw:
+        return None
+    try:
+        parsed = json.loads(raw)
+    except json.JSONDecodeError:
+        return None
+    if isinstance(parsed, list):
+        return [str(item) for item in parsed]
+    return None
 
 
 def _empty_client_arrays():
@@ -24,7 +41,11 @@ def read_data(dataset_name, idx, is_train=True):
     """
     partitioned_data_root = get_partitioned_data_root(dataset_name)
     split = "train" if is_train else "test"
-    client_data_path = os.path.join(partitioned_data_root, split, str(idx))
+    client_mapping = get_client_id_mapping()
+    client_id = str(idx)
+    if client_mapping is not None and 0 <= idx < len(client_mapping):
+        client_id = client_mapping[idx]
+    client_data_path = os.path.join(partitioned_data_root, split, client_id)
     x_path = os.path.join(client_data_path, "X.npy")
     y_path = os.path.join(client_data_path, "y.npy")
 

@@ -1,139 +1,173 @@
-# 基于轻量化联邦学习的物联网恶意流量检测系统
+# 基于 FedProto 的 IoT 恶意流量联邦检测系统
 
-## 项目简介
+本项目面向 IoT 恶意流量检测场景，构建了一个可运行、可复现实验结果、可进行桌面化展示的联邦学习原型系统。系统以 `FedProto` 为核心方法，同时保留 `Local` 与 `FedAvg` 作为对照方案，支持同构模型对比实验，以及当前项目正式采用的异构客户端实验配置。
 
-本项目实现了一个面向 IoT 恶意流量检测场景的轻量化联邦学习原型系统。
+当前仓库已经包含：
 
-系统以 `FedProto` 为核心联邦方案，同时保留 `Local` 和 `FedAvg` 作为对照方法，支持多种轻量化本地模型，并支持同构与部分异构实验。
+- 联邦训练主入口
+- 本地训练、FedAvg、FedProto 三类训练流程
+- MLP、CNN1D、Transformer1D 三种同构模型
+- `MLP + CNN1D` 异构客户端组合
+- 结果汇总、历史模型评估与可视化导出脚本
+- Electron 桌面端原型
 
-当前系统重点包括：
+## 项目结构
 
-- 轻量化恶意流量检测模型
-- 联邦训练流程实现
-- 多指标结果评估
-- 结果归档与总结果表汇总
-
-## 当前支持内容
-
-### 算法
-
-- `Local`
-- `FedAvg`
-- `FedProto`
-
-### 模型
-
-- `IoT_MLP`
-- `IoT_CNN1D`
-- `IoT_Transformer1D`
-- `IoT_MIX_MLP_CNN1D`
-- `IoT_MIX_MLP_CNN_TRANS`
-
-说明：
-
-- `Local`、`FedAvg`、`FedProto` 适用于同构模型实验。
-- 异构模型实验当前优先建议使用 `FedProto`。
-- 当前实现下，不建议直接将异构模型用于 `FedAvg`。
-
-## 项目目录
-
-- `src`：最终主代码目录，包含训练入口、客户端、服务端、模型实现与结果汇总脚本。
-- `dataset`：联邦划分后的客户端数据目录。
-- `data`：原始数据与处理中间产物。
-- `results`：实验日志、指标结果、图像输出和汇总表。
-- `reference`：开题报告、任务书、计划文档等参考材料。
-- `scripts`：参数统计、效率分析等辅助脚本。
-
-## 环境依赖
-
-建议 Python 版本：
-
-- `Python 3.10+`
-
-主要依赖：
-
-- `torch`
-- `numpy`
-- `scikit-learn`
-- `h5py`
-- `matplotlib`
-
-安装示例：
-
-```bash
-pip install torch numpy scikit-learn h5py matplotlib
+```text
+IoT_FedProto/
+├─ src/                  # 训练入口、联邦客户端/服务端、模型定义、评估脚本
+├─ dataset/              # 当前训练直接读取的客户端数据目录
+├─ data/                 # 原始数据与预处理阶段中间文件
+├─ results/              # 指标文件、图像、日志、汇总表
+├─ artifacts/            # 桌面端保存的模型与运行清单
+├─ scripts/              # 数据处理、参数统计、效率分析脚本
+├─ desktop-app/          # Electron 桌面端
+├─ reference/            # 设计文档与过程材料
+├─ requirements.txt
+└─ README.md
 ```
 
-## 数据说明
+## 环境要求
 
-项目当前使用已经处理好的 IoT 恶意流量特征数据，并已构建联邦学习客户端划分目录。
+- Python 3.10
+- 建议使用项目根目录下的 `.venv`
+- Node.js 18 及以上，仅桌面端需要
 
-常用数据目录包括：
+安装 Python 依赖：
+
+```bash
+pip install -r requirements.txt
+```
+
+当前 `requirements.txt` 已按项目现有环境固定版本：
+
+- `torch==2.5.1`
+- `numpy==2.0.1`
+- `scikit-learn==1.7.2`
+- `scipy==1.15.3`
+- `h5py==3.16.0`
+- `matplotlib==3.10.8`
+- `pandas==2.3.3`
+
+## 当前数据组织
+
+当前项目代码默认读取的不是多个候选数据集，而是仓库内现有的这一套客户端划分数据：
 
 - `dataset/IoT`
-- `dataset/IoT_20k_c20`
-- `dataset/IoT_20k_c20_noniid`
-- `dataset/IoT_k40_c20_noniid`
 
-运行实验前，需要确认 `main.py` 读取的数据目录与当前准备好的数据集一致。
+实际读取方式由 [src/utils/data_utils.py](/e:/IoT_FedProto/src/utils/data_utils.py:1) 决定，目录结构必须为：
 
-## 主入口
+```text
+dataset/IoT/
+├─ train/
+│  ├─ 0/
+│  │  ├─ X.npy
+│  │  └─ y.npy
+│  ├─ 1/
+│  └─ ...
+└─ test/
+   ├─ 0/
+   │  ├─ X.npy
+   │  └─ y.npy
+   ├─ 1/
+   └─ ...
+```
 
-统一主入口为 [src/main.py](C:/Users/朱世豪/Desktop/毕业设计/IoT_FedProto_thesis/src/main.py:1)。
+也就是说，当前训练代码读取的是：
 
-建议始终在 `src` 目录下执行命令，这样相对路径最稳定。
+- `dataset/IoT/train/<client_id>/X.npy`
+- `dataset/IoT/train/<client_id>/y.npy`
+- `dataset/IoT/test/<client_id>/X.npy`
+- `dataset/IoT/test/<client_id>/y.npy`
 
-## 快速开始
+不是 CSV，不是 HDF5，也不是我之前文档里写过的其他候选目录结构。
 
-### 1. 进入主代码目录
+训练前需要确认：
+
+- `train` 与 `test` 下客户端编号对应
+- 每个客户端目录下都同时存在 `X.npy` 和 `y.npy`
+- `-dataset IoT` 与实际目录名一致
+- `-nc 20` 与当前客户端划分数量一致
+
+## 训练入口
+
+统一训练入口为 [src/main.py](/e:/IoT_FedProto/src/main.py:1)。
+
+建议在 `src/` 目录中执行训练命令：
 
 ```bash
 cd src
 ```
 
-### 2. 运行同构实验
+主程序当前支持的核心参数包括：
 
-当前仓库中的三个正式脚本为同构实验入口：
+- `-dataset`：数据集名称，当前项目使用 `IoT`
+- `-algo`：`Local`、`FedAvg`、`FedProto`
+- `-model_family`：`IoT_MLP`、`IoT_CNN1D`、`IoT_Transformer1D`、`IoT_MIX_MLP_CNN1D`
+- `-nc`：客户端数量
+- `-gr`：全局轮数
+- `-ls`：本地训练轮数
+- `-lr`：本地学习率
+- `-fd`：特征维度
+- `-lbs`：batch size
+- `-nw`：DataLoader worker 数
+- `--early_stop_patience`：早停阈值
+- `--skip_figures`：跳过图像生成
 
-- [run_local.sh](C:/Users/朱世豪/Desktop/毕业设计/IoT_FedProto_thesis/src/run_local.sh:1)
-- [run_fedavg.sh](C:/Users/朱世豪/Desktop/毕业设计/IoT_FedProto_thesis/src/run_fedavg.sh:1)
-- [run_fedproto.sh](C:/Users/朱世豪/Desktop/毕业设计/IoT_FedProto_thesis/src/run_fedproto.sh:1)
+如果指定 `cuda` 但环境不可用，程序会自动回退到 `cpu`。
 
-运行示例：
+## 快速开始
+
+### 1. 同构实验
+
+当前仓库内保留的同构实验脚本为：
+
+- [src/run_local.sh](/e:/IoT_FedProto/src/run_local.sh:1)
+- [src/run_fedavg.sh](/e:/IoT_FedProto/src/run_fedavg.sh:1)
+- [src/run_fedproto.sh](/e:/IoT_FedProto/src/run_fedproto.sh:1)
+
+这三组脚本默认基于 `IoT_MLP` 运行：
 
 ```bash
+cd src
 bash run_local.sh
 bash run_fedavg.sh
 bash run_fedproto.sh
 ```
 
-### 3. 运行异构实验
+### 2. 异构实验
 
-异构 `MLP + CNN1D` 的 `FedProto` 入口脚本：
+当前项目正式保留的异构实验脚本为：
 
-- [run_fedproto_mix_mlp_cnn1d.sh](C:/Users/朱世豪/Desktop/毕业设计/IoT_FedProto_thesis/src/run_fedproto_mix_mlp_cnn1d.sh:1)
+- [src/run_fedproto_mix_mlp_cnn1d.sh](/e:/IoT_FedProto/src/run_fedproto_mix_mlp_cnn1d.sh:1)
 
 运行方式：
 
 ```bash
+cd src
 bash run_fedproto_mix_mlp_cnn1d.sh
 ```
 
-## 手动运行命令示例
+该脚本对应当前项目的异构展示主方案：
 
-### 同构 MLP + FedProto
+- 算法：`FedProto`
+- 模型组合：`IoT_MIX_MLP_CNN1D`
+
+## 常用命令
+
+### MLP + FedProto
 
 ```bash
 python -u main.py -t 1 -lr 0.01 -jr 1 -lbs 10 -ls 1 -gr 1000 -eg 1 -nw 4 -nc 20 -nb 15 -dataset IoT -model_family IoT_MLP --input_dim 77 -fd 512 -did 0 -algo FedProto -lam 1.0 --proto_eval_mode classifier -se 100 -mart 100 -ab True --early_stop_patience 100
 ```
 
-### 同构 CNN1D + FedProto
+### CNN1D + FedProto
 
 ```bash
 python -u main.py -t 1 -lr 0.01 -jr 1 -lbs 10 -ls 1 -gr 1000 -eg 1 -nw 4 -nc 20 -nb 15 -dataset IoT -model_family IoT_CNN1D --input_dim 77 -fd 512 -did 0 -algo FedProto -lam 1.0 --proto_eval_mode classifier -se 100 -mart 100 -ab True --early_stop_patience 100
 ```
 
-### 同构 Transformer + FedProto
+### Transformer1D + FedProto
 
 ```bash
 python -u main.py -t 1 -lr 0.01 -jr 1 -lbs 10 -ls 1 -gr 1000 -eg 1 -nw 4 -nc 20 -nb 15 -dataset IoT -model_family IoT_Transformer1D --input_dim 77 -fd 512 -did 0 -algo FedProto -lam 1.0 --proto_eval_mode classifier -se 100 -mart 100 -ab True --early_stop_patience 100
@@ -145,140 +179,130 @@ python -u main.py -t 1 -lr 0.01 -jr 1 -lbs 10 -ls 1 -gr 1000 -eg 1 -nw 4 -nc 20 
 python -u main.py -t 1 -lr 0.01 -jr 1 -lbs 10 -ls 1 -gr 1000 -eg 1 -nw 4 -nc 20 -nb 15 -dataset IoT -model_family IoT_MIX_MLP_CNN1D --input_dim 77 -fd 512 -did 0 -algo FedProto -lam 1.0 --proto_eval_mode classifier -se 100 -mart 100 -ab True --early_stop_patience 100
 ```
 
-## PowerShell 运行方式
+### PowerShell 示例
 
 ```powershell
-cd src
+Set-Location .\src
 python -u main.py -t 1 -lr 0.01 -jr 1 -lbs 10 -ls 1 -gr 1000 -eg 1 -nw 4 -nc 20 -nb 15 -dataset IoT -model_family IoT_MIX_MLP_CNN1D --input_dim 77 -fd 512 -did 0 -algo FedProto -lam 1.0 --proto_eval_mode classifier -se 100 -mart 100 -ab True --early_stop_patience 100
 ```
 
-## 常用参数说明
+## 结果输出
 
-- `-model_family`：选择模型家族，例如 `IoT_MLP`、`IoT_CNN1D`、`IoT_Transformer1D`。
-- `-algo`：选择训练算法，例如 `Local`、`FedAvg`、`FedProto`。
-- `-fd`：特征表示维度，也作为原型维度。
-- `-gr`：全局轮数。
-- `-ls`：本地训练轮数。
-- `-nc`：客户端数量。
-- `--early_stop_patience`：早停容忍轮数。
-- `--skip_figures`：跳过图片生成，仅在需要节省时间时手动开启。
+训练结果当前统一写入 `results/`，按模型类别与算法分类组织。现有目录结构包括：
 
-## 结果目录说明
+- `results/MLP/Local`
+- `results/MLP/FedAvg`
+- `results/MLP/FedProto`
+- `results/CNN1D/Local`
+- `results/CNN1D/FedAvg`
+- `results/CNN1D/FedProto`
+- `results/Transformer/Local`
+- `results/Transformer/FedAvg`
+- `results/Transformer/FedProto`
+- `results/heterogeneous_models/FedProto`
 
-当前结果目录按“模型类别 / 算法 / 文件类型”统一整理。
+标准子目录通常包括：
 
-### 标准目录结构
+- `metrics/`：`.h5` 指标文件
+- `figures/`：t-SNE 与原型分布图
+- `logs/`：训练日志
 
-- `results/MLP模型/Local/`
-- `results/MLP模型/FedAvg/`
-- `results/MLP模型/FedProto/`
-- `results/CNN1D模型/Local/`
-- `results/CNN1D模型/FedAvg/`
-- `results/CNN1D模型/FedProto/`
-- `results/transformer模型/Local/`
-- `results/transformer模型/FedAvg/`
-- `results/transformer模型/FedProto/`
-- `results/异构模型/FedProto/`
-
-每个算法目录下进一步分为：
-
-- `logs/`：保存 `.out` 日志文件。
-- `metrics/`：保存 `.h5` 指标结果文件。
-- `figures/`：保存 t-SNE 图、原型分布图等图片。
-
-### 结果文件命名
-
-新的标准 `.h5` 文件命名格式为：
+结果文件命名格式为：
 
 ```text
 {dataset}_{algorithm}_{model_family}_{goal}_{run_idx}.h5
 ```
 
-例如：
+当前仓库中已经存在的命名示例包括：
 
-```text
-IoT_FedAvg_IoT_MLP_test_0.h5
-IoT_FedProto_IoT_MLP_smoke_proto_0.h5
-```
+- `IoT_FedAvg_IoT_MLP_test_0.h5`
+- `IoT_FedProto_IoT_CNN1D_test_0.h5`
+- `IoT_FedProto_IoT_MIX_MLP_CNN1D_heterogeneous_demo_0.h5`
 
-## 总结果表使用命令
+## 结果汇总
 
-训练完成后，可以运行统一汇总脚本扫描 `results/**/*.h5`，自动生成总结果表。
-
-在项目根目录运行：
+在项目根目录执行：
 
 ```bash
 python src/summarize_results.py
 ```
 
-生成文件：
+会生成：
 
 - `results/summary/experiment_summary.csv`
 - `results/summary/experiment_summary.md`
 
-该脚本会：
+汇总脚本会扫描 `results/` 下的 `.h5` 文件，并提取：
 
-- 兼容扫描旧结果目录和新标准目录。
-- 提取 `Acc`、`AUC Macro`、`AUC Micro`、`Precision`、`Recall`、`F1`、`FNR`、`FPR`。
-- 汇总推理延迟、通信量、参数量、模型大小和 FLOPs。
-- 输出适合后续论文整理的统一结果表。
+- Accuracy
+- AUC Macro
+- AUC Micro
+- Precision
+- Recall
+- F1
+- FNR
+- FPR
+- 推理时延
+- 通信量
+- 参数量与 FLOPs
 
-## 结果输出说明
+## 已保存模型评估
 
-训练结束后，系统会输出：
+[src/evaluate_saved_model.py](/e:/IoT_FedProto/src/evaluate_saved_model.py:1) 用于重新加载历史训练模型并在测试客户端上执行评估。该能力目前主要由桌面端调用，但脚本本身已经独立可用。
 
-- `.out` 日志文件
-- `.h5` 结果文件
-- `.png` 图片文件
-- 汇总后的 `.csv` 和 `.md` 总结果表
+## 数据处理与分析脚本
 
-## 轻量化与效率分析脚本
+### 数据预处理
 
-### 模型参数量统计
+```bash
+python scripts/data_preprocess.py
+```
+
+### 数据重打包
+
+```bash
+python scripts/repack_to_dataset.py
+```
+
+### 模型参数统计
 
 ```bash
 python scripts/report_iot_model_params.py
 ```
 
-### 联邦效率统计
+### 联邦效率分析
 
 ```bash
 python scripts/report_iot_efficiency.py --model-family IoT_CNN1D
-```
-
-异构统计示例：
-
-```bash
 python scripts/report_iot_efficiency.py --model-family IoT_MIX_MLP_CNN1D
 ```
 
-## 当前系统建议实验结构
+## 当前实验口径
 
-### 主实验
+当前项目代码与结果目录最贴合的实验范围是：
 
-- 同构 `MLP`：`Local / FedAvg / FedProto`
-- 同构 `CNN1D`：`Local / FedAvg / FedProto`
-- 同构 `Transformer`：`Local / FedAvg / FedProto`
+- 同构 `IoT_MLP`：`Local / FedAvg / FedProto`
+- 同构 `IoT_CNN1D`：`Local / FedAvg / FedProto`
+- 同构 `IoT_Transformer1D`：`Local / FedAvg / FedProto`
+- 异构 `IoT_MIX_MLP_CNN1D`：`FedProto`
 
-### 扩展实验
+## 桌面端
 
-- 异构 `MLP + CNN1D`：`FedProto`
+桌面端说明见 [desktop-app/README.md](/e:/IoT_FedProto/desktop-app/README.md:1)。
 
-## 注意事项
+桌面端当前可以完成：
 
-- 建议始终在 `src` 目录运行主程序，避免相对路径问题。
-- `FedAvg` 当前仅用于同构实验。
-- 正式脚本默认会生成图片；若只想快速验证，可手动添加 `--skip_figures`。
-- 如果 GPU 不可用，程序会自动切换到 CPU。
+- 扫描数据集目录
+- 选择训练客户端
+- 启动联邦训练
+- 实时显示训练日志
+- 保存模型运行记录
+- 加载历史模型并执行测试评估
+- 显示实验图像与汇总结果
 
-## 当前系统定位
+## 说明
 
-该项目当前已经具备：
-
-- 轻量化本地检测模型
-- 联邦原型聚合训练框架
-- 同构与异构客户端实验入口
-- 多指标结果评估与效率分析能力
-- 统一结果目录与总结果表生成能力
-
-因此，它已经具备“轻量化联邦学习恶意流量检测原型系统”的核心结构，后续工作主要是继续整理结果、补充展示材料并完成最终论文交付。
+- 当前 README 以仓库内现有代码、现有数据目录和现有结果目录为准
+- 当前默认数据集是 `dataset/IoT`
+- 当前训练读取的最小数据单元是每个客户端目录下的 `X.npy` 与 `y.npy`
+- 如果后续你调整了数据目录结构，`src/utils/data_utils.py` 和桌面端的数据扫描逻辑也需要同步修改

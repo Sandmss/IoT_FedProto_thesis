@@ -42,6 +42,10 @@ class FedProto(Server):
         self.set_global_protos_to_clients()
         if self.global_protos is not None:
             self.evaluate()
+            if self.rs_test_acc:
+                self.best_test_acc = (self.rs_test_acc[-1], 0)
+                print("Saving initial prototype checkpoint at round 0...")
+                self.save_best_checkpoint()
         print("----------------------------------------------------------------")
 
         for i in range(1, self.global_rounds + 1):

@@ -23,6 +23,11 @@ class Local(Server):
     def train(self):
         print("\n------------- Local epoch: 0 (initial evaluation) -------------")
         self.evaluate()
+        if self.rs_test_acc:
+            self.best_test_acc = (self.rs_test_acc[-1], 0)
+            print("Saving initial local checkpoints at epoch 0...")
+            for client in self.clients:
+                client.save_best_model()
         print("---------------------------------------------------------------")
 
         start_time = time.time()

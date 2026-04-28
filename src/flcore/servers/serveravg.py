@@ -36,6 +36,10 @@ class FedAvg(Server):
         print("\n------------- Global round: 0 (initial evaluation) -------------")
         self.set_global_model_to_clients()
         self.evaluate()
+        if self.rs_test_acc:
+            self.best_test_acc = (self.rs_test_acc[-1], 0)
+            print("Saving initial global checkpoint at round 0...")
+            self.save_best_checkpoint()
         print("----------------------------------------------------------------")
 
         for i in range(1, self.global_rounds + 1):

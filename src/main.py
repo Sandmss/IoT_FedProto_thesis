@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+from functools import partial
 import logging
 import os
 import sys
@@ -9,11 +10,13 @@ import warnings
 
 import numpy as np
 import torch
+import torch.nn as nn
 
 from flcore.clients.clientbase import debug_log
 from flcore.servers.serveravg import FedAvg
 from flcore.servers.serverlocal import Local
 from flcore.servers.serverproto import FedProto
+from flcore.trainmodel.models import CNN1D_IoT, MLP_IoT, Transformer1D_IoT
 from utils.result_utils import average_data
 
 
@@ -86,11 +89,19 @@ def resolve_models(args):
             f"MLP_IoT(dim_in={args.input_dim}, dim_hidden=128, dim_out={args.feature_dim}, num_classes={args.num_classes})",
         ]
         args.heads = [f"nn.Linear({args.feature_dim}, {args.num_classes})"]
+        args.model_builders = [
+            partial(MLP_IoT, dim_in=args.input_dim, dim_hidden=128, dim_out=args.feature_dim, num_classes=args.num_classes),
+        ]
+        args.head_builders = [partial(nn.Linear, args.feature_dim, args.num_classes)]
     elif args.model_family == "IoT_CNN1D":
         args.models = [
             f"CNN1D_IoT(dim_in={args.input_dim}, dim_out={args.feature_dim}, num_classes={args.num_classes})",
         ]
         args.heads = [f"nn.Linear({args.feature_dim}, {args.num_classes})"]
+        args.model_builders = [
+            partial(CNN1D_IoT, dim_in=args.input_dim, dim_out=args.feature_dim, num_classes=args.num_classes),
+        ]
+        args.head_builders = [partial(nn.Linear, args.feature_dim, args.num_classes)]
     elif args.model_family == "IoT_Transformer1D":
         args.models = [
             (
@@ -102,6 +113,19 @@ def resolve_models(args):
             ),
         ]
         args.heads = [f"nn.Linear({args.feature_dim}, {args.num_classes})"]
+        args.model_builders = [
+            partial(
+                Transformer1D_IoT,
+                dim_in=args.input_dim,
+                dim_out=args.feature_dim,
+                num_classes=args.num_classes,
+                d_model=args.transformer_d_model,
+                num_heads=args.transformer_num_heads,
+                num_layers=args.transformer_num_layers,
+                dropout=args.transformer_dropout,
+            ),
+        ]
+        args.head_builders = [partial(nn.Linear, args.feature_dim, args.num_classes)]
     elif args.model_family == "IoT_MIX_MLP_CNN1D":
         args.models = [
             f"MLP_IoT(dim_in={args.input_dim}, dim_hidden=128, dim_out={args.feature_dim}, num_classes={args.num_classes})",
@@ -110,6 +134,14 @@ def resolve_models(args):
         args.heads = [
             f"nn.Linear({args.feature_dim}, {args.num_classes})",
             f"nn.Linear({args.feature_dim}, {args.num_classes})",
+        ]
+        args.model_builders = [
+            partial(MLP_IoT, dim_in=args.input_dim, dim_hidden=128, dim_out=args.feature_dim, num_classes=args.num_classes),
+            partial(CNN1D_IoT, dim_in=args.input_dim, dim_out=args.feature_dim, num_classes=args.num_classes),
+        ]
+        args.head_builders = [
+            partial(nn.Linear, args.feature_dim, args.num_classes),
+            partial(nn.Linear, args.feature_dim, args.num_classes),
         ]
     elif args.model_family == "IoT_MIX_MLP_CNN_TRANS":
         args.models = [
@@ -127,6 +159,25 @@ def resolve_models(args):
             f"nn.Linear({args.feature_dim}, {args.num_classes})",
             f"nn.Linear({args.feature_dim}, {args.num_classes})",
             f"nn.Linear({args.feature_dim}, {args.num_classes})",
+        ]
+        args.model_builders = [
+            partial(MLP_IoT, dim_in=args.input_dim, dim_hidden=128, dim_out=args.feature_dim, num_classes=args.num_classes),
+            partial(CNN1D_IoT, dim_in=args.input_dim, dim_out=args.feature_dim, num_classes=args.num_classes),
+            partial(
+                Transformer1D_IoT,
+                dim_in=args.input_dim,
+                dim_out=args.feature_dim,
+                num_classes=args.num_classes,
+                d_model=args.transformer_d_model,
+                num_heads=args.transformer_num_heads,
+                num_layers=args.transformer_num_layers,
+                dropout=args.transformer_dropout,
+            ),
+        ]
+        args.head_builders = [
+            partial(nn.Linear, args.feature_dim, args.num_classes),
+            partial(nn.Linear, args.feature_dim, args.num_classes),
+            partial(nn.Linear, args.feature_dim, args.num_classes),
         ]
     else:
         raise NotImplementedError(

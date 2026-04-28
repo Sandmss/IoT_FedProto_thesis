@@ -8,6 +8,9 @@ import type {
   ProjectContext,
   ResultDetail,
   ResultSummaryRow,
+  SavedModelInfo,
+  TestEvaluationRequest,
+  TestEvaluationResult,
   TrainingConfig,
   TrainingEvent,
   TrainingStatus,
@@ -15,6 +18,7 @@ import type {
 
 const desktopRoot = path.resolve(__dirname, "..", "..");
 const thesisRoot = path.resolve(desktopRoot, "..");
+const savedModelRoot = path.join(thesisRoot, "artifacts", "models");
 const defaultPythonExecutable =
   process.platform === "win32"
     ? path.join(thesisRoot, ".venv", "python.exe")
@@ -23,6 +27,8 @@ const defaultPythonExecutable =
 let mainWindow: BrowserWindow | null = null;
 let trainingProcess: ChildProcessByStdio<null, Readable, Readable> | null = null;
 let trainingStopRequested = false;
+let activeTrainingRunRoot: string | null = null;
+let activeTrainingManifestPath: string | null = null;
 
 const DEFAULT_CONTEXT: ProjectContext = {
   projectRoot: thesisRoot,
@@ -40,7 +46,7 @@ function listSubdirs(dirPath: string): string[] {
     .readdirSync(dirPath, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
-    .sort((left, right) => left.localeCompare(right, "zh-CN"));
+    .sort((left, right) => left.localeCompare(right, "zh-CN", { numeric: true, sensitivity: "base" }));
 }
 
 function readDatasetCatalog(datasetRoot: string): DatasetInfo[] {
@@ -144,6 +150,238 @@ function readSummaryRows(resultsRoot: string): ResultSummaryRow[] {
   return parseCsv(fs.readFileSync(summaryPath, "utf8"));
 }
 
+function ensureSavedModelRoot(): void {
+  fs.mkdirSync(savedModelRoot, { recursive: true });
+}
+
+function buildRunId(config: TrainingConfig): string {
+  const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+  return `${stamp}_${config.dataset}_${config.algorithm}_${config.modelFamily}`;
+}
+
+function resultCategoryForModel(modelFamily: string): string {
+  if (modelFamily === "IoT_MLP") {
+    return "MLP";
+  }
+  if (modelFamily === "IoT_CNN1D") {
+    return "CNN1D";
+  }
+  if (modelFamily === "IoT_Transformer1D") {
+    return "Transformer";
+  }
+  return "heterogeneous_models";
+}
+
+function expectedResultRelativePath(config: TrainingConfig): string {
+  return [
+    resultCategoryForModel(config.modelFamily),
+    config.algorithm,
+    "metrics",
+    `${config.dataset}_${config.algorithm}_${config.modelFamily}_${config.goal}_${config.times}.h5`,
+  ].join("/");
+}
+
+function writeSavedModelManifest(runRoot: string, manifest: Omit<SavedModelInfo, "id"> & { id?: string }): void {
+  ensureSavedModelRoot();
+  const manifestPath = path.join(runRoot, "manifest.json");
+  fs.mkdirSync(runRoot, { recursive: true });
+  fs.writeFileSync(
+    manifestPath,
+    JSON.stringify(
+      {
+        ...manifest,
+        id: manifest.id ?? path.basename(runRoot),
+      },
+      null,
+      2,
+    ),
+    "utf8",
+  );
+}
+
+function readSavedModelManifest(manifestPath: string): SavedModelInfo | null {
+  try {
+    const raw = fs.readFileSync(manifestPath, "utf8");
+    return JSON.parse(raw) as SavedModelInfo;
+  } catch {
+    return null;
+  }
+}
+
+function listSavedModels(): SavedModelInfo[] {
+  ensureSavedModelRoot();
+  return fs
+    .readdirSync(savedModelRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => {
+      const manifestPath = path.join(savedModelRoot, entry.name, "manifest.json");
+      const manifest = readSavedModelManifest(manifestPath);
+      if (!manifest) {
+        return null;
+      }
+      const normalized = normalizeSavedModelManifest(manifest, manifestPath, DEFAULT_CONTEXT.resultsRoot);
+      return normalized;
+    })
+    .filter((entry): entry is SavedModelInfo => Boolean(entry))
+    .sort((left, right) => right.createdAt.localeCompare(left.createdAt, "zh-CN"));
+}
+
+function buildResultFileCandidates(manifest: SavedModelInfo): string[] {
+  const config = manifest.config;
+  const dataset = config?.dataset || manifest.dataset;
+  const algorithm = config?.algorithm || manifest.algorithm;
+  const modelFamily = config?.modelFamily || manifest.modelFamily;
+  const goal = config?.goal || manifest.goal;
+  const category = resultCategoryForModel(modelFamily);
+  const metricsDir = path.join(DEFAULT_CONTEXT.resultsRoot, category, algorithm, "metrics");
+  if (!fs.existsSync(metricsDir)) {
+    return [];
+  }
+
+  const prefix = `${dataset}_${algorithm}_${modelFamily}_${goal}_`;
+  return fs
+    .readdirSync(metricsDir, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && entry.name.startsWith(prefix) && entry.name.endsWith(".h5"))
+    .map((entry) => path.posix.join(category, algorithm, "metrics", entry.name))
+    .sort((left, right) => right.localeCompare(left, "zh-CN", { numeric: true, sensitivity: "base" }));
+}
+
+function normalizeSavedModelManifest(
+  manifest: SavedModelInfo,
+  manifestPath: string,
+  resultsRoot: string,
+): SavedModelInfo {
+  const saveRootResultPath = manifest.resultFile ? path.join(manifest.saveRoot, manifest.resultFile) : "";
+  const globalResultPath = manifest.resultFile ? path.join(resultsRoot, manifest.resultFile) : "";
+
+  if (
+    manifest.resultFile &&
+    (fs.existsSync(saveRootResultPath) || fs.existsSync(globalResultPath))
+  ) {
+    return manifest;
+  }
+
+  const candidates = buildResultFileCandidates(manifest);
+  if (!candidates.length) {
+    return manifest;
+  }
+
+  const nextManifest: SavedModelInfo = {
+    ...manifest,
+    resultFile: candidates[0],
+  };
+  fs.writeFileSync(manifestPath, JSON.stringify(nextManifest, null, 2), "utf8");
+  return nextManifest;
+}
+
+function deleteSavedModelById(modelId: string): boolean {
+  const targetPath = path.join(savedModelRoot, modelId);
+  if (!fs.existsSync(targetPath)) {
+    return false;
+  }
+  if (activeTrainingRunRoot && path.resolve(activeTrainingRunRoot) === path.resolve(targetPath)) {
+    throw new Error("当前训练任务仍在运行，不能删除对应模型记录。");
+  }
+  fs.rmSync(targetPath, { recursive: true, force: true });
+  return true;
+}
+
+async function getSavedModelResultDetail(modelId: string, context: ProjectContext): Promise<ResultDetail | null> {
+  const manifest = listSavedModels().find((item) => item.id === modelId);
+  if (!manifest?.resultFile) {
+    return null;
+  }
+
+  const attempts: Array<{ root: string; relativePath: string }> = [
+    { root: manifest.saveRoot, relativePath: manifest.resultFile },
+    { root: context.resultsRoot, relativePath: manifest.resultFile },
+  ];
+
+  const basename = path.basename(manifest.resultFile);
+  if (basename !== manifest.resultFile) {
+    attempts.push({ root: manifest.saveRoot, relativePath: path.posix.join("metrics", basename) });
+    attempts.push({ root: context.resultsRoot, relativePath: path.posix.join("metrics", basename) });
+  }
+
+  for (const attempt of attempts) {
+    try {
+      return await runJsonPython<ResultDetail>(
+        "export_result_payload.py",
+        ["--results_root", attempt.root, "--relative_path", attempt.relativePath],
+        context,
+      );
+    } catch {
+      continue;
+    }
+  }
+
+  return null;
+}
+
+function copyFileIfExists(sourcePath: string, targetPath: string): void {
+  if (!fs.existsSync(sourcePath)) {
+    return;
+  }
+  fs.mkdirSync(path.dirname(targetPath), { recursive: true });
+  fs.copyFileSync(sourcePath, targetPath);
+}
+
+function syncRunArtifactsFromResults(context: ProjectContext, manifest: SavedModelInfo): SavedModelInfo {
+  if (!manifest.resultFile) {
+    return manifest;
+  }
+
+  const sourceMetricsPath = path.join(context.resultsRoot, manifest.resultFile);
+  if (!fs.existsSync(sourceMetricsPath)) {
+    return manifest;
+  }
+
+  const metricFileName = path.basename(sourceMetricsPath);
+  const metricStem = path.parse(metricFileName).name;
+  const sourceMetricsDir = path.dirname(sourceMetricsPath);
+  const sourceAlgorithmDir = path.dirname(sourceMetricsDir);
+  const sourceFiguresDir = path.join(sourceAlgorithmDir, "figures");
+  const sourceLogsDir = path.join(sourceAlgorithmDir, "logs");
+
+  const targetMetricsDir = path.join(manifest.saveRoot, "metrics");
+  const targetFiguresDir = path.join(manifest.saveRoot, "figures");
+  const targetLogsDir = path.join(manifest.saveRoot, "logs");
+
+  copyFileIfExists(sourceMetricsPath, path.join(targetMetricsDir, metricFileName));
+
+  if (fs.existsSync(sourceFiguresDir)) {
+    for (const entry of fs.readdirSync(sourceFiguresDir, { withFileTypes: true })) {
+      if (!entry.isFile() || !entry.name.startsWith(metricStem) || !entry.name.endsWith(".png")) {
+        continue;
+      }
+      copyFileIfExists(
+        path.join(sourceFiguresDir, entry.name),
+        path.join(targetFiguresDir, entry.name),
+      );
+    }
+  }
+
+  if (fs.existsSync(sourceLogsDir)) {
+    const logCandidates = fs
+      .readdirSync(sourceLogsDir, { withFileTypes: true })
+      .filter((entry) => entry.isFile() && entry.name.endsWith(".out"))
+      .map((entry) => ({
+        name: entry.name,
+        fullPath: path.join(sourceLogsDir, entry.name),
+        mtimeMs: fs.statSync(path.join(sourceLogsDir, entry.name)).mtimeMs,
+      }))
+      .sort((left, right) => right.mtimeMs - left.mtimeMs);
+    if (logCandidates[0]) {
+      copyFileIfExists(logCandidates[0].fullPath, path.join(targetLogsDir, logCandidates[0].name));
+    }
+  }
+
+  return {
+    ...manifest,
+    resultFile: `metrics/${metricFileName}`,
+  };
+}
+
 function buildTrainingArgs(config: TrainingConfig): string[] {
   const args = [
     "main.py",
@@ -189,6 +427,8 @@ function buildTrainingArgs(config: TrainingConfig): string[] {
     String(config.evalGap),
     "-lam",
     String(config.lamda),
+    "-sfn",
+    config.saveFolderRoot || "temp",
   ];
 
   if (config.skipFigures) {
@@ -226,7 +466,12 @@ function timestamp(): string {
   return new Date().toISOString();
 }
 
-function runJsonPython<T>(scriptName: string, args: string[], context: ProjectContext): Promise<T> {
+function runJsonPython<T>(
+  scriptName: string,
+  args: string[],
+  context: ProjectContext,
+  extraEnv?: Record<string, string>,
+): Promise<T> {
   return new Promise((resolve, reject) => {
     const child = spawn(context.pythonExecutable, [scriptName, ...args], {
       cwd: context.srcRoot,
@@ -234,6 +479,7 @@ function runJsonPython<T>(scriptName: string, args: string[], context: ProjectCo
       env: {
         ...process.env,
         PYTHONIOENCODING: "utf-8",
+        ...extraEnv,
       },
     });
 
@@ -337,12 +583,102 @@ app.whenReady().then(() => {
     };
   });
 
+  ipcMain.handle("model:list-saved", () => listSavedModels());
+  ipcMain.handle("model:delete-saved", (_event, modelId: string) => deleteSavedModelById(modelId));
+  ipcMain.handle("model:result-detail", (_event, modelId: string, context: ProjectContext) =>
+    getSavedModelResultDetail(modelId, context),
+  );
+  ipcMain.handle("model:evaluate", async (_event, context: ProjectContext, request: TestEvaluationRequest) => {
+    const manifest = listSavedModels().find((item) => item.id === request.modelId);
+    if (!manifest) {
+      throw new Error("Saved model not found.");
+    }
+    if (request.testClients.length !== manifest.trainingClients.length) {
+      throw new Error("测试客户端数量需要与训练客户端数量一致。");
+    }
+
+    const payload = await runJsonPython<TestEvaluationResult>(
+      "evaluate_saved_model.py",
+      [
+        "--dataset",
+        request.dataset,
+        "--algorithm",
+        manifest.algorithm,
+        "--model_family",
+        manifest.modelFamily,
+        "--save_root",
+        manifest.saveRoot,
+        "--num_clients",
+        String(manifest.trainingClients.length),
+        "--goal",
+        manifest.goal,
+        "--input_dim",
+        String((manifest as SavedModelInfo & { config?: TrainingConfig }).config?.inputDim ?? 77),
+        "--num_classes",
+        String((manifest as SavedModelInfo & { config?: TrainingConfig }).config?.numClasses ?? 15),
+        "--normal_class",
+        String((manifest as SavedModelInfo & { config?: TrainingConfig }).config?.normalClass ?? 0),
+        "--batch_size",
+        String((manifest as SavedModelInfo & { config?: TrainingConfig }).config?.batchSize ?? 10),
+        "--num_workers",
+        String((manifest as SavedModelInfo & { config?: TrainingConfig }).config?.numWorkers ?? 0),
+        "--feature_dim",
+        String((manifest as SavedModelInfo & { config?: TrainingConfig }).config?.featureDim ?? 64),
+        "--lamda",
+        String((manifest as SavedModelInfo & { config?: TrainingConfig }).config?.lamda ?? 1),
+        "--transformer_d_model",
+        String((manifest as SavedModelInfo & { config?: TrainingConfig }).config?.transformerDModel ?? 64),
+        "--transformer_num_heads",
+        String((manifest as SavedModelInfo & { config?: TrainingConfig }).config?.transformerNumHeads ?? 4),
+        "--transformer_num_layers",
+        String((manifest as SavedModelInfo & { config?: TrainingConfig }).config?.transformerNumLayers ?? 2),
+        "--transformer_dropout",
+        String((manifest as SavedModelInfo & { config?: TrainingConfig }).config?.transformerDropout ?? 0.2),
+      ],
+      {
+        ...context,
+        datasetRoot: context.datasetRoot,
+      },
+      {
+        IOT_FEDPROTO_DATASET_BASE: context.datasetRoot,
+        IOT_FEDPROTO_CLIENT_MAP_JSON: JSON.stringify(request.testClients),
+      },
+    );
+    return payload;
+  });
+
   ipcMain.handle("training:start", (_event, context: ProjectContext, config: TrainingConfig) => {
     if (trainingProcess) {
       throw new Error("A training job is already running.");
     }
 
-    const args = buildTrainingArgs(config);
+    ensureSavedModelRoot();
+    const runId = buildRunId(config);
+    const runRoot = path.join(savedModelRoot, runId);
+    const trainingConfig: TrainingConfig = {
+      ...config,
+      saveFolderRoot: runRoot,
+    };
+    const saveFolder = path.join(runRoot, trainingConfig.dataset, trainingConfig.algorithm);
+    const manifest = {
+      id: runId,
+      label: `${trainingConfig.algorithm} / ${trainingConfig.modelFamily}`,
+      dataset: trainingConfig.dataset,
+      sourceDataset: trainingConfig.dataset,
+      algorithm: trainingConfig.algorithm,
+      modelFamily: trainingConfig.modelFamily,
+      trainingClients: trainingConfig.selectedClients || [],
+      saveRoot: runRoot,
+      saveFolder,
+      createdAt: new Date().toISOString(),
+      status: "running" as const,
+      goal: trainingConfig.goal,
+      resultFile: expectedResultRelativePath(trainingConfig),
+      config: trainingConfig,
+    };
+    writeSavedModelManifest(runRoot, manifest);
+
+    const args = buildTrainingArgs(trainingConfig);
     trainingStopRequested = false;
     const child = spawn(context.pythonExecutable, args, {
       cwd: context.srcRoot,
@@ -350,9 +686,13 @@ app.whenReady().then(() => {
       env: {
         ...process.env,
         PYTHONIOENCODING: "utf-8",
+        IOT_FEDPROTO_DATASET_BASE: context.datasetRoot,
+        IOT_FEDPROTO_CLIENT_MAP_JSON: JSON.stringify(trainingConfig.selectedClients || []),
       },
     });
     trainingProcess = child;
+    activeTrainingRunRoot = runRoot;
+    activeTrainingManifestPath = path.join(runRoot, "manifest.json");
 
     emitTrainingEvent({
       type: "status",
@@ -385,6 +725,17 @@ app.whenReady().then(() => {
 
     child.on("close", (code) => {
       const status: TrainingStatus = trainingStopRequested ? "stopped" : code === 0 ? "success" : "failed";
+      if (activeTrainingManifestPath && fs.existsSync(activeTrainingManifestPath)) {
+        const currentManifest = readSavedModelManifest(activeTrainingManifestPath);
+        if (currentManifest) {
+          const nextManifest =
+            code === 0 ? syncRunArtifactsFromResults(context, currentManifest) : currentManifest;
+          writeSavedModelManifest(activeTrainingRunRoot!, {
+            ...nextManifest,
+            status: trainingStopRequested ? "stopped" : code === 0 ? "ready" : "failed",
+          });
+        }
+      }
       emitTrainingEvent({
         type: "status",
         status,
@@ -397,6 +748,8 @@ app.whenReady().then(() => {
       });
       trainingStopRequested = false;
       trainingProcess = null;
+      activeTrainingRunRoot = null;
+      activeTrainingManifestPath = null;
     });
 
     return {

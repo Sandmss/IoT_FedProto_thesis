@@ -21,6 +21,8 @@ export interface TrainingConfig {
   dataset: string;
   algorithm: string;
   modelFamily: string;
+  selectedClients?: string[];
+  saveFolderRoot?: string;
   numClients: number;
   globalRounds: number;
   localEpochs: number;
@@ -86,4 +88,48 @@ export interface TrainingEvent {
   status?: TrainingStatus;
   message: string;
   timestamp: string;
+}
+
+export interface SavedModelInfo {
+  id: string;
+  label: string;
+  dataset: string;
+  sourceDataset: string;
+  algorithm: string;
+  modelFamily: string;
+  trainingClients: string[];
+  saveRoot: string;
+  saveFolder: string;
+  createdAt: string;
+  status: "running" | "ready" | "failed" | "stopped";
+  goal: string;
+  resultFile?: string;
+  config?: TrainingConfig;
+}
+
+export interface TestEvaluationRequest {
+  modelId: string;
+  dataset: string;
+  testClients: string[];
+}
+
+export interface TestEvaluationResult {
+  modelLabel: string;
+  dataset: string;
+  testClients: string[];
+  accuracy: number;
+  aucMacro: number;
+  aucMicro: number;
+  precision: number;
+  recall: number;
+  f1: number;
+  fnr: number;
+  fpr: number;
+  inferenceLatencyMs: number;
+  confusionMatrix: number[][];
+  perClient: Array<{
+    clientId: string;
+    accuracy: number;
+    samples: number;
+  }>;
 }

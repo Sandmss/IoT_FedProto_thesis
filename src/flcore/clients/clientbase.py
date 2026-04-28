@@ -50,6 +50,7 @@ class Client(object):
         # 设置随机种子以保证可复现性
         torch.manual_seed(0)
         # 从参数中初始化核心属性
+        self.args = args
         self.algorithm = args.algorithm
         self.dataset = args.dataset
         self.device = args.device
@@ -69,18 +70,22 @@ class Client(object):
         self.model = None
         self.best_model = None
 
-        # 如果不是从已有的临时文件夹恢复，则为该客户端创建一个新的模型实例
-        if args.save_folder_name == 'temp' or 'temp' not in args.save_folder_name:
-            # BaseHeadSplit会根据配置动态创建 "base" + "head" 结构的模型
-            model = BaseHeadSplit(args, self.id).to(self.device)
-            # 将新创建的模型保存到文件
+        model_path = os.path.join(self.save_folder_name, f"{self.role}_model.pt")
+        model_template = self._build_model_template()
+        if os.path.isfile(model_path):
+            self.model = load_item(
+                self.role,
+                'model',
+                self.save_folder_name,
+                model_template=model_template,
+            )
+            if self.model is None:
+                self.model = model_template
+                save_item(self.model, self.role, 'model', self.save_folder_name)
+        else:
+            model = model_template
             save_item(model, self.role, 'model', self.save_folder_name)
             self.model = model
-        else:
-            self.model = load_item(self.role, 'model', self.save_folder_name)
-            if self.model is None:
-                self.model = BaseHeadSplit(args, self.id).to(self.device)
-                save_item(self.model, self.role, 'model', self.save_folder_name)
 
         # 从关键字参数中获取慢客户端标志，用于模拟异构性
         self.train_slow = kwargs['train_slow']  # 标记是否为训练慢的客户端
@@ -91,6 +96,17 @@ class Client(object):
 
         # 定义默认的损失函数
         self.loss = nn.CrossEntropyLoss()
+
+    def _build_model_template(self):
+        return BaseHeadSplit(self.args, self.id).to(self.device)
+
+    def _load_local_model(self, item_name='model'):
+        return load_item(
+            self.role,
+            item_name,
+            self.save_folder_name,
+            model_template=self._build_model_template(),
+        )
 
     # def load_global_test_data(self, batch_size=None):
     #     """让客户端有能力自行加载全局测试数据集。"""
@@ -119,7 +135,7 @@ class Client(object):
         return DataLoader(
             train_data,
             batch_size=batch_size,
-            drop_last=True,
+            drop_last=False,
             shuffle=True,
             num_workers=self.num_workers,
             pin_memory=self.pin_memory,
@@ -151,15 +167,36 @@ class Client(object):
         for param, new_param in zip(model.parameters(), new_params):
             param.data = new_param.data.clone()
 
-    def test_metrics(self):
+    def set_parameters(self, global_model=None):
+        """
+        Sync server parameters into the client's local model.
+
+        Falls back to the persisted server checkpoint so the generic server
+        helper remains usable even outside the in-memory FedAvg path.
+        """
+        if global_model is None:
+            global_model = load_item(
+                'Server',
+                'global_model',
+                self.save_folder_name,
+                model_template=self._build_model_template(),
+            )
+        if global_model is None:
+            raise FileNotFoundError("Server_global_model.pt not found for client parameter sync.")
+
+        if self.model is None:
+            self.model = self._build_model_template()
+        self.model.load_state_dict(copy.deepcopy(global_model.state_dict()))
+
+    def collect_test_outputs(self):
         """
         在本地测试集上评估模型的性能，计算准确率和AUC。
         这是标准的评估方法，使用模型的分类头进行预测。
         """
         testloaderfull = self.load_test_data()
-        model = self.model if self.model is not None else load_item(self.role, 'model', self.save_folder_name)
+        model = self.model if self.model is not None else self._load_local_model('model')
         if self.algorithm == "Local" and self.id == 0 and getattr(self, "current_round", 0) in {1, 10, 50, 99, 100}:
-            disk_model = load_item(self.role, 'model', self.save_folder_name)
+            disk_model = self._load_local_model('model')
             # region agent log
             debug_log(
                 "src/flcore/clients/clientbase.py:138",
@@ -220,9 +257,36 @@ class Client(object):
                 y_pred.append(pred.detach().cpu().numpy())
 
         # 将所有批次的概率和标签连接起来
-        y_prob = np.concatenate(y_prob, axis=0)
-        y_true = np.concatenate(y_true, axis=0)
-        y_pred = np.concatenate(y_pred, axis=0)
+        if y_prob:
+            y_prob = np.concatenate(y_prob, axis=0)
+            y_true = np.concatenate(y_true, axis=0)
+            y_pred = np.concatenate(y_pred, axis=0)
+        else:
+            y_prob = np.zeros((0, self.num_classes), dtype=np.float32)
+            y_true = np.array([], dtype=np.int64)
+            y_pred = np.array([], dtype=np.int64)
+
+        return {
+            "test_acc": int(test_acc),
+            "test_num": int(test_num),
+            "y_prob": y_prob,
+            "y_true": y_true,
+            "y_pred": y_pred,
+            "inference_time": float(inference_time),
+        }
+
+    def test_metrics(self):
+        outputs = self.collect_test_outputs()
+        test_acc = outputs["test_acc"]
+        test_num = outputs["test_num"]
+        y_prob = outputs["y_prob"]
+        y_true = outputs["y_true"]
+        y_pred = outputs["y_pred"]
+        inference_time = outputs["inference_time"]
+
+        if test_num == 0:
+            confusion_matrix = np.zeros((self.num_classes, self.num_classes), dtype=np.int64)
+            return 0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, confusion_matrix, 0.0
 
         auc_macro, auc_micro = self.compute_multiclass_auc(y_true, y_prob)
         precision, recall, f1, fpr = self.compute_classification_metrics(y_true, y_pred)
@@ -276,7 +340,7 @@ class Client(object):
     def train_metrics(self):
         """在本地训练集上评估模型的总损失。"""
         trainloader = self.load_train_data()
-        model = self.model if self.model is not None else load_item(self.role, 'model', self.save_folder_name)
+        model = self.model if self.model is not None else self._load_local_model('model')
         model.eval()
 
         train_num = 0
@@ -360,20 +424,34 @@ def save_item(item, role, item_name, item_path=None):
     # 如果路径不存在，则创建它
     if not os.path.exists(item_path):
         os.makedirs(item_path)
-    # 使用torch.save保存
-    torch.save(item, os.path.join(item_path, role + "_" + item_name + ".pt"))
+    payload = item
+    if isinstance(item, nn.Module):
+        payload = {
+            "__kind__": "module_state_dict",
+            "state_dict": item.state_dict(),
+        }
+    torch.save(payload, os.path.join(item_path, role + "_" + item_name + ".pt"))
 
 
-def load_item(role, item_name, item_path=None):
+def load_item(role, item_name, item_path=None, model_template=None):
     """
     从文件中加载一个PyTorch对象。
     """
+    file_path = os.path.join(item_path, role + "_" + item_name + ".pt")
     try:
-        return torch.load(
-            os.path.join(item_path, role + "_" + item_name + ".pt"),
-            weights_only=False,
-        )
+        payload = torch.load(file_path, weights_only=True)
     except FileNotFoundError:
         print(f"文件未找到: {role}_{item_name}.pt")
         return None
+    except Exception:
+        payload = torch.load(file_path, weights_only=False)
 
+    if isinstance(payload, dict) and payload.get("__kind__") == "module_state_dict":
+        if model_template is None:
+            raise ValueError(
+                f"Loading module '{role}_{item_name}.pt' requires a model_template."
+            )
+        model_template.load_state_dict(payload["state_dict"])
+        return model_template
+
+    return payload

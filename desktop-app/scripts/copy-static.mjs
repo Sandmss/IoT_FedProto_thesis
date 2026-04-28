@@ -1,4 +1,4 @@
-import { cpSync, mkdirSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -9,5 +9,5 @@ const sourceDir = path.join(projectRoot, "src", "renderer");
 const targetDir = path.join(projectRoot, "dist", "src", "renderer");
 
 mkdirSync(targetDir, { recursive: true });
-cpSync(path.join(sourceDir, "index.html"), path.join(targetDir, "index.html"));
-cpSync(path.join(sourceDir, "styles.css"), path.join(targetDir, "styles.css"));
+writeFileSync(path.join(targetDir, "index.html"), readFileSync(path.join(sourceDir, "index.html")));
+writeFileSync(path.join(targetDir, "styles.css"), readFileSync(path.join(sourceDir, "styles.css")));

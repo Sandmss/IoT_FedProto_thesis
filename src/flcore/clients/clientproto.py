@@ -142,12 +142,12 @@ class clientproto(Client):
         self.local_protos = agg_func(protos)
         self.local_proto_weights = dict(class_counts)
 
-    def test_metrics(self):
+    def collect_test_outputs(self):
         """
         标准测试方法：在【本地测试集】上使用【全局原型】进行分类。
         """
         if self.proto_eval_mode == "classifier":
-            return super().test_metrics()
+            return super().collect_test_outputs()
 
         testloader = self.load_test_data()
         model = self.model
@@ -208,18 +208,18 @@ class clientproto(Client):
                     y_true.append(y.detach().cpu().numpy())
                     y_pred.append(proto_pred.detach().cpu().numpy())
 
-            y_prob = np.concatenate(y_prob, axis=0)
-            y_true = np.concatenate(y_true, axis=0)
-            y_pred = np.concatenate(y_pred, axis=0)
+            if y_prob:
+                y_prob = np.concatenate(y_prob, axis=0)
+                y_true = np.concatenate(y_true, axis=0)
+                y_pred = np.concatenate(y_pred, axis=0)
+            else:
+                y_prob = np.zeros((0, self.num_classes), dtype=np.float32)
+                y_true = np.array([], dtype=np.int64)
+                y_pred = np.array([], dtype=np.int64)
+
             auc_macro, auc_micro = self.compute_multiclass_auc(y_true, y_prob)
             precision, recall, f1, fpr = self.compute_classification_metrics(y_true, y_pred)
             fnr = self.compute_false_negative_rate(y_true, y_pred)
-            confusion_matrix = metrics.confusion_matrix(
-                y_true,
-                y_pred,
-                labels=list(range(self.num_classes)),
-            )
-            latency_ms = 1000.0 * inference_time / max(test_num, 1)
             if self.id in {0, 2} and self.current_round in {1, 10, 50, 98, 100}:
                 pred_labels, pred_counts = np.unique(y_pred, return_counts=True)
                 true_labels, true_counts = np.unique(y_true, return_counts=True)
@@ -248,9 +248,23 @@ class clientproto(Client):
                     hypothesis_id="H4",
                 )
                 # endregion
-            return test_acc, test_num, auc_macro, auc_micro, fnr, precision, recall, f1, fpr, confusion_matrix, latency_ms
+            return {
+                "test_acc": int(test_acc),
+                "test_num": int(test_num),
+                "y_prob": y_prob,
+                "y_true": y_true,
+                "y_pred": y_pred,
+                "inference_time": float(inference_time),
+            }
         else:
-            return 0, 1e-5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, np.zeros((self.num_classes, self.num_classes)), 0.0
+            return {
+                "test_acc": 0,
+                "test_num": 0,
+                "y_prob": np.zeros((0, self.num_classes), dtype=np.float32),
+                "y_true": np.array([], dtype=np.int64),
+                "y_pred": np.array([], dtype=np.int64),
+                "inference_time": 0.0,
+            }
 
     # def evaluate_on_global_test_set(self, global_protos=None):
     #     """

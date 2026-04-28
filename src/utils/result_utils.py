@@ -3,6 +3,8 @@ import numpy as np
 import os
 from glob import glob
 
+RESULTS_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "results"))
+
 
 def average_data(algorithm="", dataset="", goal="", times=10, model_family=""):
     results = get_all_results_for_one_algo(
@@ -123,8 +125,7 @@ def build_result_file_stem(dataset, algorithm, goal, run_idx, model_family=""):
 def locate_result_file(file_name, model_family="", algorithm=""):
     if model_family and algorithm:
         candidate = os.path.join(
-            "..",
-            "results",
+            RESULTS_ROOT,
             get_model_result_category(model_family),
             algorithm,
             "metrics",
@@ -133,11 +134,11 @@ def locate_result_file(file_name, model_family="", algorithm=""):
         if os.path.exists(candidate):
             return candidate
 
-    matches = glob(os.path.join("..", "results", "**", f"{file_name}.h5"), recursive=True)
+    matches = glob(os.path.join(RESULTS_ROOT, "**", f"{file_name}.h5"), recursive=True)
     if matches:
         return matches[0]
 
-    legacy_candidate = os.path.join("..", "results", f"{file_name}.h5")
+    legacy_candidate = os.path.join(RESULTS_ROOT, f"{file_name}.h5")
     if os.path.exists(legacy_candidate):
         return legacy_candidate
 

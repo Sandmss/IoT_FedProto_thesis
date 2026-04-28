@@ -56,6 +56,20 @@ def read_log_preview(log_files: list[Path]) -> list[str]:
 
 def build_payload(results_root: Path, relative_path: str) -> dict[str, object]:
     file_path = results_root / relative_path
+    if not file_path.exists():
+        basename = Path(relative_path).name
+        candidate_paths = [
+            results_root / "metrics" / basename,
+            results_root / basename,
+        ]
+        for candidate in candidate_paths:
+            if candidate.exists():
+                file_path = candidate
+                break
+        else:
+            recursive_matches = list(results_root.rglob(basename)) if results_root.exists() else []
+            if recursive_matches:
+                file_path = recursive_matches[0]
     series: dict[str, list[float]] = {}
     best_round: int | None = None
     confusion_matrix: list[list[int]] | None = None
