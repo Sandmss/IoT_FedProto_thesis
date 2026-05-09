@@ -30,9 +30,9 @@
   "saveRoot": "E:\\IoT_FedProto\\artifacts\\models\\2026-04-28T12-28-59-186Z_IoT_FedProto_IoT_MIX_MLP_CNN1D",
   "saveFolder": "E:\\IoT_FedProto\\artifacts\\models\\2026-04-28T12-28-59-186Z_IoT_FedProto_IoT_MIX_MLP_CNN1D\\IoT\\FedProto",
   "createdAt": "2026-04-28T12:28:59.186Z",
-  "status": "running",
+  "status": "ready",
   "goal": "heterogeneous_demo",
-  "resultFile": "heterogeneous_models/FedProto/metrics/IoT_FedProto_IoT_MIX_MLP_CNN1D_heterogeneous_demo_0.h5",
+  "resultFile": "metrics/IoT_FedProto_IoT_MIX_MLP_CNN1D_heterogeneous_demo_0.h5",
   "config": {
     "dataset": "IoT",
     "algorithm": "FedProto",
