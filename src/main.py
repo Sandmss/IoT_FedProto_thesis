@@ -13,7 +13,9 @@ import torch
 import torch.nn as nn
 
 from flcore.clients.clientbase import debug_log
+from flcore.servers.serverfd import FD
 from flcore.servers.serveravg import FedAvg
+from flcore.servers.serverlg import LGFedAvg
 from flcore.servers.serverlocal import Local
 from flcore.servers.serverproto import FedProto
 from flcore.trainmodel.models import CNN1D_IoT, MLP_IoT, Transformer1D_IoT
@@ -188,15 +190,19 @@ def resolve_models(args):
 
 
 def build_server(args, run_idx):
+    if args.algorithm == "FD":
+        return FD(args, run_idx)
     if args.algorithm == "FedProto":
         return FedProto(args, run_idx)
     if args.algorithm == "FedAvg":
         return FedAvg(args, run_idx)
+    if args.algorithm == "LGFedAvg":
+        return LGFedAvg(args, run_idx)
     if args.algorithm == "Local":
         return Local(args, run_idx)
     raise NotImplementedError(
         f"Unsupported algorithm '{args.algorithm}'. "
-        "Available options: FedAvg, FedProto, Local"
+        "Available options: FD, FedAvg, FedProto, LGFedAvg, Local"
     )
 
 
@@ -306,6 +312,18 @@ def build_parser():
         help="Local training epochs per communication round",
     )
     parser.add_argument("-algo", "--algorithm", type=str, default="FedAvg")
+    parser.add_argument(
+        "--fd_temperature",
+        type=float,
+        default=1.0,
+        help="Temperature used by FD/FedDistill KL distillation.",
+    )
+    parser.add_argument(
+        "--lg_shared_param_prefixes",
+        type=str,
+        default="head.",
+        help="Comma-separated state_dict prefixes to share in LGFedAvg. Default shares only classifier head.",
+    )
     parser.add_argument(
         "-jr",
         "--join_ratio",

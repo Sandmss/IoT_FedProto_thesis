@@ -46,3 +46,38 @@ desktop-app/dist/
 
 # Local archives
 *.zip
+
+# Thesis documents, slides, and related planning materials
+*.doc
+*.docx
+*.docm
+*.ppt
+*.pptx
+*.pptm
+*.pdf
+MinerU_markdown_*.md
+毕业设计*.md
+毕业设计*.docx
+毕业设计*.pptx
+三天看懂项目全部代码计划.md
+
+# Local thesis/reference notes and Codex skill workspace
+reference/
+.codex/skills/
+
+# Additional local temp, preview, and experiment scratch outputs
+.tmp/
+tmp/
+tmp_*/
+temp_*/
+artifacts/
+old_results/
+review_eval_newfmt_keep/
+smoke_*_keep/
+eval_isolated_*/
+*.tmp
+*.temp
+*.bak
+*.bkp
+~$*.doc*
+~$*.ppt*
