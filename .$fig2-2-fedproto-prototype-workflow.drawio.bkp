@@ -1,0 +1,146 @@
+<mxfile host="app.diagrams.net" modified="2026-05-10T00:00:00.000Z" agent="Codex" version="24.7.17">
+  <diagram id="fig2-2-fedproto" name="Page-1">
+    <mxGraphModel dx="1280" dy="720" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1280" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="2" value="服务器原型聚合&#xa;全局原型" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontColor=#000000;fontSize=19;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="40" width="400" height="82" as="geometry"/>
+        </mxCell>
+        <mxCell id="3" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.2;fontColor=#000000;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="90" y="210" width="1020" height="330" as="geometry"/>
+        </mxCell>
+        <mxCell id="4" value="客户端并行训练" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="370" y="222" width="460" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="5" value="下发全局原型" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="300" y="160" width="170" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="6" value="上传本地原型" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="735" y="160" width="190" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="7" value="仅传原型 | 异构协同" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontColor=#000000;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="615" width="360" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="8" value="重复迭代" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="975" y="360" width="130" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="10" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.3;" vertex="1" parent="1">
+          <mxGeometry x="125" y="260" width="170" height="235" as="geometry"/>
+        </mxCell>
+        <mxCell id="11" value="客户端1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="155" y="274" width="110" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="12" value="本地特征提取" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1;fontColor=#000000;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="150" y="312" width="120" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="13" value="本地类别原型" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1;fontColor=#000000;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="150" y="370" width="120" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="14" value="局部训练" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="135" y="430" width="150" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="15" value="数据不出端" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1;dashed=1;fontColor=#000000;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="147" y="458" width="126" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="20" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.3;" vertex="1" parent="1">
+          <mxGeometry x="365" y="260" width="170" height="235" as="geometry"/>
+        </mxCell>
+        <mxCell id="21" value="客户端2" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="395" y="274" width="110" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="22" value="本地特征提取" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1;fontColor=#000000;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="390" y="312" width="120" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="23" value="本地类别原型" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1;fontColor=#000000;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="390" y="370" width="120" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="24" value="局部训练" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="375" y="430" width="150" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="25" value="数据不出端" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1;dashed=1;fontColor=#000000;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="387" y="458" width="126" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="30" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.3;" vertex="1" parent="1">
+          <mxGeometry x="605" y="260" width="170" height="235" as="geometry"/>
+        </mxCell>
+        <mxCell id="31" value="客户端3" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="635" y="274" width="110" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="32" value="本地特征提取" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1;fontColor=#000000;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="630" y="312" width="120" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="33" value="本地类别原型" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1;fontColor=#000000;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="630" y="370" width="120" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="34" value="局部训练" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="615" y="430" width="150" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="35" value="数据不出端" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1;dashed=1;fontColor=#000000;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="627" y="458" width="126" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="40" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.3;" vertex="1" parent="1">
+          <mxGeometry x="845" y="260" width="170" height="235" as="geometry"/>
+        </mxCell>
+        <mxCell id="41" value="客户端4" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="875" y="274" width="110" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="42" value="本地特征提取" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1;fontColor=#000000;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="870" y="312" width="120" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="43" value="本地类别原型" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1;fontColor=#000000;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="870" y="370" width="120" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="44" value="局部训练" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="855" y="430" width="150" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="45" value="数据不出端" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1;dashed=1;fontColor=#000000;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="867" y="458" width="126" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="60" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1" source="2" target="3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="460" y="210" as="targetPoint"/>
+            <Array as="points">
+              <mxPoint x="460" y="136"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="61" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1" source="3" target="2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="760" y="136" as="targetPoint"/>
+            <Array as="points">
+              <mxPoint x="760" y="210"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="62" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1" source="3" target="7">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="600" y="610" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="63" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;dashed=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="7" target="2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="980" y="670"/>
+              <mxPoint x="1100" y="670"/>
+              <mxPoint x="1100" y="88"/>
+              <mxPoint x="860" y="88"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="64" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="12" target="13">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="65" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="22" target="23">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="66" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="32" target="33">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="67" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="42" target="43">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,66 @@
+{
+  "title": "IoT Federated Learning Overview",
+  "subtitle": "A quick technical briefing deck",
+  "author": "Codex",
+  "theme": {
+    "primary": "16324F",
+    "secondary": "3D5A80",
+    "accent": "EE6C4D",
+    "light": "DCE8F2",
+    "bg": "F8FBFD"
+  },
+  "slides": [
+    {
+      "type": "title",
+      "title": "IoT Federated Learning Overview",
+      "subtitle": "A quick technical briefing deck",
+      "footer": "Codex"
+    },
+    {
+      "type": "section",
+      "title": "Why This Matters",
+      "subtitle": "Edge privacy and distributed intelligence are driving the architecture."
+    },
+    {
+      "type": "bullets",
+      "title": "Problem Statement",
+      "lead": "Traditional centralized training is expensive and privacy-sensitive in IoT environments.",
+      "bullets": [
+        "Raw sensor data is costly to transmit continuously.",
+        "Devices have heterogeneous compute and unstable connectivity.",
+        "Data ownership constraints make central aggregation risky."
+      ],
+      "highlight": "Privacy first"
+    },
+    {
+      "type": "two_column",
+      "title": "Approach Comparison",
+      "left": {
+        "heading": "FedAvg",
+        "bullets": [
+          "Simple parameter aggregation",
+          "Strong baseline for IID settings",
+          "More sensitive to feature drift"
+        ]
+      },
+      "right": {
+        "heading": "FedProto",
+        "bullets": [
+          "Prototype-level alignment",
+          "Handles non-IID data better",
+          "Reduces semantic mismatch"
+        ]
+      }
+    },
+    {
+      "type": "summary",
+      "title": "Key Takeaways",
+      "bullets": [
+        "Keep slides structured and visually varied.",
+        "Prefer a local script over hand-authoring OOXML.",
+        "Use extraction-based QA after generation."
+      ],
+      "highlight": "Ready to present"
+    }
+  ]
+}
