@@ -46,6 +46,8 @@ desktop-app/dist/
 
 # Local archives
 *.zip
+*.dll
+*.exe
 
 # Thesis documents, slides, and related planning materials
 *.doc
@@ -81,3 +83,7 @@ eval_isolated_*/
 *.bkp
 ~$*.doc*
 ~$*.ppt*
+
+# .NET build outputs
+bin/
+obj/
