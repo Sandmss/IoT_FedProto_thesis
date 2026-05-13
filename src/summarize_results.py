@@ -10,7 +10,7 @@ import numpy as np
 
 
 RESULTS_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "results"))
-ALGORITHMS = {"FD", "FedAvg", "FedProto", "LGFedAvg", "Local"}
+ALGORITHMS = {"FD", "FML", "FedAvg", "FedProto", "LGFedAvg", "Local"}
 STANDARD_SUBDIRS = {"metrics", "figures", "logs"}
 IGNORED_DIRS = {"summary", "\u7ed3\u679c"}
 MODEL_CATEGORY_ALIASES = {

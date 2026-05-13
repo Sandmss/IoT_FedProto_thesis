@@ -629,6 +629,7 @@ class Server(object):
 
         FedAvg-style methods count uploaded model parameters from selected clients.
         FD counts uploaded class-wise logits from selected clients.
+        FML counts uploaded auxiliary global models from selected clients.
         FedProto counts uploaded local class prototypes from selected clients.
         LG-FedAvg counts only the shared parameter subset transmitted each round.
         Local has no network communication.
@@ -648,6 +649,9 @@ class Server(object):
 
         if self.algorithm == "FD" and hasattr(self, "estimate_fd_comm_params"):
             return float(self.estimate_fd_comm_params())
+
+        if self.algorithm == "FML" and hasattr(self, "estimate_fml_comm_params"):
+            return float(self.estimate_fml_comm_params())
 
         if self.algorithm == "LGFedAvg" and hasattr(self, "estimate_shared_comm_params"):
             return float(self.estimate_shared_comm_params())

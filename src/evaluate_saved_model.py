@@ -92,7 +92,7 @@ def load_best_artifacts(server):
             server.set_global_model_to_clients()
         return
 
-    if server.algorithm in {"FD", "Local", "LGFedAvg"}:
+    if server.algorithm in {"FD", "FML", "Local", "LGFedAvg"}:
         for client in server.clients:
             best_model = load_item(
                 client.role,

@@ -15,6 +15,7 @@ import torch.nn as nn
 from flcore.clients.clientbase import debug_log
 from flcore.servers.serverfd import FD
 from flcore.servers.serveravg import FedAvg
+from flcore.servers.serverfml import FML
 from flcore.servers.serverlg import LGFedAvg
 from flcore.servers.serverlocal import Local
 from flcore.servers.serverproto import FedProto
@@ -75,6 +76,9 @@ def print_runtime_config(args):
     print(f"Device: {args.device}")
     print(f"Feature dimension: {args.feature_dim}")
     print(f"Lambda: {args.lamda}")
+    print(f"FML alpha: {args.fml_alpha}")
+    print(f"FML beta: {args.fml_beta}")
+    print(f"FML temperature: {args.fml_temperature}")
     print(f"FedProto eval mode: {args.proto_eval_mode}")
     print(f"Packet weight: {args.packet_weight}")
     print(f"Auto break: {args.auto_break}")
@@ -192,6 +196,8 @@ def resolve_models(args):
 def build_server(args, run_idx):
     if args.algorithm == "FD":
         return FD(args, run_idx)
+    if args.algorithm == "FML":
+        return FML(args, run_idx)
     if args.algorithm == "FedProto":
         return FedProto(args, run_idx)
     if args.algorithm == "FedAvg":
@@ -202,7 +208,7 @@ def build_server(args, run_idx):
         return Local(args, run_idx)
     raise NotImplementedError(
         f"Unsupported algorithm '{args.algorithm}'. "
-        "Available options: FD, FedAvg, FedProto, LGFedAvg, Local"
+        "Available options: FD, FML, FedAvg, FedProto, LGFedAvg, Local"
     )
 
 
@@ -317,6 +323,24 @@ def build_parser():
         type=float,
         default=1.0,
         help="Temperature used by FD/FedDistill KL distillation.",
+    )
+    parser.add_argument(
+        "--fml_alpha",
+        type=float,
+        default=0.5,
+        help="Supervised-loss weight for FML local personalized models.",
+    )
+    parser.add_argument(
+        "--fml_beta",
+        type=float,
+        default=0.5,
+        help="Supervised-loss weight for FML auxiliary global models.",
+    )
+    parser.add_argument(
+        "--fml_temperature",
+        type=float,
+        default=1.0,
+        help="Temperature used by FML mutual distillation.",
     )
     parser.add_argument(
         "--lg_shared_param_prefixes",
