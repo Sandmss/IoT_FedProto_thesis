@@ -70,6 +70,7 @@ class Server(object):
         self.rs_confusion_matrices = []
         self.rs_inference_latency_ms = []
         self.rs_train_loss = []
+        self.rs_proto_loss = []
         self.rs_comm_params_per_round = []
         self.rs_comm_params_cumulative = []
         self.rs_model_params_mean = []
@@ -207,6 +208,7 @@ class Server(object):
                 hf.create_dataset('rs_confusion_matrices', data=self.rs_confusion_matrices)
                 hf.create_dataset('rs_inference_latency_ms', data=self.rs_inference_latency_ms)
                 hf.create_dataset('rs_train_loss', data=self.rs_train_loss)
+                hf.create_dataset('rs_proto_loss', data=self.rs_proto_loss)
                 hf.create_dataset('rs_comm_params_per_round', data=self.rs_comm_params_per_round)
                 hf.create_dataset('rs_comm_params_cumulative', data=self.rs_comm_params_cumulative)
                 hf.create_dataset('rs_model_params_mean', data=self.rs_model_params_mean)

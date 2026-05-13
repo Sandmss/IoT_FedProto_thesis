@@ -74,6 +74,7 @@ class FedProto(Server):
             for client in self.selected_clients:
                 client.train()
 
+            self.record_round_proto_loss()
             self.aggregate_protos()
             self.record_round_overheads()
 
@@ -114,6 +115,15 @@ class FedProto(Server):
             self.draw_tsne()
             self.draw_proto_distribution_tsne()
         self.save_results()
+
+    def record_round_proto_loss(self):
+        proto_losses = [
+            float(getattr(client, "last_proto_loss", 0.0))
+            for client in self.selected_clients
+        ]
+        mean_proto_loss = float(np.mean(proto_losses)) if proto_losses else 0.0
+        self.rs_proto_loss.append(mean_proto_loss)
+        print(f"Average selected-client proto loss: {mean_proto_loss:.6f}")
 
     def aggregate_protos(self):
         assert len(self.selected_clients) > 0

@@ -26,6 +26,7 @@ class clientproto(Client):
         self.best_protos = None
         self.current_round = 0
         self.proto_eval_mode = getattr(args, "proto_eval_mode", "classifier")
+        self.last_proto_loss = 0.0
 
     def train(self):
         """
@@ -43,6 +44,8 @@ class clientproto(Client):
         if self.train_slow:
             max_local_epochs = max(1, np.random.randint(1, max(2, max_local_epochs // 2 + 1)))
 
+        proto_loss_total = 0.0
+        proto_loss_steps = 0
         for step in range(max_local_epochs):
             for i, (x, y) in enumerate(trainloader):
                 if type(x) == type([]):
@@ -69,6 +72,8 @@ class clientproto(Client):
                     proto_loss_tensor = self.loss_mse(proto_new, rep)
                     proto_loss_value = float(proto_loss_tensor.item())
                     loss += proto_loss_tensor * self.lamda
+                    proto_loss_total += proto_loss_value
+                    proto_loss_steps += 1
 
                 if (
                     self.id == 0
@@ -108,6 +113,9 @@ class clientproto(Client):
 
         self.model = model
         self.collect_protos(model=model)
+        self.last_proto_loss = (
+            proto_loss_total / proto_loss_steps if proto_loss_steps > 0 else 0.0
+        )
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time
