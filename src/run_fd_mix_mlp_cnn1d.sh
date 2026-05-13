@@ -4,8 +4,22 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 RESULT_DIR="${RESULT_DIR:-../results/heterogeneous_models/FD}"
-CLIENT_MODEL_RATIOS="${CLIENT_MODEL_RATIOS:-5:5}"
-RATIO_TAG="${CLIENT_MODEL_RATIOS//:/_}"
+NUM_CLIENTS="${NUM_CLIENTS:-20}"
+DEFAULT_CLIENT_RATIO="5:5"
+CLIENT_RATIO="${CLIENT_RATIO:-$DEFAULT_CLIENT_RATIO}"
+IFS=':' read -r MLP_RATIO CNN_RATIO <<< "$CLIENT_RATIO"
+RATIO_SUM=$((MLP_RATIO + CNN_RATIO))
+if (( RATIO_SUM <= 0 )); then
+  echo "Invalid CLIENT_RATIO '$CLIENT_RATIO': sum must be positive." >&2
+  exit 1
+fi
+if (( NUM_CLIENTS % RATIO_SUM != 0 )); then
+  echo "Invalid CLIENT_RATIO '$CLIENT_RATIO' for NUM_CLIENTS=$NUM_CLIENTS: cannot convert ratio to integer client counts." >&2
+  exit 1
+fi
+SCALE=$((NUM_CLIENTS / RATIO_SUM))
+CLIENT_MODEL_RATIOS="$((MLP_RATIO * SCALE)):$((CNN_RATIO * SCALE))"
+RATIO_TAG="${CLIENT_RATIO//:/_}"
 GOAL="${GOAL:-mix_mlp_cnn1d_ratio_${RATIO_TAG}}"
 mkdir -p "$RESULT_DIR/logs"
 
@@ -18,7 +32,7 @@ python -u main.py \
   -gr 1000 \
   -eg 1 \
   -nw 4 \
-  -nc 20 \
+  -nc "$NUM_CLIENTS" \
   -nb 15 \
   -dataset IoT \
   -model_family IoT_MIX_MLP_CNN1D \
