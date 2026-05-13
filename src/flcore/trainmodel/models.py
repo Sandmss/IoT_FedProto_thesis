@@ -11,6 +11,26 @@ def _flatten_batch(x):
     return x.view(x.size(0), -1)
 
 
+def _resolve_client_model_index(args, cid):
+    indices = getattr(args, "client_model_indices", None)
+    if indices:
+        if cid < 0 or cid >= len(indices):
+            raise IndexError(
+                f"Client id {cid} is out of range for client_model_indices of length {len(indices)}."
+            )
+        return indices[cid]
+
+    model_builders = getattr(args, "model_builders", None)
+    if model_builders:
+        return cid % len(model_builders)
+
+    models = getattr(args, "models", None)
+    if models:
+        return cid % len(models)
+
+    raise ValueError("No model builders or model definitions are available for client assignment.")
+
+
 class _FeatureOnlyModel(nn.Module):
     def __init__(self, model):
         super().__init__()
@@ -23,11 +43,12 @@ class _FeatureOnlyModel(nn.Module):
 class BaseHeadSplit(nn.Module):
     def __init__(self, args, cid):
         super().__init__()
+        model_idx = _resolve_client_model_index(args, cid)
 
         if hasattr(args, "model_builders"):
-            raw_model = args.model_builders[cid % len(args.model_builders)]()
+            raw_model = args.model_builders[model_idx]()
         else:
-            raw_model = eval(args.models[cid % len(args.models)])
+            raw_model = eval(args.models[model_idx])
         if not hasattr(raw_model, "extract_features"):
             raise NotImplementedError(
                 f"Unsupported tabular model for BaseHeadSplit: {raw_model.__class__.__name__}"
@@ -36,9 +57,9 @@ class BaseHeadSplit(nn.Module):
         self.base = _FeatureOnlyModel(raw_model)
 
         if hasattr(args, "head_builders"):
-            self.head = args.head_builders[cid % len(args.head_builders)]()
+            self.head = args.head_builders[model_idx]()
         elif hasattr(args, 'heads'):
-            self.head = eval(args.heads[cid % len(args.heads)])
+            self.head = eval(args.heads[model_idx])
         elif hasattr(raw_model, 'classifier'):
             self.head = raw_model.classifier
         elif hasattr(raw_model, 'layer_hidden'):

@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
+cd "$(dirname "$0")"
 
-RESULT_DIR="../results/heterogeneous_models/FD"
+RESULT_DIR="${RESULT_DIR:-../results/heterogeneous_models/FD}"
+CLIENT_MODEL_RATIOS="${CLIENT_MODEL_RATIOS:-5:5}"
+RATIO_TAG="${CLIENT_MODEL_RATIOS//:/_}"
+GOAL="${GOAL:-mix_mlp_cnn1d_ratio_${RATIO_TAG}}"
 mkdir -p "$RESULT_DIR/logs"
 
 python -u main.py \
@@ -18,15 +22,16 @@ python -u main.py \
   -nb 15 \
   -dataset IoT \
   -model_family IoT_MIX_MLP_CNN1D \
+  --client_model_ratios "$CLIENT_MODEL_RATIOS" \
   --input_dim 77 \
   -fd 64 \
   -did 0 \
   -algo FD \
   -lam 1.0 \
   --fd_temperature 1.0 \
+  -go "$GOAL" \
   -se 100 \
   -mart 100 \
   -ab True \
   --early_stop_patience 100 \
-  > "$RESULT_DIR/logs/iot_mix_mlp_cnn1d_fd.out" 2>&1
-
+  > "$RESULT_DIR/logs/iot_mix_mlp_cnn1d_fd_${RATIO_TAG}.out" 2>&1

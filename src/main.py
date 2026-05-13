@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+from collections import Counter
 from functools import partial
 import logging
 import os
@@ -75,6 +76,8 @@ def print_runtime_config(args):
     print(f"Runs: {args.times}")
     print(f"Device: {args.device}")
     print(f"Feature dimension: {args.feature_dim}")
+    print(f"Client model ratios: {args.client_model_ratios}")
+    print(f"Client model layout: {args.client_model_layout}")
     print(f"Lambda: {args.lamda}")
     print(f"FML alpha: {args.fml_alpha}")
     print(f"FML beta: {args.fml_beta}")
@@ -86,11 +89,83 @@ def print_runtime_config(args):
     print(f"Global rounds: {args.global_rounds}")
     print(f"Eval gap (rounds): {args.eval_gap}")
     print(f"Skip figures: {args.skip_figures}")
+    if getattr(args, "client_model_indices", None) is not None:
+        print(f"Resolved client model assignment: {args.client_model_indices}")
     print("=" * 50)
+
+
+def _normalize_model_alias(raw_alias):
+    alias = raw_alias.strip().upper()
+    mapping = {
+        "MLP": "MLP",
+        "IOT_MLP": "MLP",
+        "CNN": "CNN1D",
+        "CNN1D": "CNN1D",
+        "IOT_CNN1D": "CNN1D",
+        "TRANS": "TRANSFORMER1D",
+        "TRANSFORMER": "TRANSFORMER1D",
+        "TRANSFORMER1D": "TRANSFORMER1D",
+        "IOT_TRANSFORMER1D": "TRANSFORMER1D",
+    }
+    if alias not in mapping:
+        raise ValueError(
+            f"Unsupported client model alias '{raw_alias}'. "
+            "Supported aliases include MLP, CNN1D, and TRANSFORMER1D."
+        )
+    return mapping[alias]
+
+
+def _build_client_model_indices(args):
+    num_model_types = len(args.model_builders)
+    if num_model_types <= 1:
+        return [0 for _ in range(args.num_clients)]
+
+    if args.client_model_layout:
+        tokens = [token.strip() for token in args.client_model_layout.split(",") if token.strip()]
+        if len(tokens) != args.num_clients:
+            raise ValueError(
+                "client_model_layout must provide exactly one model alias per client. "
+                f"Expected {args.num_clients}, got {len(tokens)}."
+            )
+        indices = []
+        for token in tokens:
+            normalized = _normalize_model_alias(token)
+            if normalized not in args.model_aliases:
+                raise ValueError(
+                    f"Model alias '{token}' is incompatible with model_family '{args.model_family}'. "
+                    f"Available aliases: {', '.join(args.model_aliases)}."
+                )
+            indices.append(args.model_aliases.index(normalized))
+        return indices
+
+    if args.client_model_ratios:
+        raw_parts = [part.strip() for part in args.client_model_ratios.replace(":", ",").split(",") if part.strip()]
+        if len(raw_parts) != num_model_types:
+            raise ValueError(
+                f"client_model_ratios for '{args.model_family}' must provide {num_model_types} counts, "
+                f"got {len(raw_parts)}."
+            )
+        counts = [int(part) for part in raw_parts]
+        if any(count < 0 for count in counts):
+            raise ValueError("client_model_ratios cannot contain negative counts.")
+        total = sum(counts)
+        if total != args.num_clients:
+            raise ValueError(
+                "client_model_ratios must sum to num_clients. "
+                f"Got sum={total}, num_clients={args.num_clients}."
+            )
+
+        indices = []
+        for model_idx, count in enumerate(counts):
+            indices.extend([model_idx] * count)
+        return indices
+
+    return [cid % num_model_types for cid in range(args.num_clients)]
 
 
 def resolve_models(args):
     if args.model_family == "IoT_MLP":
+        args.model_aliases = ["MLP"]
         args.models = [
             f"MLP_IoT(dim_in={args.input_dim}, dim_hidden=128, dim_out={args.feature_dim}, num_classes={args.num_classes})",
         ]
@@ -100,6 +175,7 @@ def resolve_models(args):
         ]
         args.head_builders = [partial(nn.Linear, args.feature_dim, args.num_classes)]
     elif args.model_family == "IoT_CNN1D":
+        args.model_aliases = ["CNN1D"]
         args.models = [
             f"CNN1D_IoT(dim_in={args.input_dim}, dim_out={args.feature_dim}, num_classes={args.num_classes})",
         ]
@@ -109,6 +185,7 @@ def resolve_models(args):
         ]
         args.head_builders = [partial(nn.Linear, args.feature_dim, args.num_classes)]
     elif args.model_family == "IoT_Transformer1D":
+        args.model_aliases = ["TRANSFORMER1D"]
         args.models = [
             (
                 "Transformer1D_IoT("
@@ -133,6 +210,7 @@ def resolve_models(args):
         ]
         args.head_builders = [partial(nn.Linear, args.feature_dim, args.num_classes)]
     elif args.model_family == "IoT_MIX_MLP_CNN1D":
+        args.model_aliases = ["MLP", "CNN1D"]
         args.models = [
             f"MLP_IoT(dim_in={args.input_dim}, dim_hidden=128, dim_out={args.feature_dim}, num_classes={args.num_classes})",
             f"CNN1D_IoT(dim_in={args.input_dim}, dim_out={args.feature_dim}, num_classes={args.num_classes})",
@@ -150,6 +228,7 @@ def resolve_models(args):
             partial(nn.Linear, args.feature_dim, args.num_classes),
         ]
     elif args.model_family == "IoT_MIX_MLP_CNN_TRANS":
+        args.model_aliases = ["MLP", "CNN1D", "TRANSFORMER1D"]
         args.models = [
             f"MLP_IoT(dim_in={args.input_dim}, dim_hidden=128, dim_out={args.feature_dim}, num_classes={args.num_classes})",
             f"CNN1D_IoT(dim_in={args.input_dim}, dim_out={args.feature_dim}, num_classes={args.num_classes})",
@@ -192,6 +271,11 @@ def resolve_models(args):
             "IoT_MIX_MLP_CNN1D, IoT_MIX_MLP_CNN_TRANS"
         )
 
+    args.client_model_indices = _build_client_model_indices(args)
+    args.client_model_assignment = [
+        args.model_aliases[model_idx] for model_idx in args.client_model_indices
+    ]
+
 
 def build_server(args, run_idx):
     if args.algorithm == "FD":
@@ -225,6 +309,13 @@ def run(args):
         print("Resolved models:")
         for model in args.models:
             print(f"  {model}")
+        if getattr(args, "client_model_assignment", None):
+            assignment_counts = Counter(args.client_model_assignment)
+            summary = ", ".join(
+                f"{alias}={assignment_counts.get(alias, 0)}" for alias in args.model_aliases
+            )
+            print(f"Client model assignment summary: {summary}")
+            print(f"Client model assignment detail: {args.client_model_assignment}")
 
         server = build_server(args, run_idx)
         server.train()
@@ -250,6 +341,25 @@ def build_parser():
         help="Backbone to use: IoT_MLP, IoT_CNN1D, IoT_Transformer1D, IoT_MIX_MLP_CNN1D, or IoT_MIX_MLP_CNN_TRANS",
     )
     parser.add_argument("-dataset", type=str, default="IoT", help="Dataset name")
+    parser.add_argument(
+        "--client_model_ratios",
+        type=str,
+        default="",
+        help=(
+            "Optional per-model client counts for mixed model families. "
+            "Examples: '5:5' for IoT_MIX_MLP_CNN1D, '3:3:4' for IoT_MIX_MLP_CNN_TRANS. "
+            "Counts must sum to num_clients."
+        ),
+    )
+    parser.add_argument(
+        "--client_model_layout",
+        type=str,
+        default="",
+        help=(
+            "Optional explicit comma-separated client model aliases, one per client. "
+            "Example: 'MLP,MLP,MLP,CNN1D,...'. Overrides client_model_ratios."
+        ),
+    )
     parser.add_argument("--input_dim", type=int, default=77, help="Input feature dimension for each sample")
     parser.add_argument(
         "--transformer_d_model",
