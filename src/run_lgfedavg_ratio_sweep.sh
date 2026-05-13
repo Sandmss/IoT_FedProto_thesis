@@ -2,7 +2,8 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-RATIOS=(${RATIOS:-"5:5" "4:6" "3:7"})
+RATIOS_STR="${RATIOS:-5:5 4:6 3:7}"
+read -r -a RATIOS <<< "$RATIOS_STR"
 RESULT_DIR="${RESULT_DIR:-../results/heterogeneous_models/LGFedAvg}"
 GOAL_PREFIX="${GOAL_PREFIX:-hetero_ratio_lgfedavg}"
 
