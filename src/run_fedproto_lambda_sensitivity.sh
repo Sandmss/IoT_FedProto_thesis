@@ -35,6 +35,7 @@ for LAM in "${LAMBDAS[@]}"; do
     -algo FedProto \
     -lam "$LAM" \
     --proto_eval_mode classifier \
+    --algorithm_result_dir "$RESULT_DIR" \
     -go "$GOAL" \
     -se 100 \
     -mart 100 \

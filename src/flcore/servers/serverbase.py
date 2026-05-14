@@ -242,6 +242,12 @@ class Server(object):
         return mapping.get(self.model_family, "heterogeneous_models")
 
     def _get_algorithm_result_dir(self):
+        override_dir = getattr(self.args, "algorithm_result_dir", "")
+        if override_dir:
+            result_dir = os.path.abspath(override_dir)
+            os.makedirs(result_dir, exist_ok=True)
+            return result_dir
+
         result_dir = os.path.join(
             self._get_results_root_dir(),
             self._get_model_result_category(),

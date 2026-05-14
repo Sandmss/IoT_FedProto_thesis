@@ -497,6 +497,16 @@ def build_parser():
         help="Directory name for intermediate outputs",
     )
     parser.add_argument(
+        "--algorithm_result_dir",
+        type=str,
+        default="",
+        help=(
+            "Optional explicit output directory for the current algorithm's "
+            "metrics/figures, e.g. '../results/heterogeneous_models64/FD'. "
+            "When set, it overrides the default results/<category>/<algorithm> path."
+        ),
+    )
+    parser.add_argument(
         "-ab",
         "--auto_break",
         type=str2bool,

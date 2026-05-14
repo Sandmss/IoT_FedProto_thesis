@@ -2,7 +2,6 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-RESULT_DIR="${RESULT_DIR:-../results/heterogeneous_models/FedProto}"
 NUM_CLIENTS="${NUM_CLIENTS:-20}"
 DEFAULT_CLIENT_RATIO="5:5"
 CLIENT_RATIO="${CLIENT_RATIO:-$DEFAULT_CLIENT_RATIO}"
@@ -19,6 +18,8 @@ fi
 SCALE=$((NUM_CLIENTS / RATIO_SUM))
 CLIENT_MODEL_RATIOS="$((MLP_RATIO * SCALE)):$((CNN_RATIO * SCALE))"
 RATIO_TAG="${CLIENT_RATIO//:/_}"
+RATIO_DIR_TAG="${CLIENT_RATIO//:/}"
+RESULT_DIR="${RESULT_DIR:-../results/heterogeneous_models${RATIO_DIR_TAG}/FedProto}"
 GOAL="${GOAL:-mix_mlp_cnn1d_ratio_${RATIO_TAG}}"
 mkdir -p "$RESULT_DIR/logs"
 
@@ -42,6 +43,7 @@ python -u main.py \
   -algo FedProto \
   -lam 1.0 \
   --proto_eval_mode classifier \
+  --algorithm_result_dir "$RESULT_DIR" \
   -go "$GOAL" \
   -se 100 \
   -mart 100 \
