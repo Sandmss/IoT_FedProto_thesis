@@ -328,6 +328,7 @@ def run(args):
         goal=args.goal,
         times=args.times,
         model_family=args.model_family,
+        result_dir_override=args.algorithm_result_dir,
     )
     print("All done!")
 

@@ -6,6 +6,12 @@ cd "$(dirname "$0")"
 NUM_CLIENTS="${NUM_CLIENTS:-20}"
 DEFAULT_CLIENT_RATIO="5:5"
 CLIENT_RATIO="${CLIENT_RATIO:-$DEFAULT_CLIENT_RATIO}"
+LOCAL_EPOCHS="${LOCAL_EPOCHS:-1}"
+GLOBAL_ROUNDS="${GLOBAL_ROUNDS:-1000}"
+SERVER_EPOCHS="${SERVER_EPOCHS:-100}"
+EVAL_GAP="${EVAL_GAP:-1}"
+NUM_WORKERS="${NUM_WORKERS:-4}"
+EARLY_STOP_PATIENCE="${EARLY_STOP_PATIENCE:-100}"
 IFS=':' read -r MLP_RATIO CNN_RATIO <<< "$CLIENT_RATIO"
 RATIO_SUM=$((MLP_RATIO + CNN_RATIO))
 if (( RATIO_SUM <= 0 )); then
@@ -29,10 +35,10 @@ python -u main.py \
   -lr 0.01 \
   -jr 1 \
   -lbs 10 \
-  -ls 1 \
-  -gr 1000 \
-  -eg 1 \
-  -nw 4 \
+  -ls "$LOCAL_EPOCHS" \
+  -gr "$GLOBAL_ROUNDS" \
+  -eg "$EVAL_GAP" \
+  -nw "$NUM_WORKERS" \
   -nc "$NUM_CLIENTS" \
   -nb 15 \
   -dataset IoT \
@@ -46,8 +52,8 @@ python -u main.py \
   --fd_temperature 1.0 \
   --algorithm_result_dir "$RESULT_DIR" \
   -go "$GOAL" \
-  -se 100 \
+  -se "$SERVER_EPOCHS" \
   -mart 100 \
   -ab True \
-  --early_stop_patience 100 \
+  --early_stop_patience "$EARLY_STOP_PATIENCE" \
   > "$RESULT_DIR/logs/iot_mix_mlp_cnn1d_fd_${RATIO_TAG}.out" 2>&1

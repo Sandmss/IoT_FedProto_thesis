@@ -6,13 +6,14 @@ from glob import glob
 RESULTS_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "results"))
 
 
-def average_data(algorithm="", dataset="", goal="", times=10, model_family=""):
+def average_data(algorithm="", dataset="", goal="", times=10, model_family="", result_dir_override=""):
     results = get_all_results_for_one_algo(
         algorithm,
         dataset,
         goal,
         times,
         model_family=model_family,
+        result_dir_override=result_dir_override,
     )
 
     best_acc = [run_result["rs_test_acc"].max() for run_result in results]
@@ -48,7 +49,14 @@ def average_data(algorithm="", dataset="", goal="", times=10, model_family=""):
             print(f"mean for {label}:", np.mean(values))
 
 
-def get_all_results_for_one_algo(algorithm="", dataset="", goal="", times=10, model_family=""):
+def get_all_results_for_one_algo(
+    algorithm="",
+    dataset="",
+    goal="",
+    times=10,
+    model_family="",
+    result_dir_override="",
+):
     all_results = []
     algorithms_list = [algorithm] * times
     for i in range(times):
@@ -65,14 +73,20 @@ def get_all_results_for_one_algo(algorithm="", dataset="", goal="", times=10, mo
                 delete=False,
                 model_family=model_family,
                 algorithm=algorithm,
+                result_dir_override=result_dir_override,
             )
         )
 
     return all_results
 
 
-def read_data_then_delete(file_name, delete=False, model_family="", algorithm=""):
-    file_path = locate_result_file(file_name, model_family=model_family, algorithm=algorithm)
+def read_data_then_delete(file_name, delete=False, model_family="", algorithm="", result_dir_override=""):
+    file_path = locate_result_file(
+        file_name,
+        model_family=model_family,
+        algorithm=algorithm,
+        result_dir_override=result_dir_override,
+    )
 
     with h5py.File(file_path, 'r') as hf:
         rs_test_acc = np.array(hf.get('rs_test_acc'))
@@ -122,7 +136,16 @@ def build_result_file_stem(dataset, algorithm, goal, run_idx, model_family=""):
     return f"{dataset}_{algorithm}_{goal}_{run_idx}"
 
 
-def locate_result_file(file_name, model_family="", algorithm=""):
+def locate_result_file(file_name, model_family="", algorithm="", result_dir_override=""):
+    if result_dir_override:
+        override_candidate = os.path.join(
+            os.path.abspath(result_dir_override),
+            "metrics",
+            f"{file_name}.h5",
+        )
+        if os.path.exists(override_candidate):
+            return override_candidate
+
     if model_family and algorithm:
         candidate = os.path.join(
             RESULTS_ROOT,
