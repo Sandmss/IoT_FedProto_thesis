@@ -3,7 +3,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 MODEL_FAMILY="${MODEL_FAMILY:-IoT_MIX_MLP_CNN1D}"
-FEATURE_DIM="${FEATURE_DIM:-512}"
+FEATURE_DIM="${FEATURE_DIM:-128}"
 RESULT_DIR="${RESULT_DIR:-../results/heterogeneous_models/FedProto}"
 GOAL_PREFIX="${GOAL_PREFIX:-lambda_sensitivity_${MODEL_FAMILY}}"
 LAMBDAS=(${LAMBDAS:-0 0.25 0.5 1 2 3 4})

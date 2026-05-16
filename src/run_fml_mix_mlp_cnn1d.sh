@@ -45,7 +45,7 @@ python -u main.py \
   -model_family IoT_MIX_MLP_CNN1D \
   --client_model_ratios "$CLIENT_MODEL_RATIOS" \
   --input_dim 77 \
-  -fd 64 \
+  -fd 128 \
   -did 0 \
   -algo FML \
   --fml_alpha 0.5 \
